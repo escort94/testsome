@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="GBK"?><Config>
+        <keyStoreConfig>
+                <!-- CA签名密钥所使用的加密库类型，目前支持 "JSOFT_LIB"   "JSJY05B_LIB"   -->
+                <CASigningDeviceID>JSOFT_LIB</CASigningDeviceID>
+                <!--  在CA签名密钥使用加密机时，输入CA的签名密钥ID标识，如果<CASigningDeviceID>为JSOFT_LIB，则此项不起作用-->
+                <CASigningKeyID>1</CASigningKeyID>
+                <!-- CA签名密钥容器存储路径-->
+                <SigningKeyStore>./keystore/signingCert.jks</SigningKeyStore>
+                <!-- CA签名密钥容器密码  -->
+                <SigningKeyStorePWD isEncrypted="TRUE">detRcNxW</SigningKeyStorePWD>
+                <!-- CA签名密钥容器密码是否要验证  -->
+                <SignPWDIsConfirmed>false</SignPWDIsConfirmed>
+
+                <!-- CA通信密钥所使用的加密库类型，目前支持 "JSOFT_LIB"   "JSJY05B_LIB"   -->
+                <CACommDeviceID>JSOFT_LIB</CACommDeviceID>
+                <!--  在CA通信密钥使用加密机时，输入CA的通信密钥ID标识，如果<CACommDeviceID>为JSOFT_LIB，则此项不起作用-->
+                <CACommKeyID>2</CACommKeyID>
+                <!-- CA通信密钥容器存储路径  -->
+                <CommKeyStore>./keystore/commCert.jks</CommKeyStore>
+                <!-- CA通信密钥容器密码  -->
+                <CommKeyStorePWD isEncrypted="TRUE">detRcNxW</CommKeyStorePWD>
+
+                <!-- CA超级管理员pfx证书存储路径 -->
+                <AdminKeyStorePath>
+					./keystore/superAdminCert.pfx
+				</AdminKeyStorePath>
+                <!-- CA审计管理员pfx证书存储路径 -->
+                <AuditAdminKeyStorePath>./keystore/auditAdminCert.pfx</AuditAdminKeyStorePath>
+        </keyStoreConfig>
+
+        <DBConfig>
+                <!-- 数据库联接用的URI  -->
+                <Driver_URL>
+				jdbc:oracle:thin:@192.168.0.35:1521:eccca
+			</Driver_URL>
+                <!-- 数据库联接用的Driver_Class  -->
+                <Driver_Class>oracle.jdbc.driver.OracleDriver</Driver_Class>	
+                <!-- 数据库用户名  -->
+                <DBUser>ceshiraconsole</DBUser>
+                
+                <!-- 数据库用户密码  -->
+                <DBUser_PWD isEncrypted="TRUE">T9JoSeUFt2ouVGe9q46JPjlrAicOfS4=</DBUser_PWD>		
+                <!-- 联接池大小 -->
+                <Maximum_Connection_Count>20</Maximum_Connection_Count>		
+        </DBConfig>
+
+        <LDAPConfig>
+                <!--  LDAP服务器地址 -->
+                <LDAPServerAddress>192.168.9.149</LDAPServerAddress>
+                <!--  LDAP服务器端口 -->
+                <LDAPPort>389</LDAPPort>
+                <!--  LDAP服务器用户DN -->
+                <LDAPUserDN>cn=directory manager</LDAPUserDN>
+                <!--  LDAP服务器用户口令 -->
+                <LDAP_USER_Password isEncrypted="TRUE">RcNxcNxW</LDAP_USER_Password>	
+        </LDAPConfig>
+
+        <KMCConfig>
+                <!--  密钥管理中心server地址（没有可以不写）-->
+                <KMCServerAddress>192.168.9.149</KMCServerAddress>		
+                <!--  密钥管理中心server端口（没有可以不写）-->
+                <KMCServerPort>40624</KMCServerPort>			
+        </KMCConfig>
+
+        <NetConfig>
+                <!--  服务器地址-->
+                <ServerAddress>192.168.0.138</ServerAddress>	
+                <!-- CAServer服务器系统控制端口  -->
+                <ControlPort>40622</ControlPort>			
+
+                <!-- CAServer RA服务监听端口  -->
+                <ServicePort>40623</ServicePort>			
+                <!-- 接收线程数量，建议1-5  -->
+                <AcceptThreadCount>5</AcceptThreadCount>		
+                <!-- 线程池最大线程数量  -->
+                <MaxProcessThread>100</MaxProcessThread>		
+                <!-- CAServer服务器超时时间  -->
+                <ServiceTimeOut>60</ServiceTimeOut>		
+                <!-- Server类型  -->
+                <ServerType>SSL</ServerType>			
+
+                <!--  Web服务器端口 -->
+                <WebServerPort>8443</WebServerPort>			
+                <!--  Web服务器的根目录 -->
+                <WebHomePath>./web</WebHomePath>			
+                <!--  Web服务器应用程序基地址 -->
+                <WebAppBasePath>./webapp</WebAppBasePath>		
+                <!--  Web服务器应用路径 -->
+                <WebAppPath></WebAppPath>				
+                <!--  Web服务器的WebAppDocBasePath -->
+                <WebAppDocBasePath>EndUser</WebAppDocBasePath>	
+                <!--  Web服务器的Session超时时间,单位：分钟 -->
+                <WebSessionTimeOut>30</WebSessionTimeOut>		
+                <!--  Web服务器类型GENERAL是一般联接，UNILATERALISM为单向验证,建议不要修改 -->
+                <WebType>UNILATERALISM</WebType>			
+
+                <!--  安全Web服务器端口 -->
+                <SecureWebServerPort>9443</SecureWebServerPort>		
+                <!--  安全Web服务器的根目录,建议不要修改 -->
+                <SecureWebHomePath>./web</SecureWebHomePath>		
+                <!--  安全Web服务器应用程序基地址,建议不要修改 -->
+                <SecureWebAppBasePath>./webapp</SecureWebAppBasePath>	
+                <!--  安全Web服务器应用路径,建议不要修改 -->
+                <SecureWebAppPath></SecureWebAppPath>			
+                <!--  安全Web服务器的WebAppDocBasePath,建议不要修改 -->
+                <SecureWebAppDocBasePath>CA</SecureWebAppDocBasePath>	
+                <!--  安全Web服务器的Session超时时间,单位：分钟 -->
+                <SecureWebSessionTimeOut>30</SecureWebSessionTimeOut>	
+        </NetConfig>
+
+        <LOGConfig>
+                <!--  日志文件存放路径 -->
+                <LOG_Path>./log</LOG_Path>				
+        </LOGConfig>
+
+        <CRLConfig>
+                <!--  CRL发布时间间隔，单位：分钟，1天＝1440分钟-->
+                <CRLPeriods>240</CRLPeriods>			
+                <!--  每个CRL发布点中的证书数量-->
+                <CertCountInCRL>500</CertCountInCRL>		
+
+                <!--  是否发布以文件形式发布CRL-->
+                <CRLFilePublish>TRUE</CRLFilePublish>		
+                <!--  是否以LDAP形式发布CRL-->
+                <CRLLDAPPublish>FALSE</CRLLDAPPublish>		
+                <!-- 是否发布总CRL -->                              
+                <PUBALLCRL>FALSE</PUBALLCRL>                       
+                <!--  文件形式发布的CRL的地址-->                      
+                <CRLFilePath>./crl</CRLFilePath>			
+                <!--  LDAP发布CRL的地址，即crl将发布在BaseDN+CRLLDAPPath的路径下-->
+                <CRLLDAPPath>OU=CRL</CRLLDAPPath>			
+
+                <!--  证书中的CDP扩展域是否写URI形式的内容-->
+                <CDP_URI_Publish>TRUE</CDP_URI_Publish>		
+                <!--  证书中的CDP扩展域是否写LDAP形式的内容-->
+                <CDP_DN_Publish>FALSE</CDP_DN_Publish>		
+                <!--  证书中的CDP扩展域的URI形式的内容-->
+                <CDP_URI>http://192.168.9.149</CDP_URI>		
+
+                <!-- 证书中的CDP扩展是否写LDAP_URI形式内容 -->
+                <CDP_LDAP_URI_Publish>FALSE</CDP_LDAP_URI_Publish> 
+                <!-- 证书中的CDP扩展域的LDAP_URI形式的内容 -->
+                <CDP_LDAP_URI>ldap://192.168.9.149:389</CDP_LDAP_URI>  
+        </CRLConfig>
+
+        <CertConfig>
+                <!--  CA的证书发布周期（仅针对由于特殊原因未能即时发布的证书），单位：分钟-->
+                <CertPubPeriods>240</CertPubPeriods>			
+                <!--  证书发布路径-->
+                <CertFilePath>./cert</CertFilePath>		
+        </CertConfig>
+
+        <CAConfig>
+                <!--  是否发布以文件形式发布根CA签名证书-->
+                <RootCertFilePublish>FALSE</RootCertFilePublish>		
+                <!--  是否以LDAP形式发布根CA签名证书-->
+	             <RootCertLDAPPublish>FALSE</RootCertLDAPPublish>		
+
+                <!--  CA对RA请求允许的时间超前量单位：分钟-->
+                <TimeDifAllow>3</TimeDifAllow>				
+
+                <!--  CA的权威机构访问信息地址-->
+                <AuthorityInfoAccess>
+			CAISSUER=http://192.168.9.149/caissue.htm;OCSP=http://192.168.9.149:20443
+		</AuthorityInfoAccess> 	
+
+                <!--  默认情况下，每次证书、证书实体或业务日志查询每页显示的记录数量-->
+                <CountPerPage>10</CountPerPage>			
+                <!--  每次证书、证书实体或业务日志查询可以从数据库返回的最大记录数量，用于限制RA一次查询可以取得的最大数据量-->
+                <MaxCountPerPage>1000</MaxCountPerPage>  		
+
+                <!--  系统同步时间，用于负载均衡功能，单位：分钟，“0”代表不同步-->
+                <Synchrointerval>0</Synchrointerval>		
+
+                <!--  证书序列号的长度，默认：16字符-->
+                <CertSNLength>16</CertSNLength>			
+                <!--  证书授权码的长度，默认：16字符-->
+                <AuthCodeLength>16</AuthCodeLength>			
+                <!--  授权码有效期限，单位：天-->
+                <AuthCodeValidity>3</AuthCodeValidity>		
+
+                <!--  签发证书时，使用的签名算法，目前支持“SHA1withRSAEncryption”，“MD5withRSAEncryption”-->
+                <CASigningAlg>SHA1withRSA</CASigningAlg>
+                <!--  是否应用证书更新过渡期 -->
+                <EnableUpdatePeriod>FALSE</EnableUpdatePeriod>
+        </CAConfig>
+
+        <CSPConfig>
+                <!--  管理员CSP信息配置，ALL表示显示所有合理CSP信息，SPECIFY表示只显示包含指定CSP的信息 -->
+                <CSPAdminShowType>ALL</CSPAdminShowType>
+                <!--  管理员CSP信息配置，默认为以下CSP -->
+                <!--  当CSPAdminShowType配置为ALL时，下拉列表显示所有可用，SPECIFY表示只显示包含指定CSP的信息，没有时给出提示 -->
+                <CSPAdminSpecify>
+			Microsoft Enhanced Cryptographic Provider v1.0
+		</CSPAdminSpecify>
+
+                <!--  用户CSP信息配置，ALL表示显示所有合理CSP信息，SPECIFY表示只显示包含指定CSP的信息 -->
+                <CSPUserShowType>ALL</CSPUserShowType>
+                <!--  用户CSP信息配置，默认为以下CSP -->
+                <!--  当CSPUserShowType配置为ALL时，下拉列表显示所有可用，SPECIFY表示只显示包含指定CSP的信息，没有时给出提示 -->
+                <CSPUserSpecify>
+			Microsoft Enhanced Cryptographic Provider v1.0
+		</CSPUserSpecify>
+        </CSPConfig>
+
+        <AutoServiceConfig>
+                <!-- 检查证书更新服务的周期(用于支持更新过渡期),单位:分钟，要求大于0 -->
+                <CheckUpdateServiceInterval>10</CheckUpdateServiceInterval>
+
+                <!-- 是否使用自动证书归档功能 -->
+                <UseAutoCertArchive>FALSE</UseAutoCertArchive>
+                <!-- 自动证书归档周期，单位:天，如果<UseAutoCertArchive>设置为FALSE,则此项不起作用 -->
+                <AutoCertArchiveInterval>180</AutoCertArchiveInterval>
+                <!-- 归档过期时间超过此限制的证书，单位:天，例如：归档已过期365天的证书 -->
+                <CertAfterDays>365</CertAfterDays>
+
+                <!-- 是否使用自动日志归档功能 -->
+                <UseAutoLogArchive>FALSE</UseAutoLogArchive>
+                <!-- 自动日志归档周期，单位:天，如果<UseAutoLogArchive>设置为FALSE,则此项不起作用 -->
+                <AutoLogArchiveInterval>180</AutoLogArchiveInterval>
+                <!-- 归档距离当前日期几天前的操作日志，单位:天，例如：归档据现在365天以前的操作日志 -->
+                <LogBeforeDays>365</LogBeforeDays>
+        </AutoServiceConfig>
+</Config>
