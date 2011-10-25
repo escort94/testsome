@@ -1,4 +1,4 @@
-package cn.com.jit.ida.ca.dbutils;
+package cn.com.jit.ida.ca.displayUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -87,7 +87,7 @@ public class DbUtils {
 			localPreparedStatement.setString(6, "tmp_signClient");
 			localPreparedStatement.execute();
 		}
-		this.closeStatement(localPreparedStatement);
-		this.closeConnection(conn);
+		closeStatement(localPreparedStatement);
+		closeConnection(conn);
 	}
 }
