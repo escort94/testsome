@@ -21,7 +21,7 @@ import java.util.Vector;
 import sun.security.x509.X509CertImpl;
 import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.certmanager.service.operation.CodeGenerator;
-import cn.com.jit.ida.ca.dbutils.DbUtils;
+import cn.com.jit.ida.ca.displayUtils.DbUtils;
 import cn.com.jit.ida.ca.key.keyutils.KeyUtils;
 import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ConfigTool;
