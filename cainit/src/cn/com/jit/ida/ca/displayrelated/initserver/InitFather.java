@@ -1,5 +1,6 @@
 package cn.com.jit.ida.ca.displayrelated.initserver;
 
+import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ParseXML;
 
@@ -10,12 +11,12 @@ public abstract class InitFather {
 	public static final String RSA = "RSA";
 	public static final String SM2 = "SM2";
 
-	public InitFather() throws Exception {
+	public InitFather() throws IDAException  {
 		this.init = new ParseXML("./config/init.xml");
 		initConfig();
 		initialize();
 	}
-	public InitFather(ParseXML init) throws Exception {
+	public InitFather(ParseXML init) throws IDAException {
 		this.init = init;
 		initConfig();
 		try {
@@ -24,7 +25,7 @@ public abstract class InitFather {
 			e.printStackTrace();
 		}
 	}
-	public abstract void initialize() throws Exception ;
+	public abstract void initialize() throws IDAException ;
 	
 	//初始化方法 供子类实现 
 	public void initConfig() throws ConfigException{

@@ -176,9 +176,17 @@ public class GenericKey {
 		}
 	}
 
-	public void updateAdmin(int adminType) throws KeyStoreException, IDAException, SQLException {
-		X509CertImpl localX509CertImpl = (X509CertImpl) m_keyStore
-				.getCertificate("s1as");
+	public void updateAdmin(int adminType) throws IDAException{
+		X509CertImpl localX509CertImpl = null;
+		try {
+			localX509CertImpl = (X509CertImpl) m_keyStore
+					.getCertificate("s1as");
+		} catch (KeyStoreException e) {
+			OperateException oexception = new OperateException(
+					OperateException.GET_CER_BY_ALIAS_ERROR,
+					OperateException.GET_CER_BY_ALIAS_ERROR_DES);
+			throw oexception;
+		}
 		String dn = localX509CertImpl.getSubjectX500Principal().getName();
 		String sn = localX509CertImpl.getSerialNumber().toString(16);
 		// operate database to update config table
@@ -393,9 +401,9 @@ public class GenericKey {
 	}
 
 	public static void main(String[] args) {
-	String snStr = CodeGenerator.generateRefCode();
-	new BigInteger(snStr, 16);
-}
+		String snStr = CodeGenerator.generateRefCode();
+		new BigInteger(snStr, 16);
+	}
 
 	public void addKeystoreStruct(String algorithm, String dn,
 			char[] passwords, int validityDay) throws IDAException {
@@ -443,24 +451,20 @@ public class GenericKey {
 					KeyPairException.STORE_JKS_ERROR_DES, e);
 			throw kException;
 		}
-		if(this.fileType.equals(GenericKey.PKCS12)){
-			try {
-				DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
-			} catch (SQLException e) {
-				OperateException oe = new OperateException(OperateException.UPDATE_ADMIN_ERROR, OperateException.UPDATE_ADMIN_ERROR_DES);
-				throw oe;
-			}
+		if (this.fileType.equals(GenericKey.PKCS12)) {
+			DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
 		}
 	}
+
 	public void addKeystoreStruct(String algorithm, String dn, String issuer,
-			char[] passwords, int validityDay) throws IDAException{
+			char[] passwords, int validityDay) throws IDAException {
 		X509Certificate certificate = null;
 		String signAlg = algorithm;
 		String snStr = CodeGenerator.generateRefCode();
 		X509V3CertificateGenerator v3CertGen = new X509V3CertificateGenerator();
 		X509Principal x509Principal = new X509Principal(dn);
 		X509Principal issuerPrincipal = new X509Principal(issuer);
-		
+
 		// DbUtils
 		v3CertGen.reset();
 		BigInteger bi = new BigInteger(snStr, 16);
@@ -500,15 +504,11 @@ public class GenericKey {
 					KeyPairException.STORE_JKS_ERROR_DES, e);
 			throw kException;
 		}
-		if(this.fileType.equals(GenericKey.PKCS12)){
-			try {
-				DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
-			} catch (SQLException e) {
-				OperateException oe = new OperateException(OperateException.UPDATE_ADMIN_ERROR, OperateException.UPDATE_ADMIN_ERROR_DES);
-				throw oe;
-			}
+		if (this.fileType.equals(GenericKey.PKCS12)) {
+			DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
 		}
 	}
+
 	public boolean isM_isNewKeyStore() {
 		return m_isNewKeyStore;
 	}

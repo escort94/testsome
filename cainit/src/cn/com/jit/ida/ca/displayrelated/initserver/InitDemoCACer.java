@@ -26,11 +26,11 @@ public class InitDemoCACer extends InitFather {
 	protected String genCerDN;
 	public String democaKeyStore;
 	
-	public InitDemoCACer() throws Exception {
+	public InitDemoCACer() throws IDAException {
 		super();
 	}
 
-	public InitDemoCACer(ParseXML parseXML) throws Exception {
+	public InitDemoCACer(ParseXML parseXML) throws IDAException {
 		super(parseXML);
 	}
 

@@ -7,14 +7,11 @@ import java.security.KeyStoreException;
 
 import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.config.CAConfig;
-import cn.com.jit.ida.ca.config.GlobalConfig;
 import cn.com.jit.ida.ca.displayrelated.initserver.InitAuditAdminPFX;
 import cn.com.jit.ida.ca.displayrelated.initserver.InitSuperAdminPFX;
 import cn.com.jit.ida.ca.key.GenericKey;
 import cn.com.jit.ida.ca.key.keyutils.Keytype;
-import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ConfigTool;
-import cn.com.jit.ida.globalconfig.KeyPairException;
 import cn.com.jit.ida.globalconfig.ParseXML;
 import cn.com.jit.ida.privilege.Admin;
 
@@ -30,7 +27,7 @@ public class UpdateAdmin {
 	private String validityDay;
 	CAConfig localCAConfig = null;
 
-	public void updateAdmin() throws Exception {
+	public void updateAdmin() throws IDAException {
 		if (!isBeenInit()) {
 			return;
 		}
@@ -71,7 +68,7 @@ public class UpdateAdmin {
 		}
 	}
 
-	public void operateSuperAdmin() throws Exception {
+	public void operateSuperAdmin() throws IDAException {
 		if (!beforeOperate()) {
 			return;
 		}
@@ -93,7 +90,7 @@ public class UpdateAdmin {
 
 	}
 
-	public void operateAuditAdmin() throws Exception {
+	public void operateAuditAdmin() throws IDAException {
 		if (!beforeOperate()) {
 			return;
 		}

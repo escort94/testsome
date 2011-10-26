@@ -1,5 +1,6 @@
 package cn.com.jit.ida.ca.displayrelated.initserver;
 
+import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ParseXML;
 import cn.com.jit.ida.log.LogManager;
@@ -7,11 +8,11 @@ import cn.com.jit.ida.log.SysLogger;
 
 public class InitLog extends InitFather {
 
-	public InitLog(ParseXML init) throws Exception {
+	public InitLog(ParseXML init) throws IDAException {
 		super(init);
 	}
 
-	public InitLog() throws Exception {
+	public InitLog() throws IDAException {
 		super();
 	}
 

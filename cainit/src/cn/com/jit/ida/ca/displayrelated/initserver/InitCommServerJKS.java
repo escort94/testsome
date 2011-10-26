@@ -18,11 +18,11 @@ public class InitCommServerJKS extends InitFather {
 	public int commKeySize;
 	protected int commJKSValidityDay;
 	
-	public InitCommServerJKS() throws Exception {
+	public InitCommServerJKS() throws IDAException {
 		super();
 	}
 
-	public InitCommServerJKS(ParseXML init) throws Exception {
+	public InitCommServerJKS(ParseXML init) throws IDAException {
 		super(init);
 	}
 

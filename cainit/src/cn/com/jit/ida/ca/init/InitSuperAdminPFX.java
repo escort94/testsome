@@ -1,8 +1,8 @@
 package cn.com.jit.ida.ca.init;
 
 import java.security.KeyPair;
-import java.security.KeyStore;
 
+import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.key.GenericKey;
 import cn.com.jit.ida.ca.key.keyutils.KeyUtils;
 import cn.com.jit.ida.globalconfig.ConfigException;
@@ -51,7 +51,7 @@ public class InitSuperAdminPFX extends InitFather {
 		DN = "CN=" + adminDnNameInCn + "," + baseDN;
 		password = this.init.getString("AdminKeyStorePWD");
 	}
-	public void makeSuperAdminPFX(String keytype, int keysize) throws Exception{
+	public void makeSuperAdminPFX(String keytype, int keysize) throws IDAException{
 		KeyPair keyPair = KeyUtils.createKeyPair(superAdminKeyAlg, keytype, keysize);
 		GenericKey gKey = new GenericKey(true, p12Path, password.toCharArray(), keyPair, GenericKey.PKCS12);
 		gKey.setAdminIdentity(Admin.SUPER_ADMIN);

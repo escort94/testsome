@@ -1,32 +1,15 @@
 package cn.com.jit.ida.ca.init;
 
+import java.security.KeyPair;
+
 import cn.com.jit.ida.IDAException;
-import cn.com.jit.ida.ca.certmanager.service.operation.CodeGenerator;
 import cn.com.jit.ida.ca.db.DBException;
 import cn.com.jit.ida.ca.db.DBManager;
-import cn.com.jit.ida.ca.initserver.InitServerException;
 import cn.com.jit.ida.ca.key.GenericKey;
 import cn.com.jit.ida.ca.key.keyutils.KeyUtils;
 import cn.com.jit.ida.ca.key.keyutils.Keytype;
 import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ParseXML;
-import cn.com.jit.ida.util.pki.PKIException;
-import cn.com.jit.ida.util.pki.cert.X509CertGenerator;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.*;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-import fisher.man.jce.X509Principal;
-import fisher.man.x509.X509V3CertificateGenerator;
 
 public class InitSigningJKS extends InitFather {
 	public KeyPair kPair;
@@ -64,7 +47,7 @@ public class InitSigningJKS extends InitFather {
 	}
 
 	// 生成自签名的证书cer 当然是利用上面的密钥对
-	public void getSignedByItselfCer() throws Exception {
+	public void getSignedByItselfCer() throws IDAException {
 		KeyPair keyPair =KeyUtils.createKeyPair(keySigningStoreAlg, Keytype.SOFT_VALUE,
 				keySize);
 		GenericKey gKey = new GenericKey(true, signingjkspath,
