@@ -312,14 +312,13 @@ public class DBManager implements DBInterface {
     PreparedStatement localPreparedStatement = null;
     Statement localStatement = null;
     ResultSet localResultSet = null;
-    String str2 = -1;
+    int str2 = -1;
     try
     {
       int i;
       if (paramProperties == null)
       {
-        i = str2;
-        jsr 525;
+        return str2;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localConnection.setAutoCommit(false);
@@ -339,7 +338,7 @@ public class DBManager implements DBInterface {
       str2 = localPreparedStatement.executeUpdate();
       if (!paramProperties.getProperty("ctml_name").equals("0"))
       {
-        str4 = null;
+       String str4 = null;
         String str5 = null;
         str1 = "select value from config where modulename='CAConfig' and property='CAAdminSN'";
         localStatement = localConnection.createStatement();
@@ -363,7 +362,7 @@ public class DBManager implements DBInterface {
           str2 = setTemplateAdmin(localConnection, str4, paramProperties.getProperty("ctml_name", null), str5, null);
       }
       localConnection.commit();
-      str4 = str2;
+      return str2;
     }
     catch (DBException localDBException)
     {
@@ -438,8 +437,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramProperties1 == null) || (paramProperties2 == null))
       {
-        k = j;
-        jsr 409;
+    	  return j;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       String str1 = "update ctml set ";
@@ -462,13 +460,14 @@ public class DBManager implements DBInterface {
       }
       str1 = str1.substring(0, str1.length() - 5);
       localPreparedStatement = localConnection.prepareStatement(str1.toLowerCase());
+      int k = 0;
       for (k = 0; k < i; k++)
         if (arrayOfString[k].getBytes().length > 1000)
           localPreparedStatement.setCharacterStream(k + 1, new CharArrayReader(arrayOfString[k].toCharArray()), arrayOfString[k].length());
         else
           localPreparedStatement.setString(k + 1, arrayOfString[k]);
       j = localPreparedStatement.executeUpdate();
-      k = j;
+    return j;
     }
     catch (SQLException localSQLException1)
     {
@@ -515,8 +514,7 @@ public class DBManager implements DBInterface {
       Object localObject1;
       if (paramProperties == null)
       {
-        localObject1 = null;
-        jsr 614;
+    	  return arrayOfProperties1;
       }
       str1 = "select ctml_name,ctml_id,ctml_type,ctml_status,ctml_description,ctml_policyinfo,reserve from ctml";
       localEnumeration = paramProperties.propertyNames();
@@ -582,7 +580,7 @@ public class DBManager implements DBInterface {
       arrayOfProperties1 = new Properties[localVector.size()];
       for (int k = 0; k < localVector.size(); k++)
         arrayOfProperties1[k] = ((Properties)localVector.get(k));
-      arrayOfProperties2 = arrayOfProperties1;
+     return  arrayOfProperties1;
     }
     catch (SQLException localSQLException1)
     {
@@ -628,8 +626,7 @@ public class DBManager implements DBInterface {
       int k;
       if (paramProperties == null)
       {
-        k = j;
-        jsr 451;
+        return j;
       }
       String str3 = "select ctml_name from ctml";
       Enumeration localEnumeration = paramProperties.propertyNames();
@@ -645,7 +642,7 @@ public class DBManager implements DBInterface {
       str3 = str3 + str4.toLowerCase();
       localConnection = DriverManager.getConnection("proxool.ida");
       localPreparedStatement1 = localConnection.prepareStatement(str3);
-      for (m = 0; m < i; m++)
+      for (int m = 0; m < i; m++)
         localPreparedStatement1.setString(m + 1, arrayOfString[m]);
       localResultSet2 = localPreparedStatement1.executeQuery();
       while (localResultSet2.next())
@@ -664,10 +661,10 @@ public class DBManager implements DBInterface {
       }
       str3 = "delete from ctml" + str4;
       localPreparedStatement1 = localConnection.prepareStatement(str3.toLowerCase());
-      for (m = 0; m < i; m++)
+      for (int m = 0; m < i; m++)
         localPreparedStatement1.setString(m + 1, arrayOfString[m]);
       j = localPreparedStatement1.executeUpdate();
-      m = j;
+      return  j;
     }
     catch (DBException localDBException)
     {
@@ -711,8 +708,7 @@ public class DBManager implements DBInterface {
       int j;
       if (paramProperties == null)
       {
-        j = i;
-        jsr 213;
+        return  i;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       String str = "insert into selfext values(?,?,?,?,?,?,?,?,?)";
@@ -727,7 +723,7 @@ public class DBManager implements DBInterface {
       localPreparedStatement.setString(8, "tmp_signServer");
       localPreparedStatement.setString(9, "tmp_signClient");
       i = localPreparedStatement.executeUpdate();
-      k = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -769,8 +765,7 @@ public class DBManager implements DBInterface {
       int k;
       if ((paramProperties1 == null) || (paramProperties2 == null))
       {
-        k = j;
-        jsr 358;
+    	  return j;
       }
       String str1 = "update selfext set ";
       Enumeration localEnumeration1 = paramProperties2.propertyNames();
@@ -794,12 +789,12 @@ public class DBManager implements DBInterface {
         str1 = str1.substring(0, str1.length() - 5).toLowerCase();
       localConnection = DriverManager.getConnection("proxool.ida");
       localPreparedStatement = localConnection.prepareStatement(str1);
+      int m = 0;
       for (m = 0; m < i; m++)
         localPreparedStatement.setString(m + 1, arrayOfString[m]);
       j = localPreparedStatement.executeUpdate();
-      m = j;
-    }
-    catch (SQLException localSQLException1)
+      return j;
+    }catch (SQLException localSQLException1)
     {
       int m;
       syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -842,8 +837,7 @@ public class DBManager implements DBInterface {
     {
       if (paramProperties == null)
       {
-        localEnumeration = null;
-        jsr 537;
+        return arrayOfProperties1;
       }
       localStringBuffer.append("select selfext_name,selfext_oid,selfext_status,");
       localStringBuffer.append("selfext_encodetype,selfext_description,reserve from selfext");
@@ -895,7 +889,7 @@ public class DBManager implements DBInterface {
       arrayOfProperties1 = new Properties[localVector.size()];
       for (int k = 0; k < localVector.size(); k++)
         arrayOfProperties1[k] = ((Properties)localVector.get(k));
-      arrayOfProperties2 = arrayOfProperties1;
+      return arrayOfProperties1;
     }
     catch (SQLException localSQLException1)
     {
@@ -941,8 +935,7 @@ public class DBManager implements DBInterface {
       int k;
       if (paramProperties == null)
       {
-        k = j;
-        jsr 416;
+    	  return j;
       }
       String str2 = "select selfext_name from selfext";
       Enumeration localEnumeration = paramProperties.propertyNames();
@@ -958,7 +951,7 @@ public class DBManager implements DBInterface {
       str2 = str2 + str3.toLowerCase();
       localConnection = DriverManager.getConnection("proxool.ida");
       localPreparedStatement1 = localConnection.prepareStatement(str2);
-      for (m = 0; m < i; m++)
+      for (int m = 0; m < i; m++)
         localPreparedStatement1.setString(m + 1, arrayOfString[m]);
       localResultSet2 = localPreparedStatement1.executeQuery();
       while (localResultSet2.next())
@@ -974,10 +967,10 @@ public class DBManager implements DBInterface {
       str2 = "delete from selfext" + str3;
       str2 = str2.toLowerCase();
       localPreparedStatement1 = localConnection.prepareStatement(str2);
-      for (m = 0; m < i; m++)
+      for (int m = 0; m < i; m++)
         localPreparedStatement1.setString(m + 1, arrayOfString[m]);
       j = localPreparedStatement1.executeUpdate();
-      m = j;
+      return j;
     }
     catch (DBException localDBException)
     {
@@ -1021,8 +1014,7 @@ public class DBManager implements DBInterface {
     {
       if (paramString == null)
       {
-        localObject1 = localCertInfo1;
-        jsr 373;
+    	  return localCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select certsn,subject,notbefore,notafter,validity,authcode,cdpid,ctmlname,certstatus,isvalid,createtime,applicant,email,remark,authcode_updatetime,isretainkey,oldsn,iswaiting from cert where certsn=?";
@@ -1051,7 +1043,7 @@ public class DBManager implements DBInterface {
         localCertInfo1.setOldSN(localResultSet.getString(17));
         localCertInfo1.setIswaiting(localResultSet.getString(18));
       }
-      localCertInfo2 = localCertInfo1;
+      return localCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -1091,8 +1083,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        localObject1 = localCertInfo1;
-        jsr 333;
+    	  return localCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select certsn,subject,notbefore,notafter,validity,authcode,cdpid,ctmlname,certstatus,isvalid,createtime,applicant,email,remark from cert where subjectuppercase=? and ctmlname=? and isvalid=1";
@@ -1118,7 +1109,7 @@ public class DBManager implements DBInterface {
         localCertInfo1.setEmail(localResultSet.getString(13));
         localCertInfo1.setRemark(localResultSet.getString(14));
       }
-      localCertInfo2 = localCertInfo1;
+      return localCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -1158,8 +1149,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        localObject1 = localCertInfo1;
-        jsr 344;
+    	  return localCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select certsn,subject,notbefore,notafter,validity,authcode,cdpid,ctmlname,certstatus,isvalid,createtime,applicant,email,remark from cert where subjectuppercase=? and ctmlname=? and certstatus=?";
@@ -1186,7 +1176,7 @@ public class DBManager implements DBInterface {
         localCertInfo1.setEmail(localResultSet.getString(13));
         localCertInfo1.setRemark(localResultSet.getString(14));
       }
-      localCertInfo2 = localCertInfo1;
+      return localCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -1226,8 +1216,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        localObject1 = localCertInfo1;
-        jsr 366;
+    	  return localCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select certsn,subject,notbefore,notafter,validity,authcode,cdpid,ctmlname,certstatus,isvalid,createtime,applicant,email,remark from cert where subjectuppercase=? and ctmlname=? and certstatus in(?,?,?)";
@@ -1256,7 +1245,7 @@ public class DBManager implements DBInterface {
         localCertInfo1.setEmail(localResultSet.getString(13));
         localCertInfo1.setRemark(localResultSet.getString(14));
       }
-      localCertInfo2 = localCertInfo1;
+      return localCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -1294,11 +1283,9 @@ public class DBManager implements DBInterface {
     int i = 0;
     try
     {
-      int j;
       if ((paramString1 == null) || (paramString2 == null))
       {
-        j = i;
-        jsr 175;
+    	  return i;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       String str = "select count(certsn) from cert where subjectuppercase=? and ctmlname=? and certstatus in(?,?,?)";
@@ -1311,11 +1298,10 @@ public class DBManager implements DBInterface {
       localResultSet = localPreparedStatement.executeQuery();
       if (localResultSet.next())
         i = localResultSet.getInt(1);
-      k = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
-      int k;
       syslogger.info("数据库异常：" + localSQLException1.getMessage());
       throw new DBException("8059", "检查证书申请失败", localSQLException1);
     }
@@ -1358,20 +1344,19 @@ public class DBManager implements DBInterface {
     {
       if (paramProperties == null)
       {
-        localObject1 = localVector1;
-        jsr 1672;
+    	  return localVector1;
       }
       int k = paramProperties.size();
       Object localObject1 = paramProperties.getProperty("ctmlName");
       if ((localObject1 != null) && (((String)localObject1).indexOf("|") >= 0))
       {
-        localObject2 = new StringTokenizer((String)localObject1, "|");
+    	  StringTokenizer localObject2 = new StringTokenizer((String)localObject1, "|");
         k += ((StringTokenizer)localObject2).countTokens();
       }
       localObject1 = paramProperties.getProperty("certStatus");
       if ((localObject1 != null) && (((String)localObject1).indexOf("|") >= 0))
       {
-        localObject2 = new StringTokenizer((String)localObject1, "|");
+    	  StringTokenizer localObject2 = new StringTokenizer((String)localObject1, "|");
         k += ((StringTokenizer)localObject2).countTokens();
       }
       arrayOfString = new String[k][2];
@@ -1397,7 +1382,7 @@ public class DBManager implements DBInterface {
           {
             if (arrayOfString[i][0].indexOf("|") >= 0)
             {
-              localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
+            	StringTokenizer localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
               k = 0;
               for (str3 = str3 + str1 + " in ("; ((StringTokenizer)localObject2).hasMoreTokens(); str3 = str3 + "?,")
               {
@@ -1418,7 +1403,7 @@ public class DBManager implements DBInterface {
           {
             if (arrayOfString[i][0].indexOf("|") >= 0)
             {
-              localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
+            	StringTokenizer localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
               for (str3 = str3 + str1 + " in ("; ((StringTokenizer)localObject2).hasMoreTokens(); str3 = str3 + "?,")
               {
                 arrayOfString[i][0] = ((StringTokenizer)localObject2).nextToken();
@@ -1530,7 +1515,7 @@ public class DBManager implements DBInterface {
       localVector2.toArray(arrayOfCertInfo);
       localVector1.add(Long.toString(l));
       localVector1.add(arrayOfCertInfo);
-      localObject2 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -1577,20 +1562,19 @@ public class DBManager implements DBInterface {
     {
       if (paramProperties == null)
       {
-        localObject1 = localVector1;
-        jsr 1722;
+    	  return localVector1;
       }
       int k = paramProperties.size();
       Object localObject1 = paramProperties.getProperty("ctmlName");
       if ((localObject1 != null) && (((String)localObject1).indexOf("|") >= 0))
       {
-        localObject2 = new StringTokenizer((String)localObject1, "|");
+    	  StringTokenizer localObject2 = new StringTokenizer((String)localObject1, "|");
         k += ((StringTokenizer)localObject2).countTokens();
       }
       localObject1 = paramProperties.getProperty("certStatus");
       if ((localObject1 != null) && (((String)localObject1).indexOf("|") >= 0))
       {
-        localObject2 = new StringTokenizer((String)localObject1, "|");
+    	  StringTokenizer localObject2 = new StringTokenizer((String)localObject1, "|");
         k += ((StringTokenizer)localObject2).countTokens();
       }
       arrayOfString = new String[k][2];
@@ -1616,7 +1600,7 @@ public class DBManager implements DBInterface {
           {
             if (arrayOfString[i][0].indexOf("|") >= 0)
             {
-              localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
+            	StringTokenizer  localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
               k = 0;
               for (str3 = str3 + str1 + " in ("; ((StringTokenizer)localObject2).hasMoreTokens(); str3 = str3 + "?,")
               {
@@ -1637,7 +1621,7 @@ public class DBManager implements DBInterface {
           {
             if (arrayOfString[i][0].indexOf("|") >= 0)
             {
-              localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
+            	StringTokenizer localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
               for (str3 = str3 + str1 + " in ("; ((StringTokenizer)localObject2).hasMoreTokens(); str3 = str3 + "?,")
               {
                 arrayOfString[i][0] = ((StringTokenizer)localObject2).nextToken();
@@ -1755,7 +1739,7 @@ public class DBManager implements DBInterface {
       localVector2.toArray(arrayOfCertInfo);
       localVector1.add(Long.toString(l));
       localVector1.add(arrayOfCertInfo);
-      localVector3 = localVector1;
+     return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -1835,7 +1819,7 @@ public class DBManager implements DBInterface {
 			localConnection.setAutoCommit(false);
 			i = saveCertReq(localConnection, paramCertInfo);
 			localConnection.commit();
-			j = i;
+			return i;
 		} catch (DBException localDBException) {
 			int j;
 			if (localConnection != null)
@@ -1866,8 +1850,7 @@ public class DBManager implements DBInterface {
       int j;
       if (paramCertInfo == null)
       {
-        j = i;
-        jsr 686;
+    	  return i;
       }
       String str = "insert into cert values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,null,?,?,?,?,?,?,?,?)";
       localPreparedStatement = paramConnection.prepareStatement(str);
@@ -1913,7 +1896,7 @@ public class DBManager implements DBInterface {
         }
       CertExtensions localCertExtensions = paramCertInfo.getCertExtensions();
       if (localCertExtensions != null)
-        for (m = 0; m < localCertExtensions.getExtensionsCount(); m++)
+        for (int m = 0; m < localCertExtensions.getExtensionsCount(); m++)
         {
           str = "insert into cert_selfext values(?,?,?,?,?,?)";
           Extension localExtension = localCertExtensions.getExtension(m);
@@ -1933,7 +1916,7 @@ public class DBManager implements DBInterface {
       localPreparedStatement.setString(3, "USING");
       localPreparedStatement.executeUpdate();
       addCertSUM();
-      m = i;
+      return  i;
     }
     catch (SQLException localSQLException1)
     {
@@ -1959,14 +1942,13 @@ public class DBManager implements DBInterface {
   {
     Connection localConnection = null;
     PreparedStatement localPreparedStatement = null;
-    ByteArrayInputStream localByteArrayInputStream1 = -1;
+    int localByteArrayInputStream1 = -1;
     try
     {
       int i;
       if (paramCertInfo == null)
       {
-        i = localByteArrayInputStream1;
-        jsr 277;
+    	  return localByteArrayInputStream1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       String str;
@@ -1977,7 +1959,7 @@ public class DBManager implements DBInterface {
         localPreparedStatement.setString(1, paramCertInfo.getCertStatus());
         localPreparedStatement.setLong(2, paramCertInfo.getNotBefore());
         localPreparedStatement.setLong(3, paramCertInfo.getNotAfter());
-        localByteArrayInputStream2 = new ByteArrayInputStream(paramCertInfo.getCertEntity());
+        ByteArrayInputStream localByteArrayInputStream2 = new ByteArrayInputStream(paramCertInfo.getCertEntity());
         localPreparedStatement.setBinaryStream(4, localByteArrayInputStream2, paramCertInfo.getCertEntity().length);
         localPreparedStatement.setString(5, paramCertInfo.getCertSN());
       }
@@ -1989,12 +1971,12 @@ public class DBManager implements DBInterface {
         localPreparedStatement.setLong(2, paramCertInfo.getNotBefore());
         localPreparedStatement.setLong(3, paramCertInfo.getNotAfter());
         localPreparedStatement.setString(4, paramCertInfo.getApplicant());
-        localByteArrayInputStream2 = new ByteArrayInputStream(paramCertInfo.getCertEntity());
+        ByteArrayInputStream localByteArrayInputStream2 = new ByteArrayInputStream(paramCertInfo.getCertEntity());
         localPreparedStatement.setBinaryStream(5, localByteArrayInputStream2, paramCertInfo.getCertEntity().length);
         localPreparedStatement.setString(6, paramCertInfo.getCertSN());
       }
       localByteArrayInputStream1 = localPreparedStatement.executeUpdate();
-      localByteArrayInputStream2 = localByteArrayInputStream1;
+      return localByteArrayInputStream1;
     }
     catch (SQLException localSQLException1)
     {
@@ -2034,7 +2016,7 @@ public class DBManager implements DBInterface {
 				localConnection.commit();
 			else
 				localConnection.rollback();
-			j = i;
+			return i;
 		} catch (DBException localDBException) {
 			int j;
 			if (localConnection != null)
@@ -2072,8 +2054,7 @@ public class DBManager implements DBInterface {
     {
       if (paramCertRevokeInfo == null)
       {
-        k = j;
-        jsr 398;
+    	  return j;
       }
       String str;
       if (paramCertRevokeInfo.getCertSN() == null)
@@ -2128,7 +2109,7 @@ public class DBManager implements DBInterface {
         localPreparedStatement.setLong(8, localCertInfo.getNotAfter());
         j = localPreparedStatement.executeUpdate();
       }
-      k = j;
+      return j;
     }
     catch (SQLException localSQLException1)
     {
@@ -2161,17 +2142,15 @@ public class DBManager implements DBInterface {
       if (str == null)
       {
         localConnection.rollback();
-        i = 0;
-        jsr 125;
+        return 0;
       }
       deleteAdmin(localConnection, str);
       deleteTemplateAdmin(localConnection, str);
       localConnection.commit();
-      i = 1;
+      return 1;
     }
     catch (DBException localDBException)
     {
-      int i;
       if (localConnection != null)
         try
         {
@@ -2221,8 +2200,7 @@ public class DBManager implements DBInterface {
     {
       if (paramCertRevokeInfo == null)
       {
-        str3 = null;
-        jsr 626;
+    	  return str2;
       }
       String str1;
       if (paramCertRevokeInfo.getCertSN() == null)
@@ -2306,7 +2284,7 @@ public class DBManager implements DBInterface {
         j = localPreparedStatement.executeUpdate();
         str2 = localCertInfo.getCertSN();
       }
-      str3 = str2;
+     return str2;
     }
     catch (SQLException localSQLException1)
     {
@@ -2352,7 +2330,7 @@ public class DBManager implements DBInterface {
 			CertRevokeInfo[] arrayOfCertRevokeInfo1 = new CertRevokeInfo[localVector
 					.size()];
 			localVector.toArray(arrayOfCertRevokeInfo1);
-			arrayOfCertRevokeInfo2 = arrayOfCertRevokeInfo1;
+			return arrayOfCertRevokeInfo1;
 		} catch (SQLException localSQLException1) {
 			CertRevokeInfo[] arrayOfCertRevokeInfo2;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -2395,7 +2373,7 @@ public class DBManager implements DBInterface {
 			CertRevokeInfo[] arrayOfCertRevokeInfo1 = new CertRevokeInfo[localVector
 					.size()];
 			localVector.toArray(arrayOfCertRevokeInfo1);
-			arrayOfCertRevokeInfo2 = arrayOfCertRevokeInfo1;
+			return arrayOfCertRevokeInfo1;
 		} catch (SQLException localSQLException1) {
 			CertRevokeInfo[] arrayOfCertRevokeInfo2;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -2425,8 +2403,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        j = i;
-        jsr 217;
+    	  return i;
       }
       String str = "update cert set certstatus=?,isvalid=1,applicant=? where certsn=? and certstatus=?";
       localConnection = DriverManager.getConnection("proxool.ida");
@@ -2449,7 +2426,7 @@ public class DBManager implements DBInterface {
       {
         localConnection.rollback();
       }
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -2508,7 +2485,7 @@ public class DBManager implements DBInterface {
 			} else {
 				localConnection.rollback();
 			}
-			j = i;
+			return i;
 		} catch (DBException localDBException) {
 			int j;
 			syslogger.info("数据库异常：" + localDBException.getMessage());
@@ -2538,7 +2515,7 @@ public class DBManager implements DBInterface {
 	public int updateAdminCert(CertRevokeInfo paramCertRevokeInfo,
 			CertInfo paramCertInfo) throws DBException {
 		Connection localConnection = null;
-		Information localInformation1 = -1;
+		int localInformation1 = -1;
 		try {
 			localConnection = DriverManager.getConnection("proxool.ida");
 			localConnection.setAutoCommit(false);
@@ -2549,7 +2526,7 @@ public class DBManager implements DBInterface {
 					updateAdmin(localConnection, str, paramCertInfo.getCertSN());
 					updateTemplateAdmin(localConnection, str, paramCertInfo
 							.getCertSN());
-					localInformation2 = new Information("CAAdminSN",
+					Information localInformation2 = new Information("CAAdminSN",
 							paramCertInfo.getCertSN(), "N");
 					localInformation1 = setConfig("CAConfig", localInformation2);
 					if (localInformation1 == 1)
@@ -2562,9 +2539,8 @@ public class DBManager implements DBInterface {
 			} else {
 				localConnection.rollback();
 			}
-			localInformation2 = localInformation1;
+			return localInformation1;
 		} catch (DBException localDBException) {
-			Information localInformation2;
 			syslogger.info("数据库异常：" + localDBException.getMessage());
 			if (localConnection != null)
 				try {
@@ -2600,7 +2576,7 @@ public class DBManager implements DBInterface {
 				localConnection.commit();
 			else
 				localConnection.rollback();
-			j = i;
+			return i;
 		} catch (DBException localDBException) {
 			int j;
 			if (localConnection != null)
@@ -2637,8 +2613,7 @@ public class DBManager implements DBInterface {
       int j;
       if (paramCertInfo == null)
       {
-        j = i;
-        jsr 662;
+    	  return i;
       }
       String str = "insert into cert values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
       localPreparedStatement = paramConnection.prepareStatement(str);
@@ -2686,7 +2661,7 @@ public class DBManager implements DBInterface {
         }
       CertExtensions localCertExtensions = paramCertInfo.getCertExtensions();
       if (localCertExtensions != null)
-        for (m = 0; m < localCertExtensions.getExtensionsCount(); m++)
+        for (int m = 0; m < localCertExtensions.getExtensionsCount(); m++)
         {
           str = "insert into cert_selfext values(?,?,?,?,?,?)";
           Extension localExtension = localCertExtensions.getExtension(m);
@@ -2700,7 +2675,7 @@ public class DBManager implements DBInterface {
           localPreparedStatement.executeUpdate();
         }
       addCertSUM();
-      m = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -2756,7 +2731,7 @@ public class DBManager implements DBInterface {
 			} else {
 				localConnection.rollback();
 			}
-			j = i;
+			return i;
 		} catch (DBException localDBException) {
 			int j;
 			if (localConnection != null)
@@ -2804,7 +2779,7 @@ public class DBManager implements DBInterface {
 			} else {
 				localConnection.rollback();
 			}
-			j = i;
+			return i;
 		} catch (DBException localDBException) {
 			int j;
 			syslogger.info("数据库异常：" + localDBException.getMessage());
@@ -2842,8 +2817,7 @@ public class DBManager implements DBInterface {
     {
       if (paramString == null)
       {
-        arrayOfByte2 = arrayOfByte1;
-        jsr 127;
+    	  return arrayOfByte1;
       }
       String str = "select certentity from cert where certsn=?";
       localConnection = DriverManager.getConnection("proxool.ida");
@@ -2852,7 +2826,7 @@ public class DBManager implements DBInterface {
       localResultSet = localPreparedStatement.executeQuery();
       if (localResultSet.next())
         arrayOfByte1 = localResultSet.getBytes(1);
-      arrayOfByte2 = arrayOfByte1;
+      return arrayOfByte1;
     }
     catch (SQLException localSQLException1)
     {
@@ -2892,8 +2866,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        localObject1 = localCertInfo;
-        jsr 512;
+    	  return localCertInfo;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select certsn,subject,notbefore,notafter,validity,authcode,cdpid,ctmlname,certstatus,isvalid,createtime,applicant,email,remark from cert where certsn=? and authcode=?";
@@ -2922,11 +2895,11 @@ public class DBManager implements DBInterface {
         localPreparedStatement = localConnection.prepareStatement((String)localObject1);
         localPreparedStatement.setString(1, paramString1);
         localResultSet = localPreparedStatement.executeQuery();
-        localObject2 = new Vector();
+        Vector localObject2 = new Vector();
         Properties localProperties = new Properties();
         while (localResultSet.next())
         {
-          localObject3 = new Extension();
+        	Extension localObject3 = new Extension();
           ((Extension)localObject3).setOid(localResultSet.getString(1));
           ((Extension)localObject3).setName(localResultSet.getString(2));
           ((Extension)localObject3).setValue(localResultSet.getString(3));
@@ -2934,11 +2907,11 @@ public class DBManager implements DBInterface {
           localProperties.setProperty(localResultSet.getString(2), localResultSet.getString(3));
         }
         localCertInfo.setExtensions(localProperties);
-        Object localObject3 = new Extension[((Vector)localObject2).size()];
+        Extension[] localObject3 = new Extension[((Vector)localObject2).size()];
         ((Vector)localObject2).toArray(localObject3);
         localCertInfo.setCertExtensions(new CertExtensions(localObject3));
       }
-      localObject2 = localCertInfo;
+      return localCertInfo;
     }
     catch (SQLException localSQLException1)
     {
@@ -2979,8 +2952,7 @@ public class DBManager implements DBInterface {
     {
       if (paramString == null)
       {
-        localObject1 = localCertExtensions1;
-        jsr 205;
+    	  return localCertExtensions1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select oid,selfext_name,value from cert_selfext where certsn=?";
@@ -2989,16 +2961,16 @@ public class DBManager implements DBInterface {
       localResultSet = localPreparedStatement.executeQuery();
       while (localResultSet.next())
       {
-        localObject2 = new Extension();
+    	  Extension localObject2 = new Extension();
         ((Extension)localObject2).setOid(localResultSet.getString(1));
         ((Extension)localObject2).setName(localResultSet.getString(2));
         ((Extension)localObject2).setValue(localResultSet.getString(3));
         localVector.add(localObject2);
       }
-      Object localObject2 = new Extension[localVector.size()];
+      Extension[] localObject2 = new Extension[localVector.size()];
       localVector.toArray(localObject2);
       localCertExtensions1 = new CertExtensions(localObject2);
-      localCertExtensions2 = localCertExtensions1;
+      return localCertExtensions1;
     }
     catch (SQLException localSQLException1)
     {
@@ -3037,8 +3009,7 @@ public class DBManager implements DBInterface {
     {
       if (paramString == null)
       {
-        j = i;
-        jsr 126;
+        return i;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       String str = "insert into certtbp values(?,?,?)";
@@ -3047,7 +3018,7 @@ public class DBManager implements DBInterface {
       localPreparedStatement.setString(2, "tmp_signServer");
       localPreparedStatement.setString(3, "tmp_signClient");
       i = localPreparedStatement.executeUpdate();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -3099,7 +3070,7 @@ public class DBManager implements DBInterface {
 			}
 			CertInfo[] arrayOfCertInfo1 = new CertInfo[localVector.size()];
 			localVector.toArray(arrayOfCertInfo1);
-			arrayOfCertInfo2 = arrayOfCertInfo1;
+			return arrayOfCertInfo1;
 		} catch (SQLException localSQLException1) {
 			CertInfo[] arrayOfCertInfo2;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -3128,18 +3099,16 @@ public class DBManager implements DBInterface {
     {
       if (paramArrayOfString == null)
       {
-        j = i;
-        jsr 174;
+    	  return i;
       }
       if (paramArrayOfString.length == 0)
       {
-        j = i;
-        jsr 160;
+    	  return i;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localConnection.setAutoCommit(false);
       localPreparedStatement = localConnection.prepareStatement("delete from certtbp where certsn=?");
-      for (j = 0; j < paramArrayOfString.length; j++)
+      for (int j = 0; j < paramArrayOfString.length; j++)
       {
         localPreparedStatement.setString(1, paramArrayOfString[j]);
         localPreparedStatement.addBatch();
@@ -3149,7 +3118,7 @@ public class DBManager implements DBInterface {
       }
       localPreparedStatement.executeBatch();
       localConnection.commit();
-      j = paramArrayOfString.length;
+      return paramArrayOfString.length;
     }
     catch (SQLException localSQLException1)
     {
@@ -3188,8 +3157,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null) || (paramString3 == null))
       {
-        j = i;
-        jsr 142;
+    	  return i;
       }
       String str = "update cert set authcode=?,applicant=?,authcode_updatetime=? where certsn=?";
       localConnection = DriverManager.getConnection("proxool.ida");
@@ -3199,7 +3167,7 @@ public class DBManager implements DBInterface {
       localPreparedStatement.setLong(3, getTime());
       localPreparedStatement.setString(4, paramString1);
       i = localPreparedStatement.executeUpdate();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -3284,8 +3252,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString == null) || (paramVector == null))
       {
-        j = i;
-        jsr 345;
+    	  return i;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localConnection.setAutoCommit(false);
@@ -3299,7 +3266,7 @@ public class DBManager implements DBInterface {
         localPreparedStatement = localConnection.prepareStatement(str);
         localPreparedStatement.setString(1, paramString);
         localPreparedStatement.execute();
-        for (j = 0; j < paramVector.size(); j++)
+        for (int j = 0; j < paramVector.size(); j++)
         {
           str = "insert into admin values(?,?,?,?)";
           localPreparedStatement = localConnection.prepareStatement(str);
@@ -3310,7 +3277,7 @@ public class DBManager implements DBInterface {
           localPreparedStatement.execute();
         }
       }
-      for (j = 0; j < paramVector.size(); j++)
+      for (int j = 0; j < paramVector.size(); j++)
       {
         str = "insert into admin values(?,?,?,?)";
         localPreparedStatement = localConnection.prepareStatement(str);
@@ -3322,7 +3289,7 @@ public class DBManager implements DBInterface {
       }
       localConnection.commit();
       i = paramVector.size();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -3358,7 +3325,7 @@ public class DBManager implements DBInterface {
 		try {
 			localConnection = DriverManager.getConnection("proxool.ida");
 			i = updateAdmin(localConnection, paramString1, paramString2);
-			j = i;
+			return i;
 		} catch (DBException localDBException) {
 			int j;
 			if (localConnection != null)
@@ -3393,15 +3360,14 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        j = i;
-        jsr 113;
+    	  return i;
       }
       String str = "update admin set certsn=? where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement(str);
       localPreparedStatement.setString(1, paramString2);
       localPreparedStatement.setString(2, paramString1);
       i = localPreparedStatement.executeUpdate();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -3428,7 +3394,7 @@ public class DBManager implements DBInterface {
 		try {
 			localConnection = DriverManager.getConnection("proxool.ida");
 			i = deleteAdmin(localConnection, paramString);
-			j = i;
+			return i;
 		} catch (SQLException localSQLException1) {
 			int j;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -3452,18 +3418,16 @@ public class DBManager implements DBInterface {
     {
       if (paramString == null)
       {
-        j = i;
-        jsr 102;
+    	  return i;
       }
       str = "delete from admin where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement(str);
       localPreparedStatement.setString(1, paramString);
       i = localPreparedStatement.executeUpdate();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
-      int j;
       syslogger.info("数据库异常：" + localSQLException1.getMessage());
       throw new DBException("8039", "删除管理员失败", localSQLException1);
     }
@@ -3737,7 +3701,7 @@ public class DBManager implements DBInterface {
 					str2 = localResultSet.getString(1);
 					localVector2 = new Vector();
 					localVector2.add(localResultSet.getString(2).trim());
-					localObject1 = localResultSet.getString(3).trim();
+					String localObject1 = localResultSet.getString(3).trim();
 					if (!((String) localObject1).equals("null")) {
 						i = ((String) localObject1).length();
 						for (int j = ((String) localObject1).length() - 1; j >= 0; j--) {
@@ -3756,7 +3720,7 @@ public class DBManager implements DBInterface {
 				if (str2.equals(localResultSet.getString(1))) {
 					localVector2 = new Vector();
 					localVector2.add(localResultSet.getString(2).trim());
-					localObject1 = localResultSet.getString(3).trim();
+					String localObject1 = localResultSet.getString(3).trim();
 					if (!((String) localObject1).equals("null")) {
 						i = ((String) localObject1).length();
 						for (int k = ((String) localObject1).length() - 1; k >= 0; k--) {
@@ -3777,7 +3741,7 @@ public class DBManager implements DBInterface {
 				str2 = localResultSet.getString(1);
 				localVector2 = new Vector();
 				localVector2.add(localResultSet.getString(2).trim());
-				localObject1 = localResultSet.getString(3).trim();
+				String localObject1 = localResultSet.getString(3).trim();
 				if (!((String) localObject1).equals("null")) {
 					i = ((String) localObject1).length();
 					for (int m = ((String) localObject1).length() - 1; m >= 0; m--) {
@@ -3794,7 +3758,7 @@ public class DBManager implements DBInterface {
 			}
 			if (str2 != null)
 				localHashtable.put(str2, localVector1);
-			localObject1 = localHashtable;
+			return localHashtable;
 		} catch (SQLException localSQLException1) {
 			Object localObject1;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -3821,7 +3785,7 @@ public class DBManager implements DBInterface {
 			localConnection = DriverManager.getConnection("proxool.ida");
 			i = setTemplateAdmin(localConnection, paramString1, paramString2,
 					paramString3, paramString4);
-			j = i;
+			return i;
 		} catch (SQLException localSQLException1) {
 			int j;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -3845,8 +3809,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        j = i;
-        jsr 267;
+    	  return i;
       }
       String str = "select count(certsn) from ba_privilege where certsn=? and ctmlname=? and basedn=?";
       localPreparedStatement = paramConnection.prepareStatement(str);
@@ -3877,7 +3840,7 @@ public class DBManager implements DBInterface {
       {
         i = 0;
       }
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -3909,8 +3872,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString == null) || (paramArrayOfString1 == null) || (paramArrayOfString2 == null))
       {
-        j = i;
-        jsr 321;
+    	  return i;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localConnection.setAutoCommit(false);
@@ -3930,7 +3892,7 @@ public class DBManager implements DBInterface {
         localPreparedStatement = localConnection.prepareStatement(str);
         localPreparedStatement.setString(1, paramString);
         i = localPreparedStatement.executeUpdate();
-        for (j = 0; j < paramArrayOfString1.length; j++)
+        for (int j = 0; j < paramArrayOfString1.length; j++)
         {
           str = "insert into ba_privilege values(?,?,?,?,?,?)";
           localPreparedStatement = localConnection.prepareStatement(str);
@@ -3943,11 +3905,11 @@ public class DBManager implements DBInterface {
           localPreparedStatement.setString(4, null);
           localPreparedStatement.setString(5, "tmp_signServer");
           localPreparedStatement.setString(6, "tmp_signClient");
-          localPreparedStatement.executeUpdate();
+          i = localPreparedStatement.executeUpdate();
         }
       }
       localConnection.commit();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -3983,7 +3945,7 @@ public class DBManager implements DBInterface {
 		try {
 			localConnection = DriverManager.getConnection("proxool.ida");
 			i = updateTemplateAdmin(localConnection, paramString1, paramString2);
-			j = i;
+			return i;
 		} catch (DBException localDBException) {
 			int j;
 			if (localConnection != null)
@@ -4013,15 +3975,14 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        j = i;
-        jsr 113;
+    	  return i;
       }
       String str = "update ba_privilege set certsn=? where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement(str);
       localPreparedStatement.setString(1, paramString2);
       localPreparedStatement.setString(2, paramString1);
       i = localPreparedStatement.executeUpdate();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -4048,7 +4009,7 @@ public class DBManager implements DBInterface {
 		try {
 			localConnection = DriverManager.getConnection("proxool.ida");
 			i = deleteTemplateAdmin(localConnection, paramString);
-			j = i;
+			return i;
 		} catch (SQLException localSQLException1) {
 			int j;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -4072,18 +4033,16 @@ public class DBManager implements DBInterface {
     {
       if (paramString == null)
       {
-        j = i;
-        jsr 102;
+    	  return i;
       }
       str = "delete from ba_privilege where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement(str);
       localPreparedStatement.setString(1, paramString);
       i = localPreparedStatement.executeUpdate();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
-      int j;
       syslogger.info("数据库异常：" + localSQLException1.getMessage());
       throw new DBException("8040", "删除业务管理员失败", localSQLException1);
     }
@@ -4342,8 +4301,7 @@ public class DBManager implements DBInterface {
     {
       if (paramProperties == null)
       {
-        localVector3 = localVector1;
-        jsr 1290;
+    	  return localVector1;
       }
       arrayOfString = new String[paramProperties.size()][2];
       localEnumeration = paramProperties.propertyNames();
@@ -4478,7 +4436,7 @@ public class DBManager implements DBInterface {
       localVector2.toArray(arrayOfOperation);
       localVector1.add(Long.toString(l));
       localVector1.add(arrayOfOperation);
-      localVector3 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -4524,8 +4482,7 @@ public class DBManager implements DBInterface {
     {
       if (paramProperties == null)
       {
-        localObject2 = localVector1;
-        jsr 1407;
+    	  return localVector1;
       }
       int k = paramProperties.size();
       Object localObject2 = paramProperties.getProperty("ctmlName");
@@ -4658,7 +4615,7 @@ public class DBManager implements DBInterface {
       }
       localVector1.add(Long.toString(l1));
       localVector1.add(localProperties);
-      localVector2 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -4697,8 +4654,7 @@ public class DBManager implements DBInterface {
     {
       if (paramRevokeCertInfo == null)
       {
-        j = i;
-        jsr 186;
+    	  return i;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       String str = "insert into revokedcert values(?,?,?,?,?,?,?,?)";
@@ -4712,7 +4668,7 @@ public class DBManager implements DBInterface {
       localPreparedStatement.setString(7, "tmp_signClient");
       localPreparedStatement.setLong(8, paramRevokeCertInfo.getNotAfter());
       i = localPreparedStatement.executeUpdate();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -4751,7 +4707,7 @@ public class DBManager implements DBInterface {
 			localStatement = localConnection.createStatement();
 			localResultSet = localStatement.executeQuery(str);
 			localResultSet.next();
-			l = localResultSet.getLong(1);
+			return localResultSet.getLong(1);
 		} catch (SQLException localSQLException1) {
 			long l;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -4782,8 +4738,7 @@ public class DBManager implements DBInterface {
       String str2;
       if (paramString == null)
       {
-        str2 = str1;
-        jsr 394;
+    	  return str1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localPreparedStatement = localConnection.prepareStatement("select ra_basedn from ra_basedn where certsn=?");
@@ -4820,11 +4775,10 @@ public class DBManager implements DBInterface {
           localPreparedStatement.executeUpdate();
         }
       }
-      str3 = str1;
+      return str1;
     }
     catch (SQLException localSQLException1)
     {
-      String str3;
       syslogger.info("数据库异常：" + localSQLException1.getMessage());
       throw new DBException("8064", "获取RA管理员的BaseDN失败", localSQLException1);
     }
@@ -4864,8 +4818,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        str2 = str1;
-        jsr 184;
+    	  return str1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localPreparedStatement = localConnection.prepareStatement("select ra_basedn from ra_basedn where certsn=?");
@@ -4881,7 +4834,7 @@ public class DBManager implements DBInterface {
         localPreparedStatement.setString(4, "tmp_signClient");
         localPreparedStatement.executeUpdate();
       }
-      str2 = str1;
+      return str1;
     }
     catch (SQLException localSQLException1)
     {
@@ -4926,7 +4879,7 @@ public class DBManager implements DBInterface {
 			localResultSet = localPreparedStatement.executeQuery();
 			long l2 = 0L;
 			while (localResultSet.next()) {
-				localObject1 = new CRLInfo();
+				CRLInfo localObject1 = new CRLInfo();
 				((CRLInfo) localObject1)
 						.setCRLName(localResultSet.getString(1));
 				byte[] arrayOfByte = localResultSet.getBytes(2);
@@ -4941,7 +4894,7 @@ public class DBManager implements DBInterface {
 			localVector2.toArray(arrayOfCRLInfo);
 			localVector1.add(Long.toString(l1));
 			localVector1.add(arrayOfCRLInfo);
-			localObject1 = localVector1;
+			return localVector1;
 		} catch (SQLException localSQLException1) {
 			Object localObject1;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -4970,13 +4923,12 @@ public class DBManager implements DBInterface {
     {
       if (paramConnection == null)
       {
-        j = i;
-        jsr 91;
+    	  return i;
       }
       str = "delete from crl";
       localPreparedStatement = paramConnection.prepareStatement(str);
       i = localPreparedStatement.executeUpdate();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -5000,7 +4952,7 @@ public class DBManager implements DBInterface {
 	public int saveCRL(CRLInfo[] paramArrayOfCRLInfo)
     throws DBException
   {
-    SQLException localSQLException1 = -1;
+    int localSQLException1 = -1;
     Connection localConnection = null;
     PreparedStatement localPreparedStatement = null;
     String str1 = "insert into crl values (?,?,?,?)";
@@ -5009,8 +4961,7 @@ public class DBManager implements DBInterface {
       int i;
       if (paramArrayOfCRLInfo == null)
       {
-        i = localSQLException1;
-        jsr 272;
+    	  return localSQLException1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localConnection.setAutoCommit(false);
@@ -5018,7 +4969,7 @@ public class DBManager implements DBInterface {
       String str2 = null;
       String str3 = null;
       localPreparedStatement = localConnection.prepareStatement(str1);
-      for (j = 0; j < paramArrayOfCRLInfo.length; j++)
+      for (int j = 0; j < paramArrayOfCRLInfo.length; j++)
       {
         str2 = paramArrayOfCRLInfo[j].getCRLName();
         str3 = paramArrayOfCRLInfo[j].getCRLEntity();
@@ -5032,8 +4983,7 @@ public class DBManager implements DBInterface {
             catch (SQLException localSQLException3)
             {
             }
-          localSQLException3 = localSQLException1;
-          jsr 175;
+          return localSQLException1;
         }
         localPreparedStatement.setString(1, str2);
         ByteArrayInputStream localByteArrayInputStream = new ByteArrayInputStream(str3.getBytes());
@@ -5045,7 +4995,7 @@ public class DBManager implements DBInterface {
       localPreparedStatement.executeBatch();
       localConnection.commit();
       localSQLException1 = paramArrayOfCRLInfo.length;
-      j = localSQLException1;
+      return localSQLException1;
     }
     catch (Exception localException)
     {
@@ -5095,8 +5045,7 @@ public class DBManager implements DBInterface {
     {
       if (paramString == null)
       {
-        localObject1 = localHashtable;
-        jsr 307;
+    	  return localHashtable;
       }
       Object localObject1 = "select ext_name,count(certsn) from cert_standard_ext where certsn=? group by ext_name order by ext_name";
       String str = "select ext_oid,ext_name,child_name,othername_oid,value from cert_standard_ext where certsn=? order by ext_name";
@@ -5111,7 +5060,7 @@ public class DBManager implements DBInterface {
       while (localResultSet1.next())
       {
         localVector = new Vector();
-        localObject2 = null;
+       String localObject2 = null;
         localObject2 = localResultSet1.getString(1);
         int i = localResultSet1.getInt(2);
         for (int j = 0; j < i; j++)
@@ -5127,7 +5076,7 @@ public class DBManager implements DBInterface {
         }
         localHashtable.put(localObject2, localVector);
       }
-      localObject2 = localHashtable;
+      return localHashtable;
     }
     catch (SQLException localSQLException1)
     {
@@ -5164,7 +5113,7 @@ public class DBManager implements DBInterface {
 			localResultSet = localPreparedStatement.executeQuery();
 			localResultSet.next();
 			l1 = localResultSet.getLong(1);
-			l2 = l1;
+			return l1;
 		} catch (SQLException localSQLException1) {
 			long l2;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -5197,8 +5146,7 @@ public class DBManager implements DBInterface {
     {
       if (paramString == null)
       {
-        arrayOfCertInfo2 = arrayOfCertInfo1;
-        jsr 297;
+    	  return arrayOfCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       if (paramInt1 < 1)
@@ -5234,7 +5182,7 @@ public class DBManager implements DBInterface {
       }
       arrayOfCertInfo1 = new CertInfo[localVector.size()];
       localVector.toArray(arrayOfCertInfo1);
-      arrayOfCertInfo2 = arrayOfCertInfo1;
+      return arrayOfCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -5287,7 +5235,7 @@ public class DBManager implements DBInterface {
 				localVector1.add(localResultSet.getString(1));
 			if (localVector1 == null)
 				throw new DBException("8070", "获取DN信息失败");
-			localVector2 = localVector1;
+			return localVector1;
 		} catch (SQLException localSQLException1) {
 			Vector localVector2;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -5310,33 +5258,31 @@ public class DBManager implements DBInterface {
     throws DBException
   {
     Connection localConnection = null;
-    ArrayList localArrayList1 = 0;
+    int localArrayList1 = 0;
     int i = 1000;
     try
     {
       if (paramOperation == null)
       {
-        j = localArrayList1;
-        jsr 168;
+    	  return localArrayList1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localConnection.setAutoCommit(false);
       int j = i;
       while (j == i)
       {
-        localArrayList2 = getOperationLog(localConnection, paramOperation, i, true);
+    	  ArrayList localArrayList2 = getOperationLog(localConnection, paramOperation, i, true);
         j = insertOperationLogArc(localConnection, localArrayList2);
         int k;
         if (j != localArrayList2.size())
         {
           localConnection.rollback();
-          k = localArrayList1;
-          jsr 99;
+          return localArrayList1;
         }
         localArrayList1 += j;
         localConnection.commit();
       }
-      localArrayList2 = localArrayList1;
+      return localArrayList1;
     }
     catch (SQLException localSQLException1)
     {
@@ -5489,11 +5435,10 @@ public class DBManager implements DBInterface {
     {
       if ((paramConnection == null) || (paramArrayList == null))
       {
-        j = i;
-        jsr 293;
+    	  return i;
       }
       localPreparedStatement = paramConnection.prepareStatement("insert into operationlogarc values(?,?,?,?,?,?,?,?,?,?,?,?,?)");
-      for (j = 0; j < paramArrayList.size(); j++)
+      for (int j = 0; j < paramArrayList.size(); j++)
       {
         localOperation = (Operation)paramArrayList.get(j);
         localPreparedStatement.setString(1, localOperation.getId());
@@ -5519,7 +5464,7 @@ public class DBManager implements DBInterface {
       }
       localPreparedStatement.executeBatch();
       i = paramArrayList.size();
-      j = i;
+      return i;
     }
     finally
     {
@@ -5547,14 +5492,12 @@ public class DBManager implements DBInterface {
     {
       if ((paramConnection == null) || (paramOperation == null) || (paramInt < 0))
       {
-        localObject1 = localArrayList1;
-        jsr 284;
+    	  return localArrayList1;
       }
       Object localObject1 = getOperationlogCondition(paramOperation, paramBoolean);
       if (localObject1 == null)
       {
-        localObject2 = localArrayList1;
-        jsr 260;
+    	  return localArrayList1;
       }
       str = ((Vector)localObject1).get(0).toString();
       localArrayList2 = (ArrayList)((Vector)localObject1).get(1);
@@ -5578,7 +5521,7 @@ public class DBManager implements DBInterface {
         localArrayList1.add(getOperationlog(localResultSet));
         localResultSet.deleteRow();
       }
-      localArrayList3 = localArrayList1;
+      return localArrayList1;
     }
     finally
     {
@@ -5610,33 +5553,31 @@ public class DBManager implements DBInterface {
     throws DBException
   {
     Connection localConnection = null;
-    ArrayList localArrayList1 = 0;
+    int localArrayList1 = 0;
     int i = 100;
     try
     {
       if (paramString == null)
       {
-        j = localArrayList1;
-        jsr 177;
+    	  return localArrayList1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localConnection.setAutoCommit(false);
       int j = i;
       while (j == i)
       {
-        localArrayList2 = getCerts(localConnection, paramString, paramVector, i);
+    	  ArrayList localArrayList2 = getCerts(localConnection, paramString, paramVector, i);
         j = insertCertArc(localConnection, localArrayList2);
         int k;
         if (j != localArrayList2.size())
         {
           localConnection.rollback();
-          k = localArrayList1;
-          jsr 107;
+          return  localArrayList1;
         }
         localArrayList1 += j;
         localConnection.commit();
       }
-      localArrayList2 = localArrayList1;
+      return localArrayList1;
     }
     catch (SQLException localSQLException1)
     {
@@ -5679,14 +5620,12 @@ public class DBManager implements DBInterface {
     {
       if ((paramConnection == null) || (paramString == null) || (paramInt < 0))
       {
-        localObject1 = localArrayList1;
-        jsr 416;
+return localArrayList1;
       }
       Object localObject1 = getCertsCondition(paramString);
       if (localObject1 == null)
       {
-        localObject2 = localArrayList1;
-        jsr 394;
+    	  return localArrayList1;
       }
       str1 = ((Vector)localObject1).get(0).toString();
       localArrayList2 = (ArrayList)((Vector)localObject1).get(1);
@@ -5730,7 +5669,7 @@ public class DBManager implements DBInterface {
         }
         localResultSet.deleteRow();
       }
-      localArrayList3 = localArrayList1;
+      return localArrayList1;
     }
     finally
     {
@@ -5801,11 +5740,10 @@ public class DBManager implements DBInterface {
     {
       if ((paramConnection == null) || (paramArrayList == null))
       {
-        j = i;
-        jsr 372;
+    	  return i;
       }
       localPreparedStatement = paramConnection.prepareStatement("insert into certarc values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-      for (j = 0; j < paramArrayList.size(); j++)
+      for (int j = 0; j < paramArrayList.size(); j++)
       {
         localCertInfo = (CertInfo)paramArrayList.get(j);
         localPreparedStatement.setString(1, localCertInfo.getCertSN());
@@ -5834,7 +5772,7 @@ public class DBManager implements DBInterface {
         localPreparedStatement.executeUpdate();
       }
       i = paramArrayList.size();
-      j = i;
+      return i;
     }
     finally
     {
@@ -5871,8 +5809,7 @@ public class DBManager implements DBInterface {
     {
       if (paramProperties == null)
       {
-        localVector3 = localVector1;
-        jsr 1290;
+    	  return localVector1;
       }
       arrayOfString = new String[paramProperties.size()][2];
       localEnumeration = paramProperties.propertyNames();
@@ -6007,7 +5944,7 @@ public class DBManager implements DBInterface {
       localVector2.toArray(arrayOfOperation);
       localVector1.add(Long.toString(l));
       localVector1.add(arrayOfOperation);
-      localVector3 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -6046,8 +5983,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramConnection == null) || (paramString == null))
       {
-        localObject1 = localArrayList;
-        jsr 176;
+    	  return localArrayList;
       }
       Object localObject1 = "select certsn,oid,selfext_name,value,sign_server,sign_client from cert_selfext where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement((String)localObject1, 1003, 1008);
@@ -6055,7 +5991,7 @@ public class DBManager implements DBInterface {
       localResultSet = localPreparedStatement.executeQuery();
       while (localResultSet.next())
       {
-        localObject2 = new CertSelfExt();
+    	  CertSelfExt localObject2 = new CertSelfExt();
         ((CertSelfExt)localObject2).setCertSn(localResultSet.getString(1));
         ((CertSelfExt)localObject2).setOid(localResultSet.getString(2));
         ((CertSelfExt)localObject2).setName(localResultSet.getString(3));
@@ -6065,7 +6001,7 @@ public class DBManager implements DBInterface {
         localArrayList.add(localObject2);
         localResultSet.deleteRow();
       }
-      localObject2 = localArrayList;
+      return localArrayList;
     }
     finally
     {
@@ -6092,12 +6028,11 @@ public class DBManager implements DBInterface {
       int j;
       if ((paramConnection == null) || (paramArrayList == null))
       {
-        j = i;
-        jsr 159;
+    	  return i;
       }
       String str = "insert into cert_selfext_arc values(?,?,?,?,?,?)";
       localPreparedStatement = paramConnection.prepareStatement(str);
-      for (k = 0; k < paramArrayList.size(); k++)
+      for (int k = 0; k < paramArrayList.size(); k++)
       {
         localCertSelfExt = (CertSelfExt)paramArrayList.get(k);
         localPreparedStatement.setString(1, localCertSelfExt.getCertSn());
@@ -6110,11 +6045,10 @@ public class DBManager implements DBInterface {
       }
       localPreparedStatement.executeBatch();
       i = paramArrayList.size();
-      k = i;
+      return i;
     }
     finally
     {
-      int k;
       if (localPreparedStatement != null)
         try
         {
@@ -6136,8 +6070,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramConnection == null) || (paramString == null))
       {
-        localObject1 = localArrayList;
-        jsr 204;
+    	  return localArrayList;
       }
       Object localObject1 = "select certsn,ext_oid,ext_name,child_name,othername_oid,value,sign_server,sign_client from cert_standard_ext where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement((String)localObject1, 1003, 1008);
@@ -6145,7 +6078,7 @@ public class DBManager implements DBInterface {
       localResultSet = localPreparedStatement.executeQuery();
       while (localResultSet.next())
       {
-        localObject2 = new CertStandardExt();
+    	  CertStandardExt localObject2 = new CertStandardExt();
         ((CertStandardExt)localObject2).setCertSn(localResultSet.getString(1));
         ((CertStandardExt)localObject2).setExtOID(localResultSet.getString(2));
         ((CertStandardExt)localObject2).setExtName(localResultSet.getString(3));
@@ -6157,7 +6090,7 @@ public class DBManager implements DBInterface {
         localArrayList.add(localObject2);
         localResultSet.deleteRow();
       }
-      localObject2 = localArrayList;
+      return localArrayList;
     }
     finally
     {
@@ -6184,12 +6117,11 @@ public class DBManager implements DBInterface {
       int j;
       if ((paramConnection == null) || (paramArrayList == null))
       {
-        j = i;
-        jsr 185;
+        return i;
       }
       String str = "insert into cert_standard_ext_arc values(?,?,?,?,?,?,?,?)";
       localPreparedStatement = paramConnection.prepareStatement(str);
-      for (k = 0; k < paramArrayList.size(); k++)
+      for (int k = 0; k < paramArrayList.size(); k++)
       {
         localCertStandardExt = (CertStandardExt)paramArrayList.get(k);
         localPreparedStatement.setString(1, localCertStandardExt.getCertSn());
@@ -6204,7 +6136,7 @@ public class DBManager implements DBInterface {
       }
       localPreparedStatement.executeBatch();
       i = paramArrayList.size();
-      k = i;
+      return i;
     }
     finally
     {
@@ -6230,8 +6162,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramConnection == null) || (paramString == null))
       {
-        localObject1 = localArrayList;
-        jsr 204;
+    	  return localArrayList;
       }
       Object localObject1 = "select certsn,cdpid,reason,reasondesc,revoketime,sign_server,sign_client,certnotafter from revokedcert where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement((String)localObject1, 1003, 1008);
@@ -6239,7 +6170,7 @@ public class DBManager implements DBInterface {
       localResultSet = localPreparedStatement.executeQuery();
       while (localResultSet.next())
       {
-        localObject2 = new RevokeCert();
+    	  RevokeCert localObject2 = new RevokeCert();
         ((RevokeCert)localObject2).setCertSn(localResultSet.getString(1));
         ((RevokeCert)localObject2).setCdPID(localResultSet.getLong(2));
         ((RevokeCert)localObject2).setReason(localResultSet.getInt(3));
@@ -6251,7 +6182,7 @@ public class DBManager implements DBInterface {
         localArrayList.add(localObject2);
         localResultSet.deleteRow();
       }
-      localObject2 = localArrayList;
+      return localArrayList;
     }
     finally
     {
@@ -6278,12 +6209,11 @@ public class DBManager implements DBInterface {
       int j;
       if ((paramConnection == null) || (paramArrayList == null))
       {
-        j = i;
-        jsr 179;
+    	  return i;
       }
       String str = "insert into revokedcertarc values(?,?,?,?,?,?,?,?)";
       localPreparedStatement = paramConnection.prepareStatement(str);
-      for (k = 0; k < paramArrayList.size(); k++)
+      for (int k = 0; k < paramArrayList.size(); k++)
       {
         localRevokeCert = (RevokeCert)paramArrayList.get(k);
         localPreparedStatement.setString(1, localRevokeCert.getCertSn());
@@ -6297,7 +6227,7 @@ public class DBManager implements DBInterface {
         localPreparedStatement.executeUpdate();
       }
       i = paramArrayList.size();
-      k = i;
+      return i;
     }
     finally
     {
@@ -6322,13 +6252,12 @@ public class DBManager implements DBInterface {
     {
       if ((paramConnection == null) || (paramString == null))
       {
-        j = i;
-        jsr 98;
+    	  return i;
       }
       localPreparedStatement = paramConnection.prepareStatement("delete from certtbp where certsn=?");
       localPreparedStatement.setString(1, paramString);
       i = localPreparedStatement.executeUpdate();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -6358,13 +6287,12 @@ public class DBManager implements DBInterface {
     {
       if ((paramConnection == null) || (paramString == null))
       {
-        j = i;
-        jsr 98;
+    	  return i;
       }
       localPreparedStatement = paramConnection.prepareStatement("delete from pendingtask where certsn=?");
       localPreparedStatement.setString(1, paramString);
       i = localPreparedStatement.executeUpdate();
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -6389,24 +6317,20 @@ public class DBManager implements DBInterface {
     throws DBException
   {
     int i = -1;
-    Object localObject1 = null;
     try
     {
       int j;
       if ((paramConnection == null) || (paramString == null))
       {
-        j = i;
-        jsr 190;
+    	  return i;
       }
       ArrayList localArrayList1 = getCertSelfext(paramConnection, paramString);
       int k = insertCertSelfextArc(paramConnection, localArrayList1);
       i = k;
-      int m;
       if (k != localArrayList1.size())
       {
         i = -1;
-        m = i;
-        jsr 149;
+        return i;
       }
       ArrayList localArrayList2 = getCertStandardExt(paramConnection, paramString);
       int n = insertCertStandardExtArc(paramConnection, localArrayList2);
@@ -6415,8 +6339,7 @@ public class DBManager implements DBInterface {
       if (n != localArrayList2.size())
       {
         i = -1;
-        i1 = i;
-        jsr 108;
+        return i;
       }
       try
       {
@@ -6429,7 +6352,7 @@ public class DBManager implements DBInterface {
       {
         localException.printStackTrace();
       }
-      i2 = 1;
+      return 1;
     }
     catch (SQLException localSQLException1)
     {
@@ -6439,10 +6362,10 @@ public class DBManager implements DBInterface {
     }
     finally
     {
-      if (localObject1 != null)
+      if (paramConnection != null)
         try
         {
-          localObject1.close();
+        	paramConnection.close();
         }
         catch (SQLException localSQLException2)
         {
@@ -6461,8 +6384,7 @@ public class DBManager implements DBInterface {
     {
       if (paramString == null)
       {
-        localObject1 = localCertInfo1;
-        jsr 360;
+    	  return localCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select certsn,subject,notbefore,notafter,validity,authcode,cdpid,ctmlname,certstatus,isvalid,createtime,applicant,email,remark,authcode_updatetime,isretainkey,oldsn from certarc where certsn=?";
@@ -6490,7 +6412,7 @@ public class DBManager implements DBInterface {
         localCertInfo1.setIsRetainKey(localResultSet.getString(16));
         localCertInfo1.setOldSN(localResultSet.getString(17));
       }
-      localCertInfo2 = localCertInfo1;
+      return localCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -6530,8 +6452,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        localObject1 = localCertInfo1;
-        jsr 333;
+    	  return localCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select certsn,subject,notbefore,notafter,validity,authcode,cdpid,ctmlname,certstatus,isvalid,createtime,applicant,email,remark from certarc where subjectuppercase=? and ctmlname=? and isvalid=1";
@@ -6557,7 +6478,7 @@ public class DBManager implements DBInterface {
         localCertInfo1.setEmail(localResultSet.getString(13));
         localCertInfo1.setRemark(localResultSet.getString(14));
       }
-      localCertInfo2 = localCertInfo1;
+      return localCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -6604,20 +6525,19 @@ public class DBManager implements DBInterface {
     {
       if (paramProperties == null)
       {
-        localObject1 = localVector1;
-        jsr 1672;
+    	  return localVector1;
       }
       int k = paramProperties.size();
       Object localObject1 = paramProperties.getProperty("ctmlName");
       if ((localObject1 != null) && (((String)localObject1).indexOf("|") >= 0))
       {
-        localObject2 = new StringTokenizer((String)localObject1, "|");
+    	  StringTokenizer localObject2 = new StringTokenizer((String)localObject1, "|");
         k += ((StringTokenizer)localObject2).countTokens();
       }
       localObject1 = paramProperties.getProperty("certStatus");
       if ((localObject1 != null) && (((String)localObject1).indexOf("|") >= 0))
       {
-        localObject2 = new StringTokenizer((String)localObject1, "|");
+    	  StringTokenizer localObject2 = new StringTokenizer((String)localObject1, "|");
         k += ((StringTokenizer)localObject2).countTokens();
       }
       arrayOfString = new String[k][2];
@@ -6643,7 +6563,7 @@ public class DBManager implements DBInterface {
           {
             if (arrayOfString[i][0].indexOf("|") >= 0)
             {
-              localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
+            	StringTokenizer localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
               k = 0;
               for (str3 = str3 + str1 + " in ("; ((StringTokenizer)localObject2).hasMoreTokens(); str3 = str3 + "?,")
               {
@@ -6664,7 +6584,7 @@ public class DBManager implements DBInterface {
           {
             if (arrayOfString[i][0].indexOf("|") >= 0)
             {
-              localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
+            	StringTokenizer localObject2 = new StringTokenizer(arrayOfString[i][0], "|");
               for (str3 = str3 + str1 + " in ("; ((StringTokenizer)localObject2).hasMoreTokens(); str3 = str3 + "?,")
               {
                 arrayOfString[i][0] = ((StringTokenizer)localObject2).nextToken();
@@ -6776,7 +6696,7 @@ public class DBManager implements DBInterface {
       localVector2.toArray(arrayOfCertInfo);
       localVector1.add(Long.toString(l));
       localVector1.add(arrayOfCertInfo);
-      localObject2 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -6817,7 +6737,7 @@ public class DBManager implements DBInterface {
 			localResultSet = localPreparedStatement.executeQuery();
 			while (localResultSet.next())
 				localVector1.add(localResultSet.getString(1));
-			localVector2 = localVector1;
+			return localVector1;
 		} catch (SQLException localSQLException1) {
 			Vector localVector2;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -6846,7 +6766,7 @@ public class DBManager implements DBInterface {
 			str = "delete from certarcforkmc";
 			localPreparedStatement = paramConnection.prepareStatement(str);
 			i = localPreparedStatement.executeUpdate();
-			j = i;
+			return i;
 		} catch (SQLException localSQLException1) {
 			int j;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -6866,7 +6786,7 @@ public class DBManager implements DBInterface {
 		try {
 			localConnection = DriverManager.getConnection("proxool.ida");
 			i = deleteCertArcForKMC(localConnection);
-			j = i;
+			return i;
 		} catch (SQLException localSQLException1) {
 			int j;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -6890,8 +6810,7 @@ public class DBManager implements DBInterface {
       int j;
       if (paramString == null)
       {
-        j = i;
-        jsr 119;
+    	  return i;
       }
       String str = "insert into certarcforkmc values(?,?,?)";
       localPreparedStatement = paramConnection.prepareStatement(str);
@@ -6899,7 +6818,7 @@ public class DBManager implements DBInterface {
       localPreparedStatement.setString(2, "tmp_signServer");
       localPreparedStatement.setString(3, "tmp_signClient");
       i = localPreparedStatement.executeUpdate();
-      k = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -6930,14 +6849,13 @@ public class DBManager implements DBInterface {
       int j;
       if (paramString == null)
       {
-        j = i;
-        jsr 101;
+    	  return i;
       }
       String str = "delete from cert where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement(str);
       localPreparedStatement.setString(1, paramString);
       i = localPreparedStatement.executeUpdate();
-      k = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -6968,8 +6886,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        j = i;
-        jsr 183;
+    	  return i;
       }
       String str = "select role_id from admin where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement(str);
@@ -6985,7 +6902,7 @@ public class DBManager implements DBInterface {
         localPreparedStatement.setString(4, "tmp_signClient");
         i = localPreparedStatement.executeUpdate();
       }
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -7016,8 +6933,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        j = i;
-        jsr 216;
+    	  return i;
       }
       String str = "select ctmlname,basedn,operation from ba_privilege where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement(str);
@@ -7035,7 +6951,7 @@ public class DBManager implements DBInterface {
         localPreparedStatement.setString(6, "tmp_signClient");
         i = localPreparedStatement.executeUpdate();
       }
-      j = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -7068,7 +6984,7 @@ public class DBManager implements DBInterface {
 			localResultSet = localPreparedStatement.executeQuery();
 			localResultSet.next();
 			l1 = localResultSet.getLong(1);
-			l2 = l1;
+			return l1;
 		} catch (SQLException localSQLException1) {
 			long l2;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -7093,7 +7009,7 @@ public class DBManager implements DBInterface {
     throws DBException
   {
     Connection localConnection = null;
-    IDAException localIDAException1 = -1;
+    int localIDAException1 = -1;
     if ((paramCertPendingRevokeInfo == null) || (paramCertPendingRevokeInfo.getCertSN() == null))
       return localIDAException1;
     try
@@ -7112,8 +7028,7 @@ public class DBManager implements DBInterface {
           if (updateCertPendingStatus(localConnection, paramCertPendingRevokeInfo.getCertSN()) == -1)
           {
             localConnection.rollback();
-            i = localIDAException1;
-            jsr 228;
+            return localIDAException1;
           }
           CertInfo localCertInfo = new CertInfo();
           localCertInfo = getCertInfo(paramCertPendingRevokeInfo.getCertSN());
@@ -7139,10 +7054,9 @@ public class DBManager implements DBInterface {
       else
       {
         localConnection.commit();
-        localIDAException2 = localIDAException1;
-        jsr 85;
+        return localIDAException1;
       }
-      localIDAException2 = localIDAException1;
+      return localIDAException1;
     }
     catch (SQLException localSQLException1)
     {
@@ -7181,15 +7095,14 @@ public class DBManager implements DBInterface {
       int j;
       if (paramString == null)
       {
-        j = i;
-        jsr 107;
+    	  return i;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       String str = "update cert set iswaiting='1' where certsn=?";
       localPreparedStatement = localConnection.prepareStatement(str);
       localPreparedStatement.setString(1, paramString);
       i = localPreparedStatement.executeUpdate();
-      k = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -7223,14 +7136,13 @@ public class DBManager implements DBInterface {
   {
     Connection localConnection = null;
     PreparedStatement localPreparedStatement = null;
-    SQLException localSQLException1 = -1;
+    int localSQLException1 = -1;
     try
     {
       int i;
       if (paramCertPendingRevokeInfo == null)
       {
-        i = localSQLException1;
-        jsr 370;
+    	  return localSQLException1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       String str1 = "insert into pendingtask values(?,?,?,?,?,?,?,?,?,?,?)";
@@ -7267,7 +7179,7 @@ public class DBManager implements DBInterface {
         localPreparedStatement.setString(11, "tmp_signClient");
         localSQLException1 = localPreparedStatement.executeUpdate();
       }
-      localSQLException3 = localSQLException1;
+      return localSQLException1;
     }
     catch (SQLException localSQLException2)
     {
@@ -7305,14 +7217,13 @@ public class DBManager implements DBInterface {
       int j;
       if ((paramConnection == null) || (paramString == null))
       {
-        j = i;
-        jsr 101;
+    	  return i;
       }
       String str = "delete from pendingtask where taskid=?";
       localPreparedStatement = paramConnection.prepareStatement(str);
       localPreparedStatement.setString(1, paramString);
       i = localPreparedStatement.executeUpdate();
-      k = i;
+      return i;
     }
     catch (SQLException localSQLException1)
     {
@@ -7344,8 +7255,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        localObject1 = localCertInfo1;
-        jsr 333;
+    	  return localCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select certsn,subject,notbefore,notafter,validity,authcode,cdpid,ctmlname,certstatus,isvalid,createtime,applicant,email,remark from cert where subjectuppercase=? and ctmlname=? and isvalid=1 and iswaiting='0'";
@@ -7371,7 +7281,7 @@ public class DBManager implements DBInterface {
         localCertInfo1.setEmail(localResultSet.getString(13));
         localCertInfo1.setRemark(localResultSet.getString(14));
       }
-      localCertInfo2 = localCertInfo1;
+      return localCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -7411,8 +7321,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        localObject1 = localCertInfo1;
-        jsr 344;
+    	  return localCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select certsn,subject,notbefore,notafter,validity,authcode,cdpid,ctmlname,certstatus,isvalid,createtime,applicant,email,remark from cert where subjectuppercase=? and ctmlname=? and certstatus=? and iswaiting='0'";
@@ -7439,7 +7348,7 @@ public class DBManager implements DBInterface {
         localCertInfo1.setEmail(localResultSet.getString(13));
         localCertInfo1.setRemark(localResultSet.getString(14));
       }
-      localCertInfo2 = localCertInfo1;
+      return localCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -7477,8 +7386,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramCertRevokeInfo == null) || (paramCertInfo == null))
       {
-        j = i;
-        jsr 205;
+    	  return i;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localConnection.setAutoCommit(false);
@@ -7493,7 +7401,7 @@ public class DBManager implements DBInterface {
       {
         localConnection.rollback();
       }
-      j = i;
+      return i;
     }
     catch (DBException localDBException)
     {
@@ -7544,8 +7452,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramCertRevokeInfo == null) || (paramCertInfo == null))
       {
-        j = i;
-        jsr 213;
+    	  return i;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       localConnection.setAutoCommit(false);
@@ -7561,7 +7468,7 @@ public class DBManager implements DBInterface {
       {
         localConnection.rollback();
       }
-      j = i;
+      return i;
     }
     catch (DBException localDBException)
     {
@@ -7642,7 +7549,6 @@ public class DBManager implements DBInterface {
       }
       catch (DBException localDBException)
       {
-        jsr 14;
       }
     }
     finally
@@ -7678,7 +7584,7 @@ public class DBManager implements DBInterface {
 			localPreparedStatement = paramConnection.prepareStatement(str);
 			localPreparedStatement.setString(1, paramString);
 			i = localPreparedStatement.executeUpdate();
-			j = i;
+			return i;
 		} catch (SQLException localSQLException1) {
 			int j;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -7708,8 +7614,7 @@ public class DBManager implements DBInterface {
     {
       if ((paramString1 == null) || (paramString2 == null))
       {
-        localObject1 = localCertInfo1;
-        jsr 366;
+    	  return localCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       Object localObject1 = "select certsn,subject,notbefore,notafter,validity,authcode,cdpid,ctmlname,certstatus,isvalid,createtime,applicant,email,remark from cert where subjectuppercase=? and ctmlname=? and iswaiting = '0' and certstatus in(?,?,?)";
@@ -7738,7 +7643,7 @@ public class DBManager implements DBInterface {
         localCertInfo1.setEmail(localResultSet.getString(13));
         localCertInfo1.setRemark(localResultSet.getString(14));
       }
-      localCertInfo2 = localCertInfo1;
+      return localCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -7778,7 +7683,7 @@ public class DBManager implements DBInterface {
 			localPreparedStatement = localConnection.prepareStatement(str);
 			localPreparedStatement.setLong(1, getTime());
 			i = localPreparedStatement.executeUpdate();
-			j = i;
+			return i;
 		} catch (SQLException localSQLException1) {
 			int j;
 			syslogger.info("数据库异常：" + localSQLException1.getMessage());
@@ -7797,8 +7702,3 @@ public class DBManager implements DBInterface {
 		}
 	}
 }
-
-/*
- * Location: C:\Program Files\JIT\CA50\lib\IDA\ida.jar Qualified Name:
- * cn.com.jit.ida.ca.db.DBManager JD-Core Version: 0.6.0
- */

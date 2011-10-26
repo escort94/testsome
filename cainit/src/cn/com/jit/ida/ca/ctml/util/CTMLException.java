@@ -141,7 +141,7 @@ public class CTMLException extends IDAException
 
   public static class CTML
   {
-    public static final int PARSECTMLPOLICY = CTMLException.access$004();
+    public static final int PARSECTMLPOLICY = 0;
     public static final int INVALIDCTMLTYPE;
     public static final int XMLNODENOTFIND;
     public static final int CTMLNODENOTFIND;

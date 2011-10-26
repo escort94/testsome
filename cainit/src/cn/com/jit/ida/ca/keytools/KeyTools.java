@@ -156,7 +156,6 @@ public class KeyTools
           {
             System.out.println("输入有误，请重新输入。");
           }
-          continue;
           if (this.CASignKeyID >= 0)
             break;
           System.out.println("输入有误，请重新输入。");
