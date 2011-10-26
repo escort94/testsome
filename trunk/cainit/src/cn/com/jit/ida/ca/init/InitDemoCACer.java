@@ -11,6 +11,7 @@ import java.util.GregorianCalendar;
 
 import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.certmanager.service.operation.CodeGenerator;
+import cn.com.jit.ida.ca.exception.OperateException;
 import cn.com.jit.ida.ca.key.keyutils.KeyUtils;
 import cn.com.jit.ida.ca.key.keyutils.Keytype;
 import cn.com.jit.ida.globalconfig.ParseXML;
@@ -24,7 +25,7 @@ public class InitDemoCACer extends InitFather {
 	public int democaKeySize;
 	protected String genCerDN;
 	public String democaKeyStore;
-	
+
 	public InitDemoCACer() throws Exception {
 		super();
 	}
@@ -37,15 +38,16 @@ public class InitDemoCACer extends InitFather {
 		this.demoCACertValidity = this.init.getNumber("DemoCACertValidity");
 		this.democaSigningAlg = init.getString("CASigningAlg");
 		democaKeySize = init.getNumber("SigningKeySize");
-		if(democaSigningAlg.equalsIgnoreCase("SHA1withRSA")){
+		if (democaSigningAlg.equalsIgnoreCase("SHA1withRSA")) {
 			democaStoreAlg = "RSA";
-		}else if(democaSigningAlg.equalsIgnoreCase("SM3WITHSM2")){
+		} else if (democaSigningAlg.equalsIgnoreCase("SM3WITHSM2")) {
 			democaStoreAlg = "SM2";
 		}
 		this.genCerDN = init.getString("CASubject");
 		this.democaKeyStore = this.init.getString("SigningKeyStore");
 	}
-	public void makeDemoCACer() throws IDAException{
+
+	public void makeDemoCACer() throws IDAException {
 		KeyPair kPair = KeyUtils.createKeyPair(democaStoreAlg,
 				Keytype.SOFT_VALUE, democaKeySize);
 		String snStr = CodeGenerator.generateRefCode();
@@ -57,7 +59,7 @@ public class InitDemoCACer extends InitFather {
 		// 6 代表的是天 是一个Type
 		localGregorianCalendar.add(6, demoCACertValidity);
 		Date localDate2 = localGregorianCalendar.getTime();
-		
+
 		X509V3CertificateGenerator v3CertGen = new X509V3CertificateGenerator();
 		v3CertGen.reset();
 		v3CertGen.setSerialNumber(new BigInteger(snStr, 16));
@@ -73,14 +75,18 @@ public class InitDemoCACer extends InitFather {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//存储DemoCA.cer证书到本地
-		try {
-			savaRootCert(certificate.getEncoded());
-		} catch (CertificateEncodingException e) {
-			e.printStackTrace();
-		}
+		// 存储DemoCA.cer证书到本地
+		savaRootCert(certificate);
 	}
-	public void savaRootCert(byte[] date){
+
+	public void savaRootCert(X509Certificate certificate) throws OperateException {
+		byte[] date;
+		try {
+			date = certificate.getEncoded();
+		} catch (CertificateEncodingException e) {
+			OperateException oe = new OperateException(OperateException.BYTE_DEMOCA_CER_PATH_ERROR, OperateException.BYTE_DEMOCA_CER_PATH_ERROR_DES);
+			throw oe;
+		}
 		String jkspathParent;
 		String genCerPath = null;
 		File localFile1 = new File(democaKeyStore);
@@ -90,7 +96,8 @@ public class InitDemoCACer extends InitFather {
 			jkspathParent = localFile1.getParent();
 			genCerPath = jkspathParent + "/DemoCA.cer";
 		} catch (Exception localException1) {
-			localException1.printStackTrace();
+			OperateException oe = new OperateException(OperateException.SAVE_DEMOCA_CER_PATH_ERROR, OperateException.SAVE_DEMOCA_CER_PATH_ERROR_DES);
+			throw oe;
 		}
 		try {
 			FileOutputStream localFileOutputStream = new FileOutputStream(
@@ -98,7 +105,8 @@ public class InitDemoCACer extends InitFather {
 			localFileOutputStream.write(date);
 			localFileOutputStream.close();
 		} catch (Exception localException2) {
-			localException2.printStackTrace();
+			OperateException oe = new OperateException(OperateException.SAVE_DEMOCA_CER_ERROR, OperateException.SAVE_DEMOCA_CER_ERROR_DES);
+			throw oe;
 		}
 	}
 }
