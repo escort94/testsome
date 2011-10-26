@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
+import java.sql.SQLException;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -98,10 +99,11 @@ public class KeyUtils {
 	 *            生成密钥类型（软硬之分）
 	 * @return 是否成功执行完毕
 	 * @throws IDAException
+	 * @throws SQLException 
 	 */
 	public int generalP10(String jksFliePath, String dn, String keyalg,
 			int keysize, String reqFilePath, String keytype, char[] passwords)
-			throws IDAException {
+			throws IDAException, SQLException {
 		String algorithm = keyalg.equals(Keyalg.RSA_VALUE) ? Keyalgorithm.RSA_ALGORITHM
 				: Keyalgorithm.SM2_ALGORITHM;
 		KeyPair keyPair = getKeyPair(keyalg, keytype, keysize);

@@ -81,15 +81,15 @@ public class SelfExtensionManager
     checkParam(paramSelfExtensionInformation, CTMLException.SELFEXT.CREATESELFEXT_BADPARAM);
     if (getSelfExtInfo(paramSelfExtensionInformation.getExtensionName()) != null)
     {
-      localObject = new CTMLException(CTMLException.SELFEXT.SELFEXT_EXISTED);
+    	CTMLException localObject = new CTMLException(CTMLException.SELFEXT.SELFEXT_EXISTED);
       ((CTMLException)localObject).appendMsg("自定义扩展域名称 =" + paramSelfExtensionInformation.getExtensionName());
-      throw ((Throwable)localObject);
+      throw localObject;
     }
     if (getSelfExtInfoByOID(paramSelfExtensionInformation.getExtensionOID()) != null)
     {
-      localObject = new CTMLException(CTMLException.SELFEXT.SELFEXT_EXISTED);
+    	CTMLException localObject = new CTMLException(CTMLException.SELFEXT.SELFEXT_EXISTED);
       ((CTMLException)localObject).appendMsg("自定义扩展域OID =" + paramSelfExtensionInformation.getExtensionOID());
-      throw ((Throwable)localObject);
+      throw localObject;
     }
     Object localObject = new Properties();
     ((Properties)localObject).setProperty("selfext_name", paramSelfExtensionInformation.getExtensionName());
@@ -185,9 +185,9 @@ public class SelfExtensionManager
   {
     if ((paramString1 == null) || (paramString2 == null))
     {
-      localObject = new CTMLException(CTMLException.SELFEXT.UPDATESELFEXTSTATUS_BADPARAM);
+    	CTMLException localObject = new CTMLException(CTMLException.SELFEXT.UPDATESELFEXTSTATUS_BADPARAM);
       this.debuger.doLog((Throwable)localObject);
-      throw ((Throwable)localObject);
+      throw localObject;
     }
     Object localObject = new Properties();
     ((Properties)localObject).setProperty("selfext_name", paramString1);

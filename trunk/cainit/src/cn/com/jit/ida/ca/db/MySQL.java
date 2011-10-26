@@ -1,10 +1,5 @@
 package cn.com.jit.ida.ca.db;
 
-import cn.com.jit.ida.ca.certmanager.reqinfo.CertInfo;
-import cn.com.jit.ida.ca.certmanager.reqinfo.CertSelfExt;
-import cn.com.jit.ida.ca.certmanager.reqinfo.CertStandardExt;
-import cn.com.jit.ida.log.Operation;
-import cn.com.jit.ida.log.SysLogger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,56 +12,46 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-public class MySQL extends DBManager
-{
-  MySQL()
-    throws DBException
-  {
-  }
+import cn.com.jit.ida.ca.certmanager.reqinfo.CertInfo;
+import cn.com.jit.ida.ca.certmanager.reqinfo.CertSelfExt;
+import cn.com.jit.ida.ca.certmanager.reqinfo.CertStandardExt;
+import cn.com.jit.ida.log.Operation;
 
-  public String getDBVersion()
-  {
-    Connection localConnection = null;
-    Statement localStatement = null;
-    ResultSet localResultSet = null;
-    String str1 = null;
-    String str2 = "";
-    try
-    {
-      localConnection = DriverManager.getConnection("proxool.ida");
-      str1 = "select version()";
-      localStatement = localConnection.createStatement();
-      localResultSet = localStatement.executeQuery(str1);
-      if (localResultSet.next())
-        str2 = "MySQL数据库版本是:" + localResultSet.getString(1);
-    }
-    catch (SQLException localSQLException1)
-    {
-      str2 = "返回数据库版本失败:数据库访问异常";
-    }
-    finally
-    {
-      if (localStatement != null)
-        try
-        {
-          localStatement.close();
-        }
-        catch (SQLException localSQLException2)
-        {
-        }
-      if (localConnection != null)
-        try
-        {
-          localConnection.close();
-        }
-        catch (SQLException localSQLException3)
-        {
-        }
-    }
-    return str2;
-  }
+public class MySQL extends DBManager {
+	MySQL() throws DBException {
+	}
 
-  public Vector getCertInfo(Properties paramProperties, int paramInt1, int paramInt2, boolean paramBoolean)
+	public String getDBVersion() {
+		Connection localConnection = null;
+		Statement localStatement = null;
+		ResultSet localResultSet = null;
+		String str1 = null;
+		String str2 = "";
+		try {
+			localConnection = DriverManager.getConnection("proxool.ida");
+			str1 = "select version()";
+			localStatement = localConnection.createStatement();
+			localResultSet = localStatement.executeQuery(str1);
+			if (localResultSet.next())
+				str2 = "MySQL数据库版本是:" + localResultSet.getString(1);
+		} catch (SQLException localSQLException1) {
+			str2 = "返回数据库版本失败:数据库访问异常";
+		} finally {
+			if (localStatement != null)
+				try {
+					localStatement.close();
+				} catch (SQLException localSQLException2) {
+				}
+			if (localConnection != null)
+				try {
+					localConnection.close();
+				} catch (SQLException localSQLException3) {
+				}
+		}
+		return str2;
+	}
+
+	public Vector getCertInfo(Properties paramProperties, int paramInt1, int paramInt2, boolean paramBoolean)
     throws DBException
   {
     Connection localConnection = null;
@@ -83,15 +68,14 @@ public class MySQL extends DBManager
     {
       if (paramProperties == null)
       {
-        localObject1 = localVector1;
-        jsr 1662;
+        return localVector1;
       }
       String str2 = "select count(ctmlname) from cert";
       int k = paramProperties.size();
       Object localObject1 = paramProperties.getProperty("ctmlName");
       if ((localObject1 != null) && (((String)localObject1).indexOf("|") >= 0))
       {
-        localObject2 = new StringTokenizer((String)localObject1, "|");
+    	  StringTokenizer localObject2 = new StringTokenizer((String)localObject1, "|");
         k += ((StringTokenizer)localObject2).countTokens();
       }
       Object localObject2 = paramProperties.getProperty("certStatus");
@@ -228,6 +212,7 @@ public class MySQL extends DBManager
       else
         str2 = str2 + str3 + " limit ?,?";
       localPreparedStatement = localConnection.prepareStatement(str2.toLowerCase());
+      int j = 0;
       for (j = 0; j < i; j++)
         if (arrayOfString[j][1].equals("L"))
           localPreparedStatement.setLong(j + 1, Long.parseLong(arrayOfString[j][0]));
@@ -244,7 +229,7 @@ public class MySQL extends DBManager
       arrayOfCertInfo = new CertInfo[localVector2.size()];
       localVector2.toArray(arrayOfCertInfo);
       localVector1.add(arrayOfCertInfo);
-      localVector3 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -273,7 +258,7 @@ public class MySQL extends DBManager
     }
   }
 
-  public Vector getCertInfoForIsnotWaiting(Properties paramProperties, int paramInt1, int paramInt2, boolean paramBoolean)
+	public Vector getCertInfoForIsnotWaiting(Properties paramProperties, int paramInt1, int paramInt2, boolean paramBoolean)
     throws DBException
   {
     Connection localConnection = null;
@@ -290,21 +275,20 @@ public class MySQL extends DBManager
     {
       if (paramProperties == null)
       {
-        localObject1 = localVector1;
-        jsr 1709;
+        return localVector1;
       }
       String str2 = "select count(ctmlname) from cert";
       int k = paramProperties.size();
       Object localObject1 = paramProperties.getProperty("ctmlName");
       if ((localObject1 != null) && (((String)localObject1).indexOf("|") >= 0))
       {
-        localObject2 = new StringTokenizer((String)localObject1, "|");
+    	  StringTokenizer localObject2 = new StringTokenizer((String)localObject1, "|");
         k += ((StringTokenizer)localObject2).countTokens();
       }
       Object localObject2 = paramProperties.getProperty("certStatus");
       if ((localObject2 != null) && (((String)localObject2).indexOf("|") >= 0))
       {
-        localObject3 = new StringTokenizer((String)localObject2, "|");
+    	  StringTokenizer localObject3 = new StringTokenizer((String)localObject2, "|");
         k += ((StringTokenizer)localObject3).countTokens();
       }
       arrayOfString = new String[k][2];
@@ -330,7 +314,7 @@ public class MySQL extends DBManager
           {
             if (arrayOfString[i][0].indexOf("|") >= 0)
             {
-              localObject3 = new StringTokenizer(arrayOfString[i][0], "|");
+            	StringTokenizer  localObject3 = new StringTokenizer(arrayOfString[i][0], "|");
               k = 0;
               for (str3 = str3 + str1 + " in ("; ((StringTokenizer)localObject3).hasMoreTokens(); str3 = str3 + "?,")
               {
@@ -351,7 +335,7 @@ public class MySQL extends DBManager
           {
             if (arrayOfString[i][0].indexOf("|") >= 0)
             {
-              localObject3 = new StringTokenizer(arrayOfString[i][0], "|");
+            	StringTokenizer localObject3 = new StringTokenizer(arrayOfString[i][0], "|");
               for (str3 = str3 + str1 + " in ("; ((StringTokenizer)localObject3).hasMoreTokens(); str3 = str3 + "?,")
               {
                 arrayOfString[i][0] = ((StringTokenizer)localObject3).nextToken();
@@ -440,6 +424,7 @@ public class MySQL extends DBManager
       else
         str2 = str2 + str3 + " limit ?,?";
       localPreparedStatement = localConnection.prepareStatement(str2.toLowerCase());
+      int j = 0;
       for (j = 0; j < i; j++)
         if (arrayOfString[j][1].equals("L"))
           localPreparedStatement.setLong(j + 1, Long.parseLong(arrayOfString[j][0]));
@@ -456,7 +441,7 @@ public class MySQL extends DBManager
       arrayOfCertInfo = new CertInfo[localVector2.size()];
       localVector2.toArray(arrayOfCertInfo);
       localVector1.add(arrayOfCertInfo);
-      localVector3 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -485,7 +470,7 @@ public class MySQL extends DBManager
     }
   }
 
-  public Vector getOperationLogInfo(Properties paramProperties, int paramInt1, int paramInt2, boolean paramBoolean)
+	public Vector getOperationLogInfo(Properties paramProperties, int paramInt1, int paramInt2, boolean paramBoolean)
     throws DBException
   {
     Connection localConnection = null;
@@ -506,8 +491,7 @@ public class MySQL extends DBManager
       Vector localVector3;
       if (paramProperties == null)
       {
-        localVector3 = localVector1;
-        jsr 1090;
+        return localVector1;
       }
       String str2 = "select count(operatorsubjectuppercase) from operationlog";
       arrayOfString = new String[paramProperties.size()][2];
@@ -585,6 +569,7 @@ public class MySQL extends DBManager
       else
         str2 = str2 + str3 + " limit ?,?";
       localPreparedStatement = localConnection.prepareStatement(str2.toLowerCase());
+      int j = 0;
       for (j = 0; j < i; j++)
         if (arrayOfString[j][1].equals("L"))
           localPreparedStatement.setLong(j + 1, Long.parseLong(arrayOfString[j][0]));
@@ -612,7 +597,7 @@ public class MySQL extends DBManager
       arrayOfOperation = new Operation[localVector2.size()];
       localVector2.toArray(arrayOfOperation);
       localVector1.add(arrayOfOperation);
-      localVector4 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -641,7 +626,7 @@ public class MySQL extends DBManager
     }
   }
 
-  public Vector getCertStatistic(Properties paramProperties, String paramString, boolean paramBoolean)
+	public Vector getCertStatistic(Properties paramProperties, String paramString, boolean paramBoolean)
     throws DBException
   {
     Connection localConnection = null;
@@ -658,8 +643,7 @@ public class MySQL extends DBManager
     {
       if (paramProperties == null)
       {
-        localObject2 = localVector1;
-        jsr 1353;
+    	  return localVector1;
       }
       int k = paramProperties.size();
       Object localObject2 = paramProperties.getProperty("ctmlName");
@@ -792,7 +776,7 @@ public class MySQL extends DBManager
       }
       localVector1.add(Long.toString(l1));
       localVector1.add(localProperties);
-      localVector2 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -821,7 +805,7 @@ public class MySQL extends DBManager
     }
   }
 
-  public CertInfo[] getCertsToPublish(String paramString, int paramInt1, int paramInt2)
+	public CertInfo[] getCertsToPublish(String paramString, int paramInt1, int paramInt2)
     throws DBException
   {
     Connection localConnection = null;
@@ -835,8 +819,7 @@ public class MySQL extends DBManager
     {
       if (paramString == null)
       {
-        arrayOfCertInfo2 = arrayOfCertInfo1;
-        jsr 250;
+    	  return arrayOfCertInfo1;
       }
       localConnection = DriverManager.getConnection("proxool.ida");
       if (paramInt1 < 1)
@@ -860,7 +843,7 @@ public class MySQL extends DBManager
         localVector.add(getCertinfoForCertsToPublish(localResultSet));
       arrayOfCertInfo1 = new CertInfo[localVector.size()];
       localVector.toArray(arrayOfCertInfo1);
-      arrayOfCertInfo2 = arrayOfCertInfo1;
+      return arrayOfCertInfo1;
     }
     catch (SQLException localSQLException1)
     {
@@ -889,7 +872,7 @@ public class MySQL extends DBManager
     }
   }
 
-  public Vector getCertArcInfo(Properties paramProperties, int paramInt1, int paramInt2, boolean paramBoolean)
+	public Vector getCertArcInfo(Properties paramProperties, int paramInt1, int paramInt2, boolean paramBoolean)
     throws DBException
   {
     Connection localConnection = null;
@@ -906,15 +889,14 @@ public class MySQL extends DBManager
     {
       if (paramProperties == null)
       {
-        localObject1 = localVector1;
-        jsr 1662;
+    	  return localVector1;
       }
       String str2 = "select count(ctmlname) from certarc";
       int k = paramProperties.size();
       Object localObject1 = paramProperties.getProperty("ctmlName");
       if ((localObject1 != null) && (((String)localObject1).indexOf("|") >= 0))
       {
-        localObject2 = new StringTokenizer((String)localObject1, "|");
+    	  StringTokenizer localObject2 = new StringTokenizer((String)localObject1, "|");
         k += ((StringTokenizer)localObject2).countTokens();
       }
       Object localObject2 = paramProperties.getProperty("certStatus");
@@ -1051,6 +1033,7 @@ public class MySQL extends DBManager
       else
         str2 = str2 + str3 + " limit ?,?";
       localPreparedStatement = localConnection.prepareStatement(str2.toLowerCase());
+      int j = 0;
       for (j = 0; j < i; j++)
         if (arrayOfString[j][1].equals("L"))
           localPreparedStatement.setLong(j + 1, Long.parseLong(arrayOfString[j][0]));
@@ -1067,7 +1050,7 @@ public class MySQL extends DBManager
       arrayOfCertInfo = new CertInfo[localVector2.size()];
       localVector2.toArray(arrayOfCertInfo);
       localVector1.add(arrayOfCertInfo);
-      localVector3 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -1096,7 +1079,7 @@ public class MySQL extends DBManager
     }
   }
 
-  public Vector getOperationLogArcInfo(Properties paramProperties, int paramInt1, int paramInt2, boolean paramBoolean)
+	public Vector getOperationLogArcInfo(Properties paramProperties, int paramInt1, int paramInt2, boolean paramBoolean)
     throws DBException
   {
     Connection localConnection = null;
@@ -1117,8 +1100,7 @@ public class MySQL extends DBManager
       Vector localVector3;
       if (paramProperties == null)
       {
-        localVector3 = localVector1;
-        jsr 1090;
+    	  return localVector1;
       }
       String str2 = "select count(operatorsubjectuppercase) from operationlogarc";
       arrayOfString = new String[paramProperties.size()][2];
@@ -1196,6 +1178,7 @@ public class MySQL extends DBManager
       else
         str2 = str2 + str3 + " limit ?,?";
       localPreparedStatement = localConnection.prepareStatement(str2.toLowerCase());
+      int j = 0;
       for (j = 0; j < i; j++)
         if (arrayOfString[j][1].equals("L"))
           localPreparedStatement.setLong(j + 1, Long.parseLong(arrayOfString[j][0]));
@@ -1223,7 +1206,7 @@ public class MySQL extends DBManager
       arrayOfOperation = new Operation[localVector2.size()];
       localVector2.toArray(arrayOfOperation);
       localVector1.add(arrayOfOperation);
-      localVector4 = localVector1;
+      return localVector1;
     }
     catch (SQLException localSQLException1)
     {
@@ -1252,7 +1235,7 @@ public class MySQL extends DBManager
     }
   }
 
-  protected ArrayList getOperationLog(Connection paramConnection, Operation paramOperation, int paramInt, boolean paramBoolean)
+	protected ArrayList getOperationLog(Connection paramConnection, Operation paramOperation, int paramInt, boolean paramBoolean)
     throws SQLException
   {
     PreparedStatement localPreparedStatement = null;
@@ -1265,14 +1248,12 @@ public class MySQL extends DBManager
     {
       if ((paramConnection == null) || (paramOperation == null) || (paramInt < 0))
       {
-        localObject2 = localArrayList1;
-        jsr 289;
+    	  return localArrayList1;
       }
       Object localObject2 = getOperationlogCondition(paramOperation, paramBoolean);
       if (localObject2 == null)
       {
-        localObject3 = localArrayList1;
-        jsr 265;
+    	  return localArrayList1;
       }
       str = ((Vector)localObject2).get(0).toString();
       localArrayList2 = (ArrayList)((Vector)localObject2).get(1);
@@ -1297,7 +1278,7 @@ public class MySQL extends DBManager
         localResultSet.deleteRow();
         localResultSet.previous();
       }
-      localArrayList3 = localArrayList1;
+      return localArrayList1;
     }
     finally
     {
@@ -1313,7 +1294,7 @@ public class MySQL extends DBManager
     }
   }
 
-  protected ArrayList getCerts(Connection paramConnection, String paramString, Vector paramVector, int paramInt)
+	protected ArrayList getCerts(Connection paramConnection, String paramString, Vector paramVector, int paramInt)
     throws SQLException
   {
     PreparedStatement localPreparedStatement = null;
@@ -1325,14 +1306,12 @@ public class MySQL extends DBManager
     {
       if ((paramConnection == null) || (paramString == null) || (paramInt < 0))
       {
-        localObject1 = localArrayList1;
-        jsr 419;
+    	  return localArrayList1;
       }
       Object localObject1 = getCertsCondition(paramString);
       if (localObject1 == null)
       {
-        localObject2 = localArrayList1;
-        jsr 397;
+    	  return localArrayList1;
       }
       str1 = ((Vector)localObject1).get(0).toString();
       localArrayList2 = (ArrayList)((Vector)localObject1).get(1);
@@ -1377,7 +1356,7 @@ public class MySQL extends DBManager
         localResultSet.deleteRow();
         localResultSet.previous();
       }
-      localArrayList3 = localArrayList1;
+      return localArrayList1;
     }
     finally
     {
@@ -1393,7 +1372,7 @@ public class MySQL extends DBManager
     }
   }
 
-  protected ArrayList getCertSelfext(Connection paramConnection, String paramString)
+	protected ArrayList getCertSelfext(Connection paramConnection, String paramString)
     throws SQLException
   {
     PreparedStatement localPreparedStatement = null;
@@ -1403,8 +1382,7 @@ public class MySQL extends DBManager
     {
       if ((paramConnection == null) || (paramString == null))
       {
-        localObject1 = localArrayList;
-        jsr 183;
+    	  return localArrayList;
       }
       Object localObject1 = "select certsn,oid,selfext_name,value,sign_server,sign_client from cert_selfext where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement((String)localObject1, 1004, 1008);
@@ -1412,7 +1390,7 @@ public class MySQL extends DBManager
       localResultSet = localPreparedStatement.executeQuery();
       while (localResultSet.next())
       {
-        localObject2 = new CertSelfExt();
+    	  CertSelfExt  localObject2 = new CertSelfExt();
         ((CertSelfExt)localObject2).setCertSn(localResultSet.getString(1));
         ((CertSelfExt)localObject2).setOid(localResultSet.getString(2));
         ((CertSelfExt)localObject2).setName(localResultSet.getString(3));
@@ -1423,7 +1401,7 @@ public class MySQL extends DBManager
         localResultSet.deleteRow();
         localResultSet.previous();
       }
-      localObject2 = localArrayList;
+      return localArrayList;
     }
     finally
     {
@@ -1439,7 +1417,7 @@ public class MySQL extends DBManager
     }
   }
 
-  protected ArrayList getCertStandardExt(Connection paramConnection, String paramString)
+	protected ArrayList getCertStandardExt(Connection paramConnection, String paramString)
     throws SQLException
   {
     PreparedStatement localPreparedStatement = null;
@@ -1449,8 +1427,7 @@ public class MySQL extends DBManager
     {
       if ((paramConnection == null) || (paramString == null))
       {
-        localObject1 = localArrayList;
-        jsr 211;
+    	  return localArrayList;
       }
       Object localObject1 = "select certsn,ext_oid,ext_name,child_name,othername_oid,value,sign_server,sign_client from cert_standard_ext where certsn=?";
       localPreparedStatement = paramConnection.prepareStatement((String)localObject1, 1004, 1008);
@@ -1458,7 +1435,7 @@ public class MySQL extends DBManager
       localResultSet = localPreparedStatement.executeQuery();
       while (localResultSet.next())
       {
-        localObject2 = new CertStandardExt();
+    	  CertStandardExt localObject2 = new CertStandardExt();
         ((CertStandardExt)localObject2).setCertSn(localResultSet.getString(1));
         ((CertStandardExt)localObject2).setExtOID(localResultSet.getString(2));
         ((CertStandardExt)localObject2).setExtName(localResultSet.getString(3));
@@ -1471,7 +1448,7 @@ public class MySQL extends DBManager
         localResultSet.deleteRow();
         localResultSet.previous();
       }
-      localObject2 = localArrayList;
+      return localArrayList;
     }
     finally
     {
@@ -1488,7 +1465,7 @@ public class MySQL extends DBManager
   }
 }
 
-/* Location:           C:\Program Files\JIT\CA50\lib\IDA\ida.jar
- * Qualified Name:     cn.com.jit.ida.ca.db.MySQL
- * JD-Core Version:    0.6.0
+/*
+ * Location: C:\Program Files\JIT\CA50\lib\IDA\ida.jar Qualified Name:
+ * cn.com.jit.ida.ca.db.MySQL JD-Core Version: 0.6.0
  */

@@ -209,7 +209,7 @@ public class XMLTool
   public static NodeList getChildElements(Element paramElement)
   {
     NodeList localNodeList = paramElement.getChildNodes();
-    Node[] arrayOfNode = new Node[localNodeList.getLength() + 1];
+    final Node[] arrayOfNode = new Node[localNodeList.getLength() + 1];
     int i = 0;
     for (int j = 0; j < localNodeList.getLength(); j++)
     {
@@ -218,22 +218,18 @@ public class XMLTool
       arrayOfNode[(i++)] = localNodeList.item(j);
     }
     arrayOfNode[i] = null;
-    return new NodeList(arrayOfNode)
-    {
-      private int length;
-      private Node[] datas;
-      private final Node[] val$array;
+    return new NodeList() {
+		private int length;
+		private Node[] datas = arrayOfNode;
 
-      public Node item(int paramInt)
-      {
-        return this.datas[paramInt];
-      }
+		public Node item(int paramInt) {
+			return this.datas[paramInt];
+		}
 
-      public int getLength()
-      {
-        return this.length;
-      }
-    };
+		public int getLength() {
+			return this.length;
+		}
+	};
   }
 
   public static Element newChildElement(Element paramElement, String paramString1, String paramString2)

@@ -158,7 +158,7 @@ public class XML2DB
       savaToDB("CAConfig", "CertificatePolicies");
       savaToDB("CAConfig", "BaseDN");
       //注入数据库数据
-      SetCAName();
+//      SetCAName();
     }
     catch (IDAException localIDAException)
     {

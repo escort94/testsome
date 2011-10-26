@@ -237,6 +237,9 @@ public class GenConfigFile
 	    }
 	    return true;
 	  }
+	public static void main(String[] args) {
+		makefile();
+	}
   public static boolean makefile()
   {
     File localFile = new File("./config/CAConfig.xml");

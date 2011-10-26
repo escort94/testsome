@@ -135,6 +135,7 @@ public class CAServer {
 			localSysLogger.info("更新根证书失败");
 			return;
 		}
+		//验证主题与颁发者是否相同 如果不相同则为子CA 否则是主CA
 		String str = localCAConfig.getRootCert().getSubject();
 		Object localObject = localCAConfig.getRootCert().getIssuer();
 		if (!str.equalsIgnoreCase((String) localObject)) {

@@ -21,7 +21,8 @@ import java.util.Vector;
 import sun.security.x509.X509CertImpl;
 import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.certmanager.service.operation.CodeGenerator;
-import cn.com.jit.ida.ca.displayUtils.DbUtils;
+import cn.com.jit.ida.ca.displayrelated.DbUtils;
+import cn.com.jit.ida.ca.exception.OperateException;
 import cn.com.jit.ida.ca.key.keyutils.KeyUtils;
 import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ConfigTool;
@@ -397,7 +398,7 @@ public class GenericKey {
 }
 
 	public void addKeystoreStruct(String algorithm, String dn,
-			char[] passwords, int validityDay) throws IDAException, SQLException {
+			char[] passwords, int validityDay) throws IDAException {
 		X509Certificate certificate = null;
 		String signAlg = algorithm;
 		String snStr = CodeGenerator.generateRefCode();
@@ -443,10 +444,71 @@ public class GenericKey {
 			throw kException;
 		}
 		if(this.fileType.equals(GenericKey.PKCS12)){
-			DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
+			try {
+				DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
+			} catch (SQLException e) {
+				OperateException oe = new OperateException(OperateException.UPDATE_ADMIN_ERROR, OperateException.UPDATE_ADMIN_ERROR_DES);
+				throw oe;
+			}
 		}
 	}
+	public void addKeystoreStruct(String algorithm, String dn, String issuer,
+			char[] passwords, int validityDay) throws IDAException{
+		X509Certificate certificate = null;
+		String signAlg = algorithm;
+		String snStr = CodeGenerator.generateRefCode();
+		X509V3CertificateGenerator v3CertGen = new X509V3CertificateGenerator();
+		X509Principal x509Principal = new X509Principal(dn);
+		X509Principal issuerPrincipal = new X509Principal(issuer);
+		
+		// DbUtils
+		v3CertGen.reset();
+		BigInteger bi = new BigInteger(snStr, 16);
+		String sn = bi.toString(16);
+		v3CertGen.setSerialNumber(bi);
+		v3CertGen.setIssuerDN(issuerPrincipal);
 
+		GregorianCalendar localGregorianCalendar = new GregorianCalendar();
+		Date localDate1 = new Date();
+		localGregorianCalendar.setTime(localDate1);
+		// 6 代表的是天 是一个Type
+		localGregorianCalendar.add(6, validityDay);
+		Date localDate2 = localGregorianCalendar.getTime();
+
+		v3CertGen.setNotBefore(localDate1);
+		v3CertGen.setNotAfter(localDate2);
+		v3CertGen.setSubjectDN(x509Principal);
+
+		v3CertGen.setPublicKey(keyPair.getPublic());
+		v3CertGen.setSignatureAlgorithm(signAlg);
+
+		try {
+			certificate = v3CertGen.generate(keyPair.getPrivate());
+		} catch (Exception e) {
+			KeyPairException kException = new KeyPairException(
+					KeyPairException.CREATE_JKS_ERROR,
+					KeyPairException.CREATE_JKS_ERROR_DES, e);
+			throw kException;
+		}
+		Certificate[] certtificates = { certificate };
+		try {
+			m_keyStore.setKeyEntry("s1as", keyPair.getPrivate(), passwords,
+					certtificates);
+		} catch (KeyStoreException e) {
+			KeyPairException kException = new KeyPairException(
+					KeyPairException.STORE_JKS_ERROR,
+					KeyPairException.STORE_JKS_ERROR_DES, e);
+			throw kException;
+		}
+		if(this.fileType.equals(GenericKey.PKCS12)){
+			try {
+				DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
+			} catch (SQLException e) {
+				OperateException oe = new OperateException(OperateException.UPDATE_ADMIN_ERROR, OperateException.UPDATE_ADMIN_ERROR_DES);
+				throw oe;
+			}
+		}
+	}
 	public boolean isM_isNewKeyStore() {
 		return m_isNewKeyStore;
 	}
