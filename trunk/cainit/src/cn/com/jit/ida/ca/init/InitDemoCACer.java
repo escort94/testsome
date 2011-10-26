@@ -73,7 +73,8 @@ public class InitDemoCACer extends InitFather {
 		try {
 			certificate = v3CertGen.generate(kPair.getPrivate());
 		} catch (Exception e) {
-			e.printStackTrace();
+			OperateException oe = new OperateException(OperateException.INIT_DEMOCA_CER_ERROR, OperateException.INIT_DEMOCA_CER_ERROR_DES);
+			throw oe;
 		}
 		// 存储DemoCA.cer证书到本地
 		savaRootCert(certificate);

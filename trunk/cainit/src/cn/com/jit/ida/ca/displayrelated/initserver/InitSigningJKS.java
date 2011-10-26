@@ -40,11 +40,11 @@ public class InitSigningJKS extends InitFather {
 	protected String genCerDN;
 	protected int signingValidityDay;
 	
-	public InitSigningJKS() throws Exception {
+	public InitSigningJKS() throws IDAException {
 		super();
 	}
 
-	public InitSigningJKS(ParseXML init) throws Exception {
+	public InitSigningJKS(ParseXML init) throws IDAException {
 		super(init);
 	}
 

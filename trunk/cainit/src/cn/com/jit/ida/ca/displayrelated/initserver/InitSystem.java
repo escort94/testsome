@@ -27,12 +27,14 @@ import cn.com.jit.ida.log.SysLogger;
 
 /**
  * 本类供DisplayInitServer类调用
+ * 
  * @author kmc
- *
+ * 
  */
 public class InitSystem {
 	ParseXML init;
 	boolean isInit = true;
+
 	public InitSystem() throws InitServerException {
 		try {
 			this.init = new ParseXML("./config/init.xml");
@@ -41,56 +43,54 @@ public class InitSystem {
 			throw new InitServerException(localConfigException.getErrCode(),
 					localConfigException.getErrDescEx(), localConfigException);
 		}
-		
+
 	}
-	public void runInit() throws Exception{
-		//验证配置文件正确性 init.xml文件 全部信息
+
+	public void runInit() throws IDAException {
+		// 验证配置文件正确性 init.xml文件 全部信息
 		readInitConfig();
-		//生成CAConfig.xml配置文件 初始化数据库 将配置文件中部分信息存入到数据库
+		// 生成CAConfig.xml配置文件 初始化数据库 将配置文件中部分信息存入到数据库
 		dealInitData();
-		try {
-			// log initialize
-			InitLog initLog = new InitLog();
-			SysLogger logger = initLog.initLog();
-			logger.info("日志系统初始化成功");
-			
-			// LDAP initialize
-			if (initLDAP()){
-				logger.info("LDAP初始化成功");
-			}
-			
-			//DemoCA.cer initialize
-			InitDemoCACer initDemoCACer = new InitDemoCACer();
-			initDemoCACer.makeDemoCACer();
-			logger.info("根证书初始化成功");
-			
-			//signingJKS initialize
-			InitSigningJKS initSignJKS = new InitSigningJKS();
-			initSignJKS.getSignedByItselfCer();
-			logger.info("签名根证书初始化成功");
-			
-			// commServerJKS initialize
-			InitCommServerJKS initCommServer = new InitCommServerJKS();
-			initCommServer.makeServerJKS();
-			logger.info("通信证书初始化成功");
-			
-			//superAdminJKS initialize
-			//TODO 下面的两个参数需要在界面选择 获得生成方式写死 但是密钥长度需要配置
-			InitSuperAdminPFX initSuperAdmin = new InitSuperAdminPFX();
-			initSuperAdmin.makeSuperAdminPFX(Keytype.SOFT_VALUE, 1024);
-			logger.info("超级管理员证书初始化成功");
-			
-			//auditAdminJKS initialize
-			InitAuditAdminPFX initAuditAdmin = new InitAuditAdminPFX();
-			initAuditAdmin.makeAuditAdminPFX(Keytype.SOFT_VALUE, 1024);
-			logger.info("超级管理员证书初始化成功");
-			
-			//配置文件的处理
-			deleteInitFile();
-		} catch (ConfigException e) {
-			e.printStackTrace();
+		// log initialize
+		InitLog initLog = new InitLog();
+		SysLogger logger = initLog.initLog();
+		logger.info("日志系统初始化成功");
+
+		// LDAP initialize
+		if (initLDAP()) {
+			logger.info("LDAP初始化成功");
 		}
+
+		// DemoCA.cer initialize
+		InitDemoCACer initDemoCACer = new InitDemoCACer();
+		initDemoCACer.makeDemoCACer();
+		logger.info("根证书初始化成功");
+
+		// signingJKS initialize
+		InitSigningJKS initSignJKS = new InitSigningJKS();
+		initSignJKS.getSignedByItselfCer();
+		logger.info("签名根证书初始化成功");
+
+		// commServerJKS initialize
+		InitCommServerJKS initCommServer = new InitCommServerJKS();
+		initCommServer.makeServerJKS();
+		logger.info("通信证书初始化成功");
+
+		// superAdminJKS initialize
+		// TODO 下面的两个参数需要在界面选择 获得生成方式写死 但是密钥长度需要配置
+		InitSuperAdminPFX initSuperAdmin = new InitSuperAdminPFX();
+		initSuperAdmin.makeSuperAdminPFX(Keytype.SOFT_VALUE, 1024);
+		logger.info("超级管理员证书初始化成功");
+
+		// auditAdminJKS initialize
+		InitAuditAdminPFX initAuditAdmin = new InitAuditAdminPFX();
+		initAuditAdmin.makeAuditAdminPFX(Keytype.SOFT_VALUE, 1024);
+		logger.info("超级管理员证书初始化成功");
+
+		// 配置文件的处理
+		deleteInitFile();
 	}
+
 	public void deleteInitFile() throws InitServerException {
 		File localFile1 = new File("./config/init.xml");
 		if (!ConfigTool.getYesOrNo(
@@ -104,6 +104,7 @@ public class InitSystem {
 		if (!localFile1.delete())
 			System.out.println("删除配置文件失败。");
 	}
+
 	private boolean initLDAP() throws InitServerException {
 		if (this.init.getString("InitLDAPSchema").equalsIgnoreCase("true")) {
 			InitLDAPSchema localInitLDAPSchema = new InitLDAPSchema();
@@ -117,15 +118,17 @@ public class InitSystem {
 		}
 		return false;
 	}
+
 	public void readInitConfig() throws InitServerException {
 		InitServerConfig localInitServerConfig = new InitServerConfig(this.init);
 		localInitServerConfig.run();
 	}
+
 	public void dealInitData() throws InitServerException {
 		try {
 			InternalConfig.getInstance();
 			XML2DB localXML2DB = new XML2DB(this.init);
-			//生成配置文件
+			// 生成配置文件
 			localXML2DB.run_file();
 			DBConfig localDBConfig = DBConfig.getInstance();
 			LogManager localLogManager = new LogManager();
@@ -135,9 +138,9 @@ public class InitSystem {
 			ServerConfig.getInstance();
 			KMCConfig.getInstance();
 			AutoServiceConfig.getInstance();
-			//初始化数据库
+			// 初始化数据库
 			initDB();
-			//部分配置文件的数据存入到数据库
+			// 部分配置文件的数据存入到数据库
 			localXML2DB.run_DB();
 		} catch (InitServerException localInitServerException) {
 			throw localInitServerException;
@@ -146,6 +149,7 @@ public class InitSystem {
 					localIDAException.getErrDesc(), localIDAException);
 		}
 	}
+
 	public void initDB() throws InitServerException {
 		try {
 			DBInit localDBInit = DBInit.getInstance();

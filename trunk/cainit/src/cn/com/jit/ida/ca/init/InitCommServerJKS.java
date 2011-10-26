@@ -40,7 +40,7 @@ public class InitCommServerJKS extends InitFather {
 	 * @throws IDAException
 	 * @throws SQLException 
 	 */
-	public void makeServerJKS() throws IDAException, SQLException {
+	public void makeServerJKS() throws IDAException {
 		String CNinDN = init.getString("ServerAddress");
 		String DN = "CN=" + CNinDN + "," + baseDN;
 		String path = this.init.getString("CommKeyStore");
