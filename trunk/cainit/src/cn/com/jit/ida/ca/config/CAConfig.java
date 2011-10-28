@@ -117,7 +117,7 @@ public class CAConfig {
 		this.authCodeValidity = this.configXML.getNumber("AuthCodeValidity");
 		this.enableUpdatePeriod = this.configXML
 				.getBoolean("EnableUpdatePeriod");
-		readSigningCertKeyStore();
+//		readSigningCertKeyStore();
 	}
 
 	void readSigningCertKeyStore() throws IDAException {

@@ -20,6 +20,15 @@ public class OperateException extends IDAException {
 
 	public static String GET_CER_BY_ALIAS_ERROR = "0007";
 	public static String GET_CER_BY_ALIAS_ERROR_DES = "根据别名从Keystore获得证书异常";
+	
+	public static String CERTIFICATE_NULLPOINTER_ERROR = "0008";
+	public static String CERTIFICATE_NULLPOINTER_ERROR_DES = "导入证书数据不完备";
+	
+	public static String DEMOCA_CER_NULL_ERROR = "0009";
+	public static String DEMOCA_CER_NULL_ERROR_DES = "根证书文件查找不到";
+	
+	public static String DEMOCA_FILE_ERROR = "0010";
+	public static String DEMOCA_FILE_ERROR_DES = "读取根证书文件发生错误";
 	public OperateException(String paramString1, String paramString2) {
 		super(paramString1, paramString2);
 	}

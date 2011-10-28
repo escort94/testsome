@@ -23,9 +23,12 @@ public class UpdateServerCommJKS {
 	}
 	
 	public void updateCommJKS() throws Exception{
+		String dn = ConfigTool.getDN("请输入管理员证书DN:");
 		String str = ConfigTool.getInteger("请输入通信证书有效期，如365", 2147483647, 0, "天");
+		String password = ConfigTool.getPassword("请输入证书密码:", 6, 16);
+		String path = caconfig.getString("CommKeyStore");
 		InitCommServerJKS ick = new InitCommServerJKS(caconfig);
 		ick.setCommJKSValidityDay(Integer.parseInt(str));
-		ick.makeServerJKS();
+		ick.makeServerJKS(path, password.toCharArray(), dn);
 	}
 }

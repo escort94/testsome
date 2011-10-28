@@ -73,18 +73,17 @@ public class InitSystem {
 
 		// commServerJKS initialize
 		InitCommServerJKS initCommServer = new InitCommServerJKS();
-		initCommServer.makeServerJKS();
+		initCommServer.beforeMake();
 		logger.info("通信证书初始化成功");
 
 		// superAdminJKS initialize
-		// TODO 下面的两个参数需要在界面选择 获得生成方式写死 但是密钥长度需要配置
 		InitSuperAdminPFX initSuperAdmin = new InitSuperAdminPFX();
-		initSuperAdmin.makeSuperAdminPFX(Keytype.SOFT_VALUE, 1024);
+		initSuperAdmin.makeSuperAdminPFX();
 		logger.info("超级管理员证书初始化成功");
 
 		// auditAdminJKS initialize
 		InitAuditAdminPFX initAuditAdmin = new InitAuditAdminPFX();
-		initAuditAdmin.makeAuditAdminPFX(Keytype.SOFT_VALUE, 1024);
+		initAuditAdmin.makeAuditAdminPFX();
 		logger.info("超级管理员证书初始化成功");
 
 		// 配置文件的处理

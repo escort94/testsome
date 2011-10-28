@@ -11,6 +11,7 @@ import cn.com.jit.ida.ca.displayrelated.initserver.InitAuditAdminPFX;
 import cn.com.jit.ida.ca.displayrelated.initserver.InitSuperAdminPFX;
 import cn.com.jit.ida.ca.key.GenericKey;
 import cn.com.jit.ida.ca.key.keyutils.Keytype;
+import cn.com.jit.ida.globalconfig.ConfigFromXML;
 import cn.com.jit.ida.globalconfig.ConfigTool;
 import cn.com.jit.ida.globalconfig.ParseXML;
 import cn.com.jit.ida.privilege.Admin;
@@ -25,13 +26,14 @@ public class UpdateAdmin {
 	private String path;
 	private String password;
 	private String validityDay;
-	CAConfig localCAConfig = null;
+	private String dn;
+	private String keyAlag;
+	private int keySize;
 
 	public void updateAdmin() throws IDAException {
 		if (!isBeenInit()) {
 			return;
 		}
-		int i = 0;
 		try {
 			while (true) {
 				System.out.println("请选择更新管理员类型:");
@@ -57,8 +59,9 @@ public class UpdateAdmin {
 					operateAuditAdmin();
 					break;
 				}
-				if ((str != null) && (str.trim().equalsIgnoreCase("quit")))
+				if ((str != null) && (str.trim().equalsIgnoreCase("quit"))){
 					return;
+				}
 				System.out.println("请按菜单项选择");
 				ConfigTool.waitToContinue((BufferedReader) inputBuffer);
 			}
@@ -72,9 +75,6 @@ public class UpdateAdmin {
 		if (!beforeOperate()) {
 			return;
 		}
-		if (null == path) {
-			path = localCAConfig.getAdminKeyStorePath();
-		}
 		if (this.validityDay == null) {
 			// get input pfx's sn and dn ,and update to database.
 			GenericKey gKey = new GenericKey(false, path, password
@@ -83,9 +83,9 @@ public class UpdateAdmin {
 		} else {
 			// make new pfx,in the future will be alter console input keytype
 			// and keysize
-			InitSuperAdminPFX makesuperadmin = new InitSuperAdminPFX(new ParseXML("./config/CAConfig.xml"));
-			makesuperadmin.getInit().setString("AdminKeyStorePWD", password);
-			makesuperadmin.makeSuperAdminPFX(Keytype.SOFT_VALUE, 1024);
+			InitSuperAdminPFX makesuperadmin = new InitSuperAdminPFX(keyAlag, password, path, Integer.parseInt(validityDay));
+			makesuperadmin.setDN(dn);
+			makesuperadmin.makeSuperAdminPFX(Keytype.SOFT_VALUE, keySize);
 		}
 
 	}
@@ -93,9 +93,6 @@ public class UpdateAdmin {
 	public void operateAuditAdmin() throws IDAException {
 		if (!beforeOperate()) {
 			return;
-		}
-		if (null == path) {
-			path = localCAConfig.getAdminKeyStorePath();
 		}
 		if (this.validityDay == null) {
 			// get input pfx's sn and dn ,and update to database.
@@ -105,31 +102,59 @@ public class UpdateAdmin {
 		} else {
 			// make new pfx,in the future will be alter console input keytype
 			// and keysize
-			InitAuditAdminPFX makeauditdmin = new InitAuditAdminPFX(new ParseXML("./config/CAConfig.xml"));
-			makeauditdmin.getInit().setString("AuditAdminKeyStorePath", password);
-			makeauditdmin.makeAuditAdminPFX(Keytype.SOFT_VALUE, 1024);
+			InitAuditAdminPFX makeauditdmin = new InitAuditAdminPFX(keyAlag, password, path, Integer.parseInt(validityDay));
+			makeauditdmin.setDN(dn);
+			makeauditdmin.makeAuditAdminPFX(Keytype.SOFT_VALUE, keySize);
 		}
 	}
 
 
-	public boolean beforeOperate() {
-		path = ConfigTool.readtoEnd("请输入申请书文件,按Enter键跳过这一步：");
+	public boolean beforeOperate() throws IDAException {
+		path = ConfigTool.getFilePathFromUser("请输入申请书文件,按Enter键跳过这一步：", ConfigTool.FILE_TO_READ);
 		if (null != path && path.equalsIgnoreCase("quit")) {
 			System.out.println("用户放弃");
 			return false;
 		}
-		password = ConfigTool.getPassword("请输入证书密码:", 6, 16);
-		if (password == null) {
-			return false;
-		}
 		if (null == path) {
+			path = new ConfigFromXML("CAConfig", "./config/CAConfig.xml").getString("AdminKeyStorePath");
+			int j = 0;
+			j = ConfigTool.displayMenu(
+					"**                     算法                     **", new String[] {
+							"RSA(默认)", "SM2" }, 1);
+			if (j == 1) {
+				keyAlag = "RSA";
+				keySize = ConfigTool.displayMenu(
+						"**                   密钥长度                 **",
+						new String[] { "1024(默认)", "2048" }, 1);
+				if (keySize == 0) {
+					return false;
+				}
+				keySize = (int) Math.pow(2.0D, keySize + 9);
+			} else if (j == 2) {
+				keyAlag = "SM2";
+				keySize = ConfigTool.displayMenu(
+						"**                   密钥长度                 **",
+						new String[] { "256(默认)" }, 1);
+				if (keySize == 0) {
+					return false;
+				}
+				keySize = (int) Math.pow(2.0D, keySize + 7);
+			} else {
+				return false;
+			}
+			if (keySize < 256)
+				return false;
+			dn = ConfigTool.getDN("请输入管理员证书DN:");
 			validityDay = ConfigTool.getInteger("请输入有效期，如365:", 2147483647, 0,
 					"天");
 			if (validityDay == null) {
 				return false;
 			}
 		}
-
+		password = ConfigTool.getPassword("请输入证书密码:", 1, 16);
+		if (password == null) {
+			return false;
+		}
 		if (!ConfigTool.getYesOrNo("确定执行更新管理员操作？[Y/N]", "N")) {
 			return false;
 		}
