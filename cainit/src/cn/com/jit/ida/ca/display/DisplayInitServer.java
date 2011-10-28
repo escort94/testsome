@@ -11,6 +11,11 @@ import cn.com.jit.ida.globalconfig.ConfigTool;
 import cn.com.jit.ida.log.LogManager;
 import cn.com.jit.ida.log.SysLogger;
 
+/**
+ * 初始化操作
+ * @author kmc
+ *
+ */
 public class DisplayInitServer extends DisplayOperate {
 
 	public void operate() {

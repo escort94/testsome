@@ -22,18 +22,16 @@ import cn.com.jit.ida.ca.key.keyutils.Keytype;
 import cn.com.jit.ida.globalconfig.ConfigTool;
 import cn.com.jit.ida.globalconfig.KeyPairException;
 import cn.com.jit.ida.util.pki.PKIException;
-import cn.com.jit.ida.util.pki.cipher.Session;
 
 public class InitCommuCert {
-	private String deviceId = null;
-	private int hardKeyId = 0;
-	private Session m_session = null;
-	private boolean isInit;
+	public static String identity;
 	private static final int KEY_SIZE = 256;
-
-	public InitCommuCert(boolean paramBoolean) {
+	public static final String SUB_CA_JKS = "SUB_CA_JKS" ;
+	public static final String COMM_JKS = "COMM_JKS" ;
+	
+	public InitCommuCert(String identity) {
 		try {
-			this.isInit = paramBoolean;
+			this.identity = identity;
 		} catch (Exception localException1) {
 			localException1.printStackTrace();
 		}
@@ -41,13 +39,13 @@ public class InitCommuCert {
 
 	public int generalReq() throws IDAException {
 		String jksFliePath = ConfigTool.getFilePathFromUser(
-				"请输入服务器证书密钥储存的文件名\n(默认： ./keystore/commCert.jks，直接回车使用默认文件名)：",
-				ConfigTool.FILE_TO_WRITE, "./keystore/commCert.jks");
+				"请输入服务器证书密钥储存的文件名\n(默认： ./keystore/subCAKeystore.jks，直接回车使用默认文件名)：",
+				ConfigTool.FILE_TO_WRITE, "./keystore/subCAKeystore.jks");
 		if (jksFliePath == null)
 			return 0;
 		String reqFilePath = ConfigTool.getFilePathFromUser(
-				"请输入申请书的文件名\n(默认：./keystore/commCert.req，直接回车使用默认文件名)：",
-				ConfigTool.FILE_TO_WRITE, "./keystore/commCert.req");
+				"请输入申请书的文件名\n(默认：./keystore/subCAKeystore.req，直接回车使用默认文件名)：",
+				ConfigTool.FILE_TO_WRITE, "./keystore/subCAKeystore.req");
 		if (reqFilePath == null)
 			return 0;
 		int j = 0;
@@ -87,7 +85,7 @@ public class InitCommuCert {
 			return 0;
 		}
 		int result = -1;
-		// 重点操作
+		// 重点操作  软加密库  加密机 两种生成方式 控制台提示操作 稍后修改
 		KeyUtils kUtils = new KeyUtils();
 		result = kUtils.generalP10(jksFliePath, dn, keyAlag, keySize,
 				reqFilePath, Keytype.FISHMAN_VALUE, passwords.toCharArray());
@@ -279,12 +277,13 @@ public class InitCommuCert {
 		return initServerImportP7b(arrayOfByte, paramBoolean);
 	}
 
-	public static void main(String[] paramArrayOfString) {
-		InitCommuCert localInitCommuCert = new InitCommuCert(false);
-		try {
-			System.out.println(localInitCommuCert.generalReq());
-		} catch (IDAException localIDAException) {
-			localIDAException.printStackTrace();
-		}
+	public static String getIdentity() {
+		return identity;
 	}
+
+	public static void setIdentity(String identity) {
+		InitCommuCert.identity = identity;
+	}
+
+
 }
