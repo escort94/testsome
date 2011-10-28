@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import cn.com.jit.ida.ca.config.CAConfigConstant;
 import cn.com.jit.ida.ca.control.ControlServer;
 import cn.com.jit.ida.ca.display.DisplayInitServer;
+import cn.com.jit.ida.ca.display.DisplayUpdateAdmin;
+import cn.com.jit.ida.ca.display.DisplayUpdateCommjks;
 import cn.com.jit.ida.globalconfig.ConfigTool;
 
 public class CAServerStart {
@@ -127,13 +129,16 @@ public class CAServerStart {
 				dis.operate();
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("6")) {//update admin cert
-				if (checkOperateIdentity()) {
-
+				//maybe need increase auth password
+				if(isBeenInit()){
+					DisplayUpdateAdmin dua = new DisplayUpdateAdmin();
+					dua.operate();
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("7")) {// update server comm cert
-				if (isBeenInit() && checkOperateIdentity()) {
-
+				if (isBeenInit()) {
+					DisplayUpdateCommjks dcj = new DisplayUpdateCommjks();
+					dcj.operate();
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("8")) {// update gen key cert

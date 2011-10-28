@@ -17,7 +17,7 @@ public class InitCommServerJKS extends InitFather {
 	protected String keyCommSigningStoreAlg;
 	public int commKeySize;
 	protected int commJKSValidityDay;
-	
+
 	public InitCommServerJKS() throws IDAException {
 		super();
 	}
@@ -27,6 +27,9 @@ public class InitCommServerJKS extends InitFather {
 	}
 
 	public void initialize() throws ConfigException {
+	}
+
+	public void beforeMake() throws IDAException {
 		this.keyCommSigningAlg = init.getString("CommSigningKeyAlg");
 		if (keyCommSigningAlg.equalsIgnoreCase("SHA1withRSA")) {
 			keyCommSigningStoreAlg = RSA;
@@ -35,22 +38,27 @@ public class InitCommServerJKS extends InitFather {
 		}
 		commKeySize = init.getNumber("CommSigningKeySize");
 		this.commJKSValidityDay = this.init.getNumber("CommCertValidity");
-	}
-
-	/**
-	 * 产生服务器jks
-	 * @throws IDAException
-	 * @throws SQLException 
-	 */
-	public void makeServerJKS() throws IDAException {
 		String CNinDN = init.getString("ServerAddress");
 		String DN = "CN=" + CNinDN + "," + baseDN;
 		String path = this.init.getString("CommKeyStore");
 		String issuer = init.getString("CASubject");
 		char[] password = this.init.getString("CommKeyStorePWD").toCharArray();
-		KeyPair keyPair = KeyUtils.createKeyPair(keyCommSigningStoreAlg, Keytype.SOFT_VALUE, commKeySize);
-		GenericKey gKey = new GenericKey(true, path, password, keyPair, GenericKey.JKS);
-		gKey.addKeystoreStruct(keyCommSigningAlg, DN, issuer, password, commJKSValidityDay);
+		makeServerJKS(path, password, DN);
+	}
+
+	/**
+	 * 产生服务器jks
+	 * 
+	 * @throws IDAException
+	 * @throws SQLException
+	 */
+	public void makeServerJKS(String path, char[] password, String DN) throws IDAException {
+		KeyPair keyPair = KeyUtils.createKeyPair(keyCommSigningStoreAlg,
+				Keytype.SOFT_VALUE, commKeySize);
+		GenericKey gKey = new GenericKey(true, path, password, keyPair,
+				GenericKey.JKS);
+		gKey.addKeystoreStruct(keyCommSigningAlg, DN, password,
+				commJKSValidityDay);
 		gKey.saveToFile();
 	}
 

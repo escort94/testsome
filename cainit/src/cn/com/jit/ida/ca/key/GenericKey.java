@@ -53,6 +53,8 @@ public class GenericKey {
 	public String fileType;
 	public int validity;
 	public int adminIdentity;
+	public String sn;
+	public String dn;
 
 	/**
 	 * 
@@ -176,7 +178,7 @@ public class GenericKey {
 		}
 	}
 
-	public void updateAdmin(int adminType) throws IDAException{
+	public void updateAdmin(int adminType) throws IDAException {
 		X509CertImpl localX509CertImpl = null;
 		try {
 			localX509CertImpl = (X509CertImpl) m_keyStore
@@ -185,6 +187,12 @@ public class GenericKey {
 			OperateException oexception = new OperateException(
 					OperateException.GET_CER_BY_ALIAS_ERROR,
 					OperateException.GET_CER_BY_ALIAS_ERROR_DES);
+			throw oexception;
+		}
+		if (null == localX509CertImpl) {
+			OperateException oexception = new OperateException(
+					OperateException.CERTIFICATE_NULLPOINTER_ERROR,
+					OperateException.CERTIFICATE_NULLPOINTER_ERROR_DES);
 			throw oexception;
 		}
 		String dn = localX509CertImpl.getSubjectX500Principal().getName();
@@ -249,7 +257,7 @@ public class GenericKey {
 			X509CertImpl x509CertImpl = new X509CertImpl(certArrayOfByte);
 			String importDN = x509CertImpl.getSubjectDN().getName();
 			String alias = getAlias();
-			X509CertImpl localX509CertImpl = (X509CertImpl) m_keyStore
+			X509Certificate localX509CertImpl = (X509Certificate) m_keyStore
 					.getCertificate(alias);
 			String dn = localX509CertImpl.getSubjectDN().getName();
 			if (!isSameDn(importDN, dn)) {
@@ -268,6 +276,9 @@ public class GenericKey {
 					bool = addDemoCA(privateKey, password);
 				} while (bool == true
 						&& ConfigTool.getYesOrNo("是否再次需要导入其他根证书[Y/N]:"));
+			}
+			if (this.fileType.equals(GenericKey.PKCS12)) {
+				DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
 			}
 			return true;
 		} catch (Exception e) {
@@ -321,6 +332,29 @@ public class GenericKey {
 			throw kException;
 		}
 		return true;
+	}
+
+	public void addDemoCAAtOnce(String filePath, Key privateKey, char[] password) throws KeyPairException {
+		byte[] arrayOfByte = null;
+		try {
+			FileInputStream localFileInputStream = new FileInputStream(filePath);
+			arrayOfByte = new byte[localFileInputStream.available()];
+			localFileInputStream.read(arrayOfByte);
+			localFileInputStream.close();
+			X509Certificate x509CertImpl = new X509CertImpl(arrayOfByte);
+//			m_keyStore.setCertificateEntry(getAlias(x509CertImpl.getSubjectDN()
+//					.getName()), x509CertImpl);
+			Certificate[] certificate1 = m_keyStore.getCertificateChain("s1as");
+			Certificate[] certificateuse = new Certificate[] { (Certificate) x509CertImpl };
+			certificateuse = contactCertArr(certificate1, certificateuse);
+			m_keyStore
+					.setKeyEntry("s1as", privateKey, password, certificateuse);
+		} catch (Exception localException) {
+			KeyPairException kException = new KeyPairException(
+					KeyPairException.INSERT_GEN_CER_ERROR,
+					KeyPairException.INSERT_GEN_CER_ERROR_DES, localException);
+			throw kException;
+		}
 	}
 
 	public Certificate[] contactCertArr(Certificate[] certificateOld,
@@ -407,6 +441,8 @@ public class GenericKey {
 
 	public void addKeystoreStruct(String algorithm, String dn,
 			char[] passwords, int validityDay) throws IDAException {
+		this.sn = dn;
+		this.dn = dn;
 		X509Certificate certificate = null;
 		String signAlg = algorithm;
 		String snStr = CodeGenerator.generateRefCode();
@@ -450,9 +486,6 @@ public class GenericKey {
 					KeyPairException.STORE_JKS_ERROR,
 					KeyPairException.STORE_JKS_ERROR_DES, e);
 			throw kException;
-		}
-		if (this.fileType.equals(GenericKey.PKCS12)) {
-			DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
 		}
 	}
 
@@ -503,9 +536,6 @@ public class GenericKey {
 					KeyPairException.STORE_JKS_ERROR,
 					KeyPairException.STORE_JKS_ERROR_DES, e);
 			throw kException;
-		}
-		if (this.fileType.equals(GenericKey.PKCS12)) {
-			DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
 		}
 	}
 

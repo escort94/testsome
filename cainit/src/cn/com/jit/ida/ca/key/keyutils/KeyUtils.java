@@ -103,7 +103,7 @@ public class KeyUtils {
 	 */
 	public int generalP10(String jksFliePath, String dn, String keyalg,
 			int keysize, String reqFilePath, String keytype, char[] passwords)
-			throws IDAException, SQLException {
+			throws IDAException {
 		String algorithm = keyalg.equals(Keyalg.RSA_VALUE) ? Keyalgorithm.RSA_ALGORITHM
 				: Keyalgorithm.SM2_ALGORITHM;
 		KeyPair keyPair = getKeyPair(keyalg, keytype, keysize);

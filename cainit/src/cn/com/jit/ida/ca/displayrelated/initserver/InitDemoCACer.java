@@ -46,6 +46,17 @@ public class InitDemoCACer extends InitFather {
 		this.genCerDN = init.getString("CASubject");
 		this.democaKeyStore = this.init.getString("SigningKeyStore");
 	}
+	public static void main(String[] args) {
+		InitDemoCACer c;
+		try {
+			c = new InitDemoCACer();
+			c.makeDemoCACer();
+		} catch (IDAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	public void makeDemoCACer() throws IDAException{
 		KeyPair kPair = KeyUtils.createKeyPair(democaStoreAlg,
 				Keytype.SOFT_VALUE, democaKeySize);

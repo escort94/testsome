@@ -5,15 +5,16 @@ import java.security.KeyPair;
 import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.key.GenericKey;
 import cn.com.jit.ida.ca.key.keyutils.KeyUtils;
+import cn.com.jit.ida.ca.key.keyutils.Keytype;
 import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ParseXML;
 import cn.com.jit.ida.privilege.Admin;
 
 public class InitAuditAdminPFX extends InitFather {
 	//审计管理员签名算法
-	private String auditAdminSigningKeyAlg;
+	private String signingKeyAlg;
 	//审计管理员的密钥算法
-	private String auditAdminKeyAlg;
+	private String adminKeyAlg;
 	//签发有效期限
 	private int validityNum;
 	//pfx存储路径
@@ -24,19 +25,27 @@ public class InitAuditAdminPFX extends InitFather {
 	private String auditAdminDnNameInCn;
 	private String password;
 	private String DN;
+	private int keysize;
 	
 	public InitAuditAdminPFX()throws IDAException{
 		super();
+	}
+	public InitAuditAdminPFX(String keyalag, String password, String path, int validity)throws IDAException{
+		this.adminKeyAlg = keyalag;
+		this.signingKeyAlg = keyalag.equals(RSA) ? RSA_ALGORITHM : SM2_ALGORITHM;
+		this.password = password;
+		this.validityNum = validity;
+		this.p12Path = path;
 	}
 	public InitAuditAdminPFX(ParseXML init) throws IDAException {
 		super(init);
 	}
 	public void initialize() throws ConfigException{
-		this.auditAdminSigningKeyAlg = init.getString("AuditAdminSigningKeyAlg");
-		if (auditAdminSigningKeyAlg.equalsIgnoreCase("SHA1withRSA")) {
-			auditAdminKeyAlg = RSA;
-		} else if (auditAdminSigningKeyAlg.equalsIgnoreCase("SM3WITHSM2")) {
-			auditAdminKeyAlg = SM2;
+		this.signingKeyAlg = init.getString("AuditAdminSigningKeyAlg");
+		if (signingKeyAlg.equalsIgnoreCase("SHA1withRSA")) {
+			adminKeyAlg = RSA;
+		} else if (signingKeyAlg.equalsIgnoreCase("SM3WITHSM2")) {
+			adminKeyAlg = SM2;
 		}
 		validityNum = this.init.getNumber("AuditAdminCertValidity");
 		p12Path = this.init.getString("AuditAdminKeyStorePath").trim();
@@ -50,16 +59,28 @@ public class InitAuditAdminPFX extends InitFather {
 		auditAdminDnNameInCn = this.init.getString("AuditAdminName");
 		DN = "CN=" + auditAdminDnNameInCn + "," + baseDN;
 		password = this.init.getString("AdminKeyStorePWD");
+		keysize = this.init.getNumber("AuditAdminKeySize");
 	}
 	
+	public void makeAuditAdminPFX() throws IDAException{
+		makeAuditAdminPFX(Keytype.SOFT_VALUE, keysize);
+	}
 	public void makeAuditAdminPFX(String keytype, int keysize) throws IDAException{
-		KeyPair keyPair = KeyUtils.createKeyPair(auditAdminKeyAlg, keytype, keysize);
+		KeyPair keyPair = KeyUtils.createKeyPair(adminKeyAlg, keytype, keysize);
 		GenericKey gKey = new GenericKey(true, p12Path, password.toCharArray(), keyPair, GenericKey.PKCS12);
 		gKey.setAdminIdentity(Admin.AUDIT_ADMIN);
-		gKey.addKeystoreStruct(auditAdminSigningKeyAlg, DN, password.toCharArray(), validityNum);
+		gKey.addKeystoreStruct(signingKeyAlg, DN, password.toCharArray(), validityNum);
+		gKey.addDemoCAAtOnce(getCerPath(p12Path), keyPair.getPrivate(), password.toCharArray());
 		gKey.saveToFile();
 	}
+	
 	public ParseXML getInit() {
 		return init;
+	}
+	public String getDN() {
+		return DN;
+	}
+	public void setDN(String dn) {
+		DN = dn;
 	}
 }
