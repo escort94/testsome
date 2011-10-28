@@ -5,6 +5,11 @@ import cn.com.jit.ida.ca.displayrelated.UpdateAdmin;
 import cn.com.jit.ida.log.LogManager;
 import cn.com.jit.ida.log.SysLogger;
 
+/**
+ * 更新管理员证书
+ * @author kmc
+ *
+ */
 public class DisplayUpdateAdmin extends DisplayOperate{
 
 	public void operate() {

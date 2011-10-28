@@ -5,6 +5,11 @@ import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.log.LogManager;
 import cn.com.jit.ida.log.SysLogger;
 
+/**
+ * 更新服务器通信证书
+ * @author kmc
+ *
+ */
 public class DisplayUpdateCommjks extends DisplayOperate {
 
 	public void operate() {

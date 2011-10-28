@@ -3,12 +3,14 @@ package cn.com.jit.ida.ca.displayrelated;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.config.DBConfig;
 import cn.com.jit.ida.ca.exception.OperateException;
+import cn.com.jit.ida.globalconfig.ConfigTool;
 import cn.com.jit.ida.privilege.Admin;
 
 /**
@@ -19,13 +21,72 @@ import cn.com.jit.ida.privilege.Admin;
  * 
  */
 public class DbUtils {
-
 	public static Connection getConnection() throws IDAException, SQLException {
 		DBConfig dbConfig = DBConfig.getInstance();
 		return DriverManager.getConnection(dbConfig.getURL(), dbConfig
 				.getUser(), dbConfig.getPassword());
 	}
-
+	public void insertSysAdminPwd() throws IDAException{
+		String pwd = ConfigTool.getNewPassword("请输入系统管理员密码", 6, 16);
+		try {
+			Connection conn = this.getConnection();
+			String insertAdminsql = "insert into config values(?,?,?,?,?,?)";
+			PreparedStatement statement = conn
+					.prepareStatement(insertAdminsql);
+			statement.setString(1, "CAConfig");
+			statement.setString(2, "SysAdminPwd");
+			statement.setString(3, pwd);
+			statement.setString(4, "N");
+			statement.setString(5, "tmp_signServer");
+			statement.setString(6, "tmp_signClient");
+			statement.execute();
+		} catch (SQLException e) {
+			OperateException oexception = new OperateException(
+					OperateException.INSERT_SYSADMINPWD_ERROR,
+					OperateException.INSERT_SYSADMINPWD_ERROR_DES);
+			throw oexception;
+		}
+	}
+	public String getSysPwd() throws OperateException{
+		try {
+			Connection conn = this.getConnection();
+			String insertAdminsql = "select value from config where property = 'SysAdminPwd'";
+			Statement statement = conn
+					.createStatement();
+			ResultSet set = statement.executeQuery(insertAdminsql);
+			while(set.next()){
+				String pwd = set.getString(1);
+				return pwd;
+			}
+		} catch (Exception e) {
+			OperateException oexception = new OperateException(
+					OperateException.GET_SYSADMINPWD_ERROR,
+					OperateException.GET_SYSADMINPWD_ERROR_DES);
+			throw oexception;
+		}
+		return null;
+	}
+	public void updateSysAdminPwd() throws IDAException{
+		String pwd_old = ConfigTool.getPassword("请输入系统管理员密码", 6, 16);
+		if(!pwd_old.equals(getSysPwd())){
+			System.out.println("系统管理员密码错误");
+			return;
+		}
+		String pwd_new = ConfigTool.getNewPassword("请输入新的系统管理员密码", 6, 16);
+		try {
+			Connection conn = this.getConnection();
+			String insertAdminsql = "update config set value = ? where property ='SysAdminPwd'";
+			PreparedStatement statement = conn
+					.prepareStatement(insertAdminsql);
+			statement.setString(1, pwd_new);
+			statement.execute();
+		} catch (SQLException e) {
+			OperateException oexception = new OperateException(
+					OperateException.UPDATE_SYSADMINPWD_ERROR,
+					OperateException.UPDATE_SYSADMINPWD_ERROR_DES);
+			throw oexception;
+		}
+	}
 	public static void closeConnection(Connection conn) {
 		if (null != conn) {
 			try {

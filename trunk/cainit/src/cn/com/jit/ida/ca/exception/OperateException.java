@@ -29,6 +29,16 @@ public class OperateException extends IDAException {
 	
 	public static String DEMOCA_FILE_ERROR = "0010";
 	public static String DEMOCA_FILE_ERROR_DES = "读取根证书文件发生错误";
+	
+	public static String INSERT_SYSADMINPWD_ERROR = "0011";
+	public static String INSERT_SYSADMINPWD_ERROR_DES = "创建系统管理员密码失败";
+	public static String GET_SYSADMINPWD_ERROR = "0012";
+	public static String GET_SYSADMINPWD_ERROR_DES = "获得系统管理员密码失败";
+	public static String UPDATE_SYSADMINPWD_ERROR = "0013";
+	public static String UPDATE_SYSADMINPWD_ERROR_DES = "修改系统管理员密码失败";
+	
+	public static String SYSADMINPWD_ERROR = "0014";
+	public static String SYSADMINPWD_ERROR_DES = "系统管理员密码错误";
 	public OperateException(String paramString1, String paramString2) {
 		super(paramString1, paramString2);
 	}

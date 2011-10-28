@@ -6,20 +6,27 @@ import cn.com.jit.ida.log.LogManager;
 import cn.com.jit.ida.log.SysLogger;
 import cn.com.jit.ida.util.pki.PKIException;
 
+/**
+ * 操作子CA通信证书具体实现类
+ * @author kmc
+ *
+ */
 public class DealSubCAOperate {
 
 	public void dealCommuCert() {
+		//初始化日志 然后获得日志输出对象
 		LogManager.init();
 		SysLogger logger = LogManager.getSysLogger();
+		//根据选择 进行具体操作 全部是针对子CA
 		int j = ConfigTool.displayMenu(null, new String[] { "产生申请书(用于创建通信证书)",
-				"产生申请书(用于更新通信证书)", "导入证书(通信证书或信任证书)", "导入根证书" });
+				"产生申请书(用于更新通信证书)", "导入证书(根据req文件签出的cer格式证书)", "导入根证书" });
 		if (j == 0) {
 			logger.info("用户取消");
 		}
 		int i = 0;
 		InitCommuCert initCommuCert;
 		if ((j == 1) || (j == 2)) {
-			initCommuCert = new InitCommuCert(false);
+			initCommuCert = new InitCommuCert(InitCommuCert.SUB_CA_JKS);
 			if (j == 1) {
 				try {
 					i = initCommuCert.generalReq();
@@ -31,6 +38,7 @@ public class DealSubCAOperate {
 				try {
 					i = initCommuCert.generalReqForUpdataSM2();
 				} catch (PKIException e) {
+					//TODO 打印方式需要后续修改 规范采取 e.getMessage()
 					if (!e.getErrCode().equals("3002")) {
 						i = -1;
 					}
@@ -52,11 +60,13 @@ public class DealSubCAOperate {
 					logger.info("产生通信证书申请书失败");
 				else
 					System.out.println("产生通信证书申请书失败");
+			} else if (logger != null) {
+				logger.info("用户放弃");
 			} else {
-				return;
+				System.out.println("用户放弃");
 			}
 		} else if (j == 3) {
-			initCommuCert = new InitCommuCert(false);
+			initCommuCert = new InitCommuCert(InitCommuCert.SUB_CA_JKS);
 			try {
 				i = initCommuCert.importCertFromFile(false);
 			} catch (IDAException e) {
@@ -79,7 +89,7 @@ public class DealSubCAOperate {
 				System.out.println("用户放弃");
 			}
 		} else if (j == 4) {
-				initCommuCert = new InitCommuCert(false);
+				initCommuCert = new InitCommuCert(InitCommuCert.SUB_CA_JKS);
 				try {
 					i = initCommuCert.importGenCer();
 				} catch (IDAException e) {

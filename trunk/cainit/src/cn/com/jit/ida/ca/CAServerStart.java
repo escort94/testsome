@@ -8,8 +8,11 @@ import java.io.InputStreamReader;
 import cn.com.jit.ida.ca.config.CAConfigConstant;
 import cn.com.jit.ida.ca.control.ControlServer;
 import cn.com.jit.ida.ca.display.DisplayInitServer;
+import cn.com.jit.ida.ca.display.DisplayLaterCommServerJKS;
+import cn.com.jit.ida.ca.display.DisplaySubCAAll;
 import cn.com.jit.ida.ca.display.DisplayUpdateAdmin;
 import cn.com.jit.ida.ca.display.DisplayUpdateCommjks;
+import cn.com.jit.ida.ca.display.DisplayUpdateSigningJKS;
 import cn.com.jit.ida.globalconfig.ConfigTool;
 
 public class CAServerStart {
@@ -90,15 +93,14 @@ public class CAServerStart {
 			System.out
 					.println("************************************************");
 			System.out.println("   1.  启动服务器                              ");
-			System.out.println("   3.  停止服务器                              ");
-			System.out.println("   4.  产生申请书                              ");
+			System.out.println("   2.  停止服务器                              ");
+			System.out.println("   4.  子CA通信证书操作                              ");
 			System.out.println("   5.  初始化系统                              ");
 			System.out.println("   6.  更新管理员证书                         ");
 			System.out.println("   7.  更新服务器通信证书                        ");
-			System.out.println("   8.  更新根证书(子CA更新,请使用 4 和 12 操作)     ");
+			System.out.println("   8.  更新签名证书                             ");
+			System.out.println("   9.  服务器通信证书后续操作                     ");
 			System.out.println("  11.  显示版本号                              ");
-			System.out.println("  12.  导入证书                                ");
-			System.out.println("  13.  导入KMC证书                             ");
 			System.out.println("   0.  退出                                   ");
 			System.out
 					.println("************************************************");
@@ -116,13 +118,14 @@ public class CAServerStart {
 
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
-			} else if (str.equalsIgnoreCase("3")) {
+			} else if (str.equalsIgnoreCase("2")) {
 				if (checkOperateIdentity()) {//stop server
 
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("4")) {//apply  cert
-
+				DisplaySubCAAll dca = new DisplaySubCAAll();
+				dca.operate();
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("5")) {//init server
 				DisplayInitServer dis = new DisplayInitServer();
@@ -142,19 +145,16 @@ public class CAServerStart {
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("8")) {// update gen key cert
-				if (isBeenInit() && checkOperateIdentity()) {
-
+				if (isBeenInit()) {
+					DisplayUpdateSigningJKS dsj = new DisplayUpdateSigningJKS();
+					dsj.operate();
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
-			} else if (str.equalsIgnoreCase("11")) {//display version
-
+			} else if (str.equalsIgnoreCase("9")) {//comm server jks import cert or democa
+				DisplayLaterCommServerJKS dlcj = new DisplayLaterCommServerJKS();
+				dlcj.operate();
 				ConfigTool.waitToContinue(localBufferedReader);
-			} else if (str.equalsIgnoreCase("12")) {// import cert
-				if (isBeenInit() && checkOperateIdentity()) {
-
-				}
-				ConfigTool.waitToContinue(localBufferedReader);
-			} else if (str.equalsIgnoreCase("13")) {// import kmc cert
+			} else if (str.equalsIgnoreCase("11")) {// display version
 				if (isBeenInit() && checkOperateIdentity()) {
 
 				}
@@ -164,14 +164,7 @@ public class CAServerStart {
 					return;
 				System.out.println("请按菜单项选择");
 				ConfigTool.waitToContinue(localBufferedReader);
-				continue;
 			}
-			if (CAConfigConstant.isUserCancel.equals("0")) {
-				FinalizeCryptoDevice localFinalizeCryptoDevice = new FinalizeCryptoDevice();
-				localFinalizeCryptoDevice.doFinalize();
-				continue;
-			}
-			CAConfigConstant.isUserCancel = "0";
 		}
 	}
 
