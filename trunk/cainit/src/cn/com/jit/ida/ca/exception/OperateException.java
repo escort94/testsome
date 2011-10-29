@@ -38,7 +38,10 @@ public class OperateException extends IDAException {
 	public static String UPDATE_SYSADMINPWD_ERROR_DES = "修改系统管理员密码失败";
 	
 	public static String SYSADMINPWD_ERROR = "0014";
-	public static String SYSADMINPWD_ERROR_DES = "系统管理员密码错误";
+	public static String SYSADMINPWD_ERROR_DES = "系统管理员密码错误"; 
+	
+	public static String KEYPAIRTYPE_ERROR = "0015";
+	public static String KEYPAIRTYPE_ERROR_DES = "配置文件密钥生成方式配置错误";
 	public OperateException(String paramString1, String paramString2) {
 		super(paramString1, paramString2);
 	}

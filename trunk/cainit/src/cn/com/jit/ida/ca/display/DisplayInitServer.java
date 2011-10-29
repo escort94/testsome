@@ -4,6 +4,7 @@ import java.io.File;
 
 import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.config.CAConfigConstant;
+import cn.com.jit.ida.ca.displayrelated.DbUtils;
 import cn.com.jit.ida.ca.displayrelated.initserver.InitSystem;
 import cn.com.jit.ida.ca.initserver.GenConfigFile;
 import cn.com.jit.ida.ca.initserver.InitServerException;
@@ -35,12 +36,12 @@ public class DisplayInitServer extends DisplayOperate {
 								"N"))) {
 			return;
 		}
-		// 制作CAConfig.xml文件样式
+		// production new CAConfig.xml template
 		if (!GenConfigFile.makefileCainit()) {
 			System.out.println("初始化CAConfig.xml配置文件发生错误。");
 			return;
 		}
-		// 进行详细的初始化操作
+		// for detailed initialization
 		InitSystem initSystem;
 		try {
 			initSystem = new InitSystem();
@@ -53,6 +54,10 @@ public class DisplayInitServer extends DisplayOperate {
 			} else {
 				System.out.println(e.getMessage());
 				System.out.println("CA初始化失败。");
+			}
+			File localObject4 = new File("./config/CAConfig.xml");
+			if (localObject4.exists()) {
+				localObject4.delete();
 			}
 		}
 	}

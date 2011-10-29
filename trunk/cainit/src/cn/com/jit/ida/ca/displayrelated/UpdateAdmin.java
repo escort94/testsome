@@ -85,7 +85,7 @@ public class UpdateAdmin {
 			// and keysize
 			InitSuperAdminPFX makesuperadmin = new InitSuperAdminPFX(keyAlag, password, path, Integer.parseInt(validityDay));
 			makesuperadmin.setDN(dn);
-			makesuperadmin.makeSuperAdminPFX(Keytype.SOFT_VALUE, keySize);
+			makesuperadmin.makeSuperAdminPFX(keySize);
 		}
 
 	}
@@ -104,7 +104,7 @@ public class UpdateAdmin {
 			// and keysize
 			InitAuditAdminPFX makeauditdmin = new InitAuditAdminPFX(keyAlag, password, path, Integer.parseInt(validityDay));
 			makeauditdmin.setDN(dn);
-			makeauditdmin.makeAuditAdminPFX(Keytype.SOFT_VALUE, keySize);
+			makeauditdmin.makeAuditAdminPFX(keySize);
 		}
 	}
 
