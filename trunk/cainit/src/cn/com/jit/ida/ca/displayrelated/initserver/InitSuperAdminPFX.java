@@ -70,8 +70,9 @@ public class InitSuperAdminPFX extends InitFather {
 		GenericKey gKey = new GenericKey(true, p12Path, password.toCharArray(), keyPair, GenericKey.PKCS12);
 		gKey.setAdminIdentity(Admin.SUPER_ADMIN);
 		gKey.addKeystoreStruct(signingKeyAlg, DN, password.toCharArray(), validityNum);
-		gKey.addDemoCAAtOnce(getCerPath(p12Path), keyPair.getPrivate(), password.toCharArray());
+//		gKey.addDemoCAAtOnce(getCerPath(p12Path), keyPair.getPrivate(), password.toCharArray());
 		gKey.saveToFile();
+		this.getLogger().info("更新超级管理员操作成功");
 	}
 	public String getString(String paramString){
 		return init.getString(paramString);

@@ -15,6 +15,7 @@ public class DealSubCAOperate {
 
 	public void dealCommuCert() {
 		//初始化日志 然后获得日志输出对象
+		CommuCert.clear();
 		LogManager.init();
 		SysLogger logger = LogManager.getSysLogger();
 		//根据选择 进行具体操作 全部是针对子CA

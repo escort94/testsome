@@ -18,8 +18,8 @@ public class OperateException extends IDAException {
 	public static String UPDATE_ADMIN_TO_DATABASE_ROLLBACK_ERROR = "0006";
 	public static String UPDATE_ADMIN_TO_DATABASE_ROLLBACK_ERROR_DES = "将管理员插入数据库异常导致回滚操作，但回滚操作失败";
 
-	public static String GET_CER_BY_ALIAS_ERROR = "0007";
-	public static String GET_CER_BY_ALIAS_ERROR_DES = "根据别名从Keystore获得证书异常";
+	public static String GET_CERTIFICATECHAIN_FIRST_ERROR = "0007";
+	public static String GET_CERTIFICATECHAIN_FIRST_ERROR_DES = "获得证书链中首个证书发生失败";
 	
 	public static String CERTIFICATE_NULLPOINTER_ERROR = "0008";
 	public static String CERTIFICATE_NULLPOINTER_ERROR_DES = "导入证书数据不完备";

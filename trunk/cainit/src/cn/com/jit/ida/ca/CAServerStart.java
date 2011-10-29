@@ -81,6 +81,7 @@ public class CAServerStart {
 		SysLogger logger = LogManager.getSysLogger();
 		if (pwd == null) {
 			logger.info("用户取消");
+			return false;
 		}
 		try {
 			String dbpwd = DbUtils.getSysPwd();
@@ -139,7 +140,7 @@ public class CAServerStart {
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("3")) {// apply cert
-				if (isBeenInit() && checkOperateIdentity()) {// stop server
+				if (isBeenInit()) {// stop server
 					DisplaySubCAAll dca = new DisplaySubCAAll();
 					dca.operate();
 				}
@@ -156,20 +157,20 @@ public class CAServerStart {
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("6")) {// update server comm cert
-				if (isBeenInit() && checkOperateIdentity()) {
+				if (isBeenInit()) {
 					DisplayUpdateCommjks dcj = new DisplayUpdateCommjks();
 					dcj.operate();
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("7")) {// update gen key cert
-				if (isBeenInit() && checkOperateIdentity()) {
+				if (isBeenInit()) {
 					DisplayUpdateSigningJKS dsj = new DisplayUpdateSigningJKS();
 					dsj.operate();
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("8")) {// comm server jks import
 				// cert or democa
-				if (isBeenInit() && checkOperateIdentity()) {
+				if (isBeenInit()) {
 					DisplayLaterCommServerJKS dlcj = new DisplayLaterCommServerJKS();
 					dlcj.operate();
 				}
