@@ -52,14 +52,13 @@ public class InitDemoCACer extends InitFather {
 			c = new InitDemoCACer();
 			c.makeDemoCACer();
 		} catch (IDAException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
 	public void makeDemoCACer() throws IDAException{
 		KeyPair kPair = KeyUtils.createKeyPair(democaStoreAlg,
-				Keytype.SOFT_VALUE, democaKeySize);
+				KEYPAIR_TYPE, democaKeySize);
 		String snStr = CodeGenerator.generateRefCode();
 		X509Principal x509Principal = new X509Principal(this.genCerDN);
 		// 默认签发一年

@@ -63,10 +63,10 @@ public class InitSuperAdminPFX extends InitFather {
 		keysize = this.init.getNumber("SuperAdminKeySize");
 	}
 	public void makeSuperAdminPFX() throws IDAException{
-		makeSuperAdminPFX(Keytype.SOFT_VALUE, keysize);
+		makeSuperAdminPFX(keysize);
 	}
-	public void makeSuperAdminPFX(String keytype, int keysize) throws IDAException{
-		KeyPair keyPair = KeyUtils.createKeyPair(adminKeyAlg, keytype, keysize);
+	public void makeSuperAdminPFX(int keysize) throws IDAException{
+		KeyPair keyPair = KeyUtils.createKeyPair(adminKeyAlg, KEYPAIR_TYPE, keysize);
 		GenericKey gKey = new GenericKey(true, p12Path, password.toCharArray(), keyPair, GenericKey.PKCS12);
 		gKey.setAdminIdentity(Admin.SUPER_ADMIN);
 		gKey.addKeystoreStruct(signingKeyAlg, DN, password.toCharArray(), validityNum);

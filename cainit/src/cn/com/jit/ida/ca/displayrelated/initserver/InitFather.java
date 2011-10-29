@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.exception.OperateException;
+import cn.com.jit.ida.ca.key.keyutils.Keytype;
 import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ParseXML;
 
@@ -18,6 +19,9 @@ public abstract class InitFather {
 	public static final String SM2 = "SM2";
 	public static final String RSA_ALGORITHM = "SHA1withRSA";
 	public static final String SM2_ALGORITHM = "SM3WITHSM2";
+	public static final String RUAN = "RUAN";
+	public static final String YING = "YING";
+	public static String KEYPAIR_TYPE;
 
 	public InitFather() throws IDAException {
 		this.init = new ParseXML("./config/init.xml");
@@ -38,8 +42,20 @@ public abstract class InitFather {
 	public abstract void initialize() throws IDAException;
 
 	// 初始化方法 供子类实现
-	public void initConfig() throws ConfigException {
+	public void initConfig() throws ConfigException, OperateException {
 		baseDN = init.getString("BaseDN");
+		KEYPAIR_TYPE = init.getString("KeyPairType");
+		if(null != KEYPAIR_TYPE && RUAN.equals(KEYPAIR_TYPE)){
+			KEYPAIR_TYPE = Keytype.SOFT_VALUE;
+		}else if(null != KEYPAIR_TYPE && YING.equals(KEYPAIR_TYPE)){
+			KEYPAIR_TYPE = Keytype.FISHMAN_VALUE;
+		}else{
+			OperateException oexception = new OperateException(
+					OperateException.KEYPAIRTYPE_ERROR,
+					OperateException.KEYPAIRTYPE_ERROR_DES);
+			throw oexception;
+		}
+		KEYPAIR_TYPE = init.getString("KeyPairType");
 	}
 
 	public String getCerPath(String path) throws OperateException {

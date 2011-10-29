@@ -54,7 +54,7 @@ public class InitCommServerJKS extends InitFather {
 	 */
 	public void makeServerJKS(String path, char[] password, String DN) throws IDAException {
 		KeyPair keyPair = KeyUtils.createKeyPair(keyCommSigningStoreAlg,
-				Keytype.SOFT_VALUE, commKeySize);
+				KEYPAIR_TYPE, commKeySize);
 		GenericKey gKey = new GenericKey(true, path, password, keyPair,
 				GenericKey.JKS);
 		gKey.addKeystoreStruct(keyCommSigningAlg, DN, password,

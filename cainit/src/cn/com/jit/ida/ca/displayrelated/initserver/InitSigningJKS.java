@@ -66,7 +66,7 @@ public class InitSigningJKS extends InitFather {
 
 	// 生成自签名的证书cer 当然是利用上面的密钥对
 	public void getSignedByItselfCer() throws IDAException {
-		KeyPair keyPair =KeyUtils.createKeyPair(keySigningStoreAlg, Keytype.SOFT_VALUE,
+		KeyPair keyPair =KeyUtils.createKeyPair(keySigningStoreAlg, KEYPAIR_TYPE,
 				keySize);
 		GenericKey gKey = new GenericKey(true, signingjkspath,
 				singingkeyStorePassword.toCharArray(), keyPair, GenericKey.JKS);

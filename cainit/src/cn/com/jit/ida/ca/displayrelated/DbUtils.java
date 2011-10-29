@@ -26,10 +26,10 @@ public class DbUtils {
 		return DriverManager.getConnection(dbConfig.getURL(), dbConfig
 				.getUser(), dbConfig.getPassword());
 	}
-	public void insertSysAdminPwd() throws IDAException{
+	public static void insertSysAdminPwd() throws IDAException{
 		String pwd = ConfigTool.getNewPassword("请输入系统管理员密码", 6, 16);
 		try {
-			Connection conn = this.getConnection();
+			Connection conn = getConnection();
 			String insertAdminsql = "insert into config values(?,?,?,?,?,?)";
 			PreparedStatement statement = conn
 					.prepareStatement(insertAdminsql);
@@ -47,9 +47,9 @@ public class DbUtils {
 			throw oexception;
 		}
 	}
-	public String getSysPwd() throws OperateException{
+	public static String getSysPwd() throws OperateException{
 		try {
-			Connection conn = this.getConnection();
+			Connection conn = getConnection();
 			String insertAdminsql = "select value from config where property = 'SysAdminPwd'";
 			Statement statement = conn
 					.createStatement();

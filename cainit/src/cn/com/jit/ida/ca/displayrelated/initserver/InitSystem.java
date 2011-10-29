@@ -12,6 +12,7 @@ import cn.com.jit.ida.ca.config.LOGConfig;
 import cn.com.jit.ida.ca.config.ServerConfig;
 import cn.com.jit.ida.ca.db.DBException;
 import cn.com.jit.ida.ca.db.DBManager;
+import cn.com.jit.ida.ca.displayrelated.DbUtils;
 import cn.com.jit.ida.ca.initserver.DBInit;
 import cn.com.jit.ida.ca.initserver.InitServerConfig;
 import cn.com.jit.ida.ca.initserver.InitServerException;
@@ -49,12 +50,18 @@ public class InitSystem {
 	public void runInit() throws IDAException {
 		// 验证配置文件正确性 init.xml文件 全部信息
 		readInitConfig();
-		// 生成CAConfig.xml配置文件 初始化数据库 将配置文件中部分信息存入到数据库
-		dealInitData();
+		
 		// log initialize
 		InitLog initLog = new InitLog();
 		SysLogger logger = initLog.initLog();
 		logger.info("日志系统初始化成功");
+		
+		// 生成CAConfig.xml配置文件 初始化数据库 将配置文件中部分信息存入到数据库
+		dealInitData();
+		logger.info("数据库初始化成功");
+		
+		//set sysadmin pwd,when you operationg specific function to validation identity
+		DbUtils.insertSysAdminPwd();
 
 		// LDAP initialize
 		if (initLDAP()) {
@@ -87,10 +94,10 @@ public class InitSystem {
 		logger.info("超级管理员证书初始化成功");
 
 		// 配置文件的处理
-		deleteInitFile();
+		deleteInitFile(logger);
 	}
 
-	public void deleteInitFile() throws InitServerException {
+	public void deleteInitFile(SysLogger logger) throws InitServerException {
 		File localFile1 = new File("./config/init.xml");
 		if (!ConfigTool.getYesOrNo(
 				"是否删除配置文件init.xml?\n[Y]删除；\n[N]不删除，该文件将被修改为init.xml.bak。", "Y")) {
@@ -101,7 +108,7 @@ public class InitSystem {
 			return;
 		}
 		if (!localFile1.delete())
-			System.out.println("删除配置文件失败。");
+			logger.info("删除配置文件失败。");
 	}
 
 	private boolean initLDAP() throws InitServerException {

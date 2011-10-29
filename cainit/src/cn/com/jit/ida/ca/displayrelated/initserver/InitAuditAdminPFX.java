@@ -63,10 +63,10 @@ public class InitAuditAdminPFX extends InitFather {
 	}
 	
 	public void makeAuditAdminPFX() throws IDAException{
-		makeAuditAdminPFX(Keytype.SOFT_VALUE, keysize);
+		makeAuditAdminPFX(keysize);
 	}
-	public void makeAuditAdminPFX(String keytype, int keysize) throws IDAException{
-		KeyPair keyPair = KeyUtils.createKeyPair(adminKeyAlg, keytype, keysize);
+	public void makeAuditAdminPFX(int keysize) throws IDAException{
+		KeyPair keyPair = KeyUtils.createKeyPair(adminKeyAlg, KEYPAIR_TYPE, keysize);
 		GenericKey gKey = new GenericKey(true, p12Path, password.toCharArray(), keyPair, GenericKey.PKCS12);
 		gKey.setAdminIdentity(Admin.AUDIT_ADMIN);
 		gKey.addKeystoreStruct(signingKeyAlg, DN, password.toCharArray(), validityNum);
