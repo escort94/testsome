@@ -42,7 +42,7 @@ public class DealReqPool
         {
           throw new NetException("99", "系统错误", localInterruptedException1);
         }
-        ConnectHandle localConnectHandle;
+        ConnectHandle localConnectHandle = null;
         synchronized (pool)
         {
           try
@@ -64,12 +64,9 @@ public class DealReqPool
           catch (Throwable localThrowable2)
           {
           }
-          continue;
         }
         if (Server.ServerState == 1)
-          continue;
         dealReq(localConnectHandle);
-        continue;
       }
       catch (Exception localException)
       {

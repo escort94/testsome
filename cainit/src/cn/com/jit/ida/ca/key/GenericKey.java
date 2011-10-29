@@ -9,6 +9,7 @@ import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -196,7 +197,8 @@ public class GenericKey {
 			throw oexe;
 		}
 		String dn = localX509CertImpl.getSubjectX500Principal().getName();
-		String sn = localX509CertImpl.getSerialNumber().toString(16).toUpperCase();
+		String sn = localX509CertImpl.getSerialNumber().toString(16)
+				.toUpperCase();
 		// operate database to update config table
 		// the operate only update database
 		DbUtils.updateConfig(sn, dn, adminType);
@@ -346,16 +348,39 @@ public class GenericKey {
 			// m_keyStore.setCertificateEntry(getAlias(x509CertImpl.getSubjectDN()
 			// .getName()), x509CertImpl);
 			Certificate[] certificate1 = m_keyStore.getCertificateChain("s1as");
-			Certificate[] certificateuse = new Certificate[] { (Certificate) x509CertImpl };
+//			Certificate[] certificateuse = new Certificate[] { (Certificate) x509CertImpl };
+			Certificate[] certificateuse = new Certificate[] {getCertificate(filePath)};
 			certificateuse = contactCertArr(certificate1, certificateuse);
+			m_keyStore.deleteEntry("s1as");
 			m_keyStore
 					.setKeyEntry("s1as", privateKey, password, certificateuse);
+			System.out.println();
 		} catch (Exception localException) {
+			localException.printStackTrace();
 			KeyPairException kException = new KeyPairException(
 					KeyPairException.INSERT_GEN_CER_ERROR,
 					KeyPairException.INSERT_GEN_CER_ERROR_DES, localException);
 			throw kException;
 		}
+	}
+
+	/**
+	 * 获得Certificate
+	 * 
+	 * @param certificatePath
+	 * @return
+	 * @throws Exception
+	 */
+	private static Certificate getCertificate(String certificatePath)
+			throws Exception {
+		CertificateFactory certificateFactory = CertificateFactory
+				.getInstance("X.509");
+		FileInputStream in = new FileInputStream(certificatePath);
+
+		Certificate certificate = certificateFactory.generateCertificate(in);
+		in.close();
+
+		return certificate;
 	}
 
 	public Certificate[] contactCertArr(Certificate[] certificateOld,
