@@ -278,7 +278,7 @@
 		<!-- CA签名证书密钥签名算法 将根据密钥签名算法判断 加密算法  -->
 		<!-- SHA1withRSA  与  SM3WITHSM2 之分-->
 		<SigningSigningKeyAlg>SHA1withRSA</SigningSigningKeyAlg>
-		<!--  CA签名证书密钥长度-->
+		<!--  CA签名证书密钥长度 密钥签名算为SM3WITHSM2则下面填写256 SHA1withRSA则填写1024或者2048 -->
 		<SigningSigningKeySize>1024</SigningSigningKeySize>
 		<!-- CA签名密钥容器密码  -->
 		<SigningKeyStorePWD isEncrypted="TRUE">detRcNxW</SigningKeyStorePWD>
@@ -290,10 +290,10 @@
 		<CACommKeyID>2</CACommKeyID>
 		<!-- CA通信密钥容器存储路径  -->
 		<CommKeyStore>./keystore/commCert.jks</CommKeyStore>
-		<!-- CA通信密钥密钥签名算法 将根据密钥签名算法判断 加密算法  -->
+		<!-- CA通信密钥签名算法 将根据密钥签名算法判断 加密算法  -->
 		<!-- SHA1withRSA  与  SM3WITHSM2 之分-->
 		<CommSigningKeyAlg>SHA1withRSA</CommSigningKeyAlg>
-		<!--  CA通信密钥密钥长度-->
+		<!--  CA通信密钥密钥长度 密钥签名算法为SM3WITHSM2则下面填写256 SHA1withRSA则填写1024或者2048 -->
 		<CommSigningKeySize>1024</CommSigningKeySize>
 		<!-- CA通信密钥容器密码  -->
 		<CommKeyStorePWD isEncrypted="TRUE">detRcNxW</CommKeyStorePWD>
@@ -315,9 +315,7 @@
 				<!--  CA超级管理员的名称-->
 				<AdminName>SuperAdministrator</AdminName>
 				<!--  CA超级管理员pfx证书存储路径-->
-				<AdminKeyStorePath>
-					./keystore/superAdminCert.pfx
-				</AdminKeyStorePath>
+				<AdminKeyStorePath>./keystore/superAdminCert.pfx</AdminKeyStorePath>
 				<!-- CA超级管理员密钥密钥签名算法 将根据密钥签名算法判断 加密算法  -->
 				<!-- SHA1withRSA  与  SM3WITHSM2 之分-->
 				<SuperAdminSigningKeyAlg>SHA1withRSA</SuperAdminSigningKeyAlg>
@@ -337,26 +335,20 @@
 				<!--  CA审计管理员的pkcs10证书申请书文件路径(文件内容要求Base64编码)，如果有此项那么<AuditAdminKeyStorePath>和<AuditAdminKeyStorePWD>将不起作用-->
 				<AuditAdminCertReqPath/>
 				<!--  CA审计管理员p7b证书存储路径-->
-				<AuditAdminCertPath>
-					./keystore/auditAdmin.p7b
-				</AuditAdminCertPath>
+				<AuditAdminCertPath>./keystore/auditAdmin.p7b</AuditAdminCertPath>
 			</PKCS10Req>
 			<SystemGeneration>
 				<!--  CA审计管理员的名称-->
 				<AuditAdminName>AuditAdministrator</AuditAdminName>
 				<!--  CA审计管理员pfx证书存储路径-->
-				<AuditAdminKeyStorePath>
-					./keystore/auditAdminCert.pfx
-				</AuditAdminKeyStorePath>
+				<AuditAdminKeyStorePath>./keystore/auditAdminCert.pfx</AuditAdminKeyStorePath>
 				<!-- CA审计管理员密钥密钥签名算法 将根据密钥签名算法判断 加密算法  -->
 				<!-- SHA1withRSA  与  SM3WITHSM2 之分-->
 				<AuditAdminSigningKeyAlg>SHA1withRSA</AuditAdminSigningKeyAlg>
 				<!--  审计管理员证书签名密钥长度-->
 				<AuditAdminKeySize>1024</AuditAdminKeySize>
 				<!--  CA审计管理员证书密码-->
-				<AuditAdminKeyStorePWD isEncrypted="FALSE">
-					111111
-				</AuditAdminKeyStorePWD>
+				<AuditAdminKeyStorePWD isEncrypted="FALSE">111111</AuditAdminKeyStorePWD>
 			</SystemGeneration>
 		</AuditAdminKeyStore>
 	</keyStoreConfig>
