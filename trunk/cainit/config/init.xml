@@ -15,16 +15,6 @@
 			<!-- 联接池大小 -->
 			<Maximum_Connection_Count>20</Maximum_Connection_Count>
 		</DBConfig>
-		<!-- Microsoft SQLServer 数据库配置示例 -->
-		<!--
-			<DBConfig>						   									
-			<Driver_URL>jdbc:microsoft:sqlserver://192.168.9.162:1433;DatabaseName=ca;SelectMethod=cursor</Driver_URL>
-			<Driver_Class>com.microsoft.jdbc.sqlserver.SQLServerDriver</Driver_Class>
-			<DBUser>dbuser</DBUser>
-			<DBUser_PWD isEncrypted="FALSE">dbpwd</DBUser_PWD>
-			<Maximum_Connection_Count>20</Maximum_Connection_Count>
-			</DBConfig>	
-		-->
 		<LDAPConfig>
 			<!-- 初始化LDAP Schema，如果使用Iplanet目录服务器,必须将此项配置为TRUE,不使用目录服务器或者使用OpenLDAP和南开创元目录服务器此项必须为FALSE -->
 			<InitLDAPSchema>FALSE</InitLDAPSchema>
@@ -273,6 +263,8 @@
 		<CASigningDeviceID>JSOFT_LIB</CASigningDeviceID>
 		<!-- 在CA签名密钥使用加密机时，输入CA的签名密钥ID标识，要求为大于0的整数，实际取值范围视加密机情况而定，如果<CASigningDeviceID>为JSOFT_LIB，则此项不起作用-->
 		<CASigningKeyID>1</CASigningKeyID>
+		<!-- 密钥生成方式 软加密库或者加密机   RUAN YING 之分-->
+		<KeyPairType>RUAN</KeyPairType>
 		<!-- CA签名密钥容器存储路径  -->
 		<SigningKeyStore>./keystore/signingCert.jks</SigningKeyStore>
 		<!-- CA签名证书密钥签名算法 将根据密钥签名算法判断 加密算法  -->
