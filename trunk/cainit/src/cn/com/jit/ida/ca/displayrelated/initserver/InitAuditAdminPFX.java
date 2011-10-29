@@ -27,8 +27,8 @@ public class InitAuditAdminPFX extends InitFather {
 	private String DN;
 	private int keysize;
 	
-	public InitAuditAdminPFX()throws IDAException{
-		super();
+	public InitAuditAdminPFX(String init) throws IDAException {
+		super(init);
 	}
 	public InitAuditAdminPFX(String keyalag, String password, String path, int validity)throws IDAException{
 		this.adminKeyAlg = keyalag;
@@ -37,7 +37,7 @@ public class InitAuditAdminPFX extends InitFather {
 		this.validityNum = validity;
 		this.p12Path = path;
 	}
-	public InitAuditAdminPFX(ParseXML init) throws IDAException {
+	public InitAuditAdminPFX(boolean init) throws IDAException {
 		super(init);
 	}
 	public void initialize() throws ConfigException{
@@ -72,7 +72,6 @@ public class InitAuditAdminPFX extends InitFather {
 		gKey.addKeystoreStruct(signingKeyAlg, DN, password.toCharArray(), validityNum);
 //		gKey.addDemoCAAtOnce(getCerPath(p12Path), keyPair.getPrivate(), password.toCharArray());
 		gKey.saveToFile();
-		this.getLogger().info("更新审计管理员操作成功");
 	}
 	
 	public ParseXML getInit() {

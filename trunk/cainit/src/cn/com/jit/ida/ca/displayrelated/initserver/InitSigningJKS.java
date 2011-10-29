@@ -39,12 +39,11 @@ public class InitSigningJKS extends InitFather {
 	protected int keySize;
 	protected String genCerDN;
 	protected int signingValidityDay;
-	
-	public InitSigningJKS() throws IDAException {
-		super();
-	}
 
-	public InitSigningJKS(ParseXML init) throws IDAException {
+	public InitSigningJKS(String init) throws IDAException {
+		super(init);
+	}
+	public InitSigningJKS(boolean init) throws IDAException {
 		super(init);
 	}
 

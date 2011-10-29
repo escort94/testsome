@@ -8,12 +8,13 @@ import cn.com.jit.ida.log.SysLogger;
 
 public class InitLog extends InitFather {
 
-	public InitLog(ParseXML init) throws IDAException {
+	public InitLog(boolean init) throws IDAException {
 		super(init);
 	}
-
+	public InitLog(String init) throws IDAException {
+		super(init);
+	}
 	public InitLog() throws IDAException {
-		super();
 	}
 
 	public void initialize() throws ConfigException {

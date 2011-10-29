@@ -28,6 +28,8 @@ public class GenConfigFile
 	    localStringBuffer.append("                <CACommDeviceID>JSOFT_LIB</CACommDeviceID>\n");
 	    localStringBuffer.append("                <!--  在CA通信密钥使用加密机时，输入CA的通信密钥ID标识，如果<CACommDeviceID>为JSOFT_LIB，则此项不起作用-->\n");
 	    localStringBuffer.append("                <CACommKeyID>2</CACommKeyID>\n");
+	    localStringBuffer.append("                <!-- 密钥生成方式 软加密库或者加密机   RUAN YING 之分-->\n");
+	    localStringBuffer.append("                <KeyPairType>YING</KeyPairType>\n");
 	    localStringBuffer.append("                <!-- CA通信密钥容器存储路径  -->\n");
 	    localStringBuffer.append("                <CommKeyStore>./keystore/commCert.jks</CommKeyStore>\n");
 	    localStringBuffer.append("                <!-- CA通信密钥容器密码  -->\n");

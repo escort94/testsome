@@ -71,27 +71,27 @@ public class InitSystem {
 		}
 
 		// DemoCA.cer initialize
-		InitDemoCACer initDemoCACer = new InitDemoCACer();
+		InitDemoCACer initDemoCACer = new InitDemoCACer(false);
 		initDemoCACer.makeDemoCACer();
 		logger.info("根证书初始化成功");
 
 		// signingJKS initialize
-		InitSigningJKS initSignJKS = new InitSigningJKS();
+		InitSigningJKS initSignJKS = new InitSigningJKS(false);
 		initSignJKS.getSignedByItselfCer();
 		logger.info("签名根证书初始化成功");
 
 		// commServerJKS initialize
-		InitCommServerJKS initCommServer = new InitCommServerJKS();
+		InitCommServerJKS initCommServer = new InitCommServerJKS(false);
 		initCommServer.beforeMake();
 		logger.info("通信证书初始化成功");
 
 		// superAdminJKS initialize
-		InitSuperAdminPFX initSuperAdmin = new InitSuperAdminPFX();
+		InitSuperAdminPFX initSuperAdmin = new InitSuperAdminPFX(false);
 		initSuperAdmin.makeSuperAdminPFX();
 		logger.info("超级管理员证书初始化成功");
 
 		// auditAdminJKS initialize
-		InitAuditAdminPFX initAuditAdmin = new InitAuditAdminPFX();
+		InitAuditAdminPFX initAuditAdmin = new InitAuditAdminPFX(false);
 		initAuditAdmin.makeAuditAdminPFX();
 		logger.info("超级管理员证书初始化成功");
 

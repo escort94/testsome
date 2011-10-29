@@ -17,12 +17,12 @@ public class InitCommServerJKS extends InitFather {
 	protected String keyCommSigningStoreAlg;
 	public int commKeySize;
 	protected int commJKSValidityDay;
-
-	public InitCommServerJKS() throws IDAException {
-		super();
+	
+	public InitCommServerJKS(String init) throws IDAException {
+		super(init);
 	}
 
-	public InitCommServerJKS(ParseXML init) throws IDAException {
+	public InitCommServerJKS(boolean init) throws IDAException {
 		super(init);
 	}
 

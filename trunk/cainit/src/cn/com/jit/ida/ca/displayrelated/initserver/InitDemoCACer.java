@@ -26,11 +26,11 @@ public class InitDemoCACer extends InitFather {
 	protected String genCerDN;
 	public String democaKeyStore;
 	
-	public InitDemoCACer() throws IDAException {
-		super();
+	public InitDemoCACer(String init) throws IDAException {
+		super(init);
 	}
-
-	public InitDemoCACer(ParseXML parseXML) throws IDAException {
+	
+	public InitDemoCACer(boolean parseXML) throws IDAException {
 		super(parseXML);
 	}
 
@@ -45,16 +45,6 @@ public class InitDemoCACer extends InitFather {
 		}
 		this.genCerDN = init.getString("CASubject");
 		this.democaKeyStore = this.init.getString("SigningKeyStore");
-	}
-	public static void main(String[] args) {
-		InitDemoCACer c;
-		try {
-			c = new InitDemoCACer();
-			c.makeDemoCACer();
-		} catch (IDAException e) {
-			e.printStackTrace();
-		}
-		
 	}
 	public void makeDemoCACer() throws IDAException{
 		KeyPair kPair = KeyUtils.createKeyPair(democaStoreAlg,
