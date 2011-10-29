@@ -69,6 +69,7 @@ public class XML2DB
       savaToXML("ServiceTimeOut");
       savaToXML("CACommDeviceID");
       savaToXML("CACommKeyID");
+      savaToXML("KeyPairType");
       savaToXML("CommKeyStore");
       savaToXML("CommKeyStorePWD");
       savaToXML("ServerAddress");

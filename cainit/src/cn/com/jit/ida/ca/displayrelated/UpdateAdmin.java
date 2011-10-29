@@ -14,6 +14,8 @@ import cn.com.jit.ida.ca.key.keyutils.Keytype;
 import cn.com.jit.ida.globalconfig.ConfigFromXML;
 import cn.com.jit.ida.globalconfig.ConfigTool;
 import cn.com.jit.ida.globalconfig.ParseXML;
+import cn.com.jit.ida.log.LogManager;
+import cn.com.jit.ida.log.SysLogger;
 import cn.com.jit.ida.privilege.Admin;
 
 /**
@@ -29,7 +31,8 @@ public class UpdateAdmin {
 	private String dn;
 	private String keyAlag;
 	private int keySize;
-
+	private SysLogger logger;
+	
 	public void updateAdmin() throws IDAException {
 		if (!isBeenInit()) {
 			return;
@@ -89,6 +92,7 @@ public class UpdateAdmin {
 					password, path, Integer.parseInt(validityDay));
 			makesuperadmin.setDN(dn);
 			makesuperadmin.makeSuperAdminPFX(keySize);
+			this.getLogger().info("更新超级管理员操作成功");
 		}
 
 	}
@@ -111,6 +115,7 @@ public class UpdateAdmin {
 					password, path, Integer.parseInt(validityDay));
 			makeauditdmin.setDN(dn);
 			makeauditdmin.makeAuditAdminPFX(keySize);
+			this.getLogger().info("更新审计管理员操作成功");
 		}
 	}
 
@@ -163,6 +168,8 @@ public class UpdateAdmin {
 		if (!ConfigTool.getYesOrNo("确定执行更新管理员操作？[Y/N]", "N")) {
 			return false;
 		}
+		LogManager.init();
+		logger = LogManager.getSysLogger();
 		return true;
 	}
 
@@ -185,5 +192,13 @@ public class UpdateAdmin {
 		File localFile = new File("./config/CAConfig.xml");
 		bool = localFile.exists();
 		return bool;
+	}
+
+	public SysLogger getLogger() {
+		return logger;
+	}
+
+	public void setLogger(SysLogger logger) {
+		this.logger = logger;
 	}
 }

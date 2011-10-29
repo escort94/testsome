@@ -28,10 +28,10 @@ public class InitSuperAdminPFX extends InitFather {
 	private String DN;
 	private int keysize;
 	
-	public InitSuperAdminPFX()throws IDAException{
-		super();
+	public InitSuperAdminPFX(String init) throws IDAException {
+		super(init);
 	}
-	public InitSuperAdminPFX(ParseXML init) throws IDAException {
+	public InitSuperAdminPFX(boolean init) throws IDAException {
 		super(init);
 	}
 	public InitSuperAdminPFX(String keyalag, String password, String path, int validity)throws IDAException{
@@ -72,7 +72,6 @@ public class InitSuperAdminPFX extends InitFather {
 		gKey.addKeystoreStruct(signingKeyAlg, DN, password.toCharArray(), validityNum);
 //		gKey.addDemoCAAtOnce(getCerPath(p12Path), keyPair.getPrivate(), password.toCharArray());
 		gKey.saveToFile();
-		this.getLogger().info("更新超级管理员操作成功");
 	}
 	public String getString(String paramString){
 		return init.getString(paramString);

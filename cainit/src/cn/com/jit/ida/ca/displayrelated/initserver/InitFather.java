@@ -24,16 +24,26 @@ public abstract class InitFather {
 	public static final String RUAN = "RUAN";
 	public static final String YING = "YING";
 	public static String KEYPAIR_TYPE;
-	private SysLogger logger;
-	
-	public InitFather() throws IDAException {
-		this.init = new ParseXML("./config/init.xml");
-		initConfig();
-		initialize();
+
+	public InitFather() throws ConfigException {
+
 	}
 
-	public InitFather(ParseXML init) throws IDAException {
-		this.init = init;
+	public InitFather(String inited) throws ConfigException {
+		this.init = new ParseXML("./config/CAConfig.xml");
+		KEYPAIR_TYPE = init.getString("KeyPairType");
+
+	}
+
+	public InitFather(boolean bool) throws IDAException {
+		if (bool) {
+			this.init = new ParseXML("./config/CAConfig.xml");
+			KEYPAIR_TYPE = init.getString("KeyPairType");
+		} else {
+			this.init = new ParseXML("./config/init.xml");
+			baseDN = init.getString("BaseDN");
+			KEYPAIR_TYPE = init.getString("KeyPairType");
+		}
 		initConfig();
 		try {
 			initialize();
@@ -46,20 +56,16 @@ public abstract class InitFather {
 
 	// 初始化方法 供子类实现
 	public void initConfig() throws ConfigException, OperateException {
-		baseDN = init.getString("BaseDN");
-		KEYPAIR_TYPE = init.getString("KeyPairType");
-		if(null != KEYPAIR_TYPE && RUAN.equals(KEYPAIR_TYPE)){
+		if (null != KEYPAIR_TYPE && RUAN.equals(KEYPAIR_TYPE)) {
 			KEYPAIR_TYPE = Keytype.SOFT_VALUE;
-		}else if(null != KEYPAIR_TYPE && YING.equals(KEYPAIR_TYPE)){
+		} else if (null != KEYPAIR_TYPE && YING.equals(KEYPAIR_TYPE)) {
 			KEYPAIR_TYPE = Keytype.FISHMAN_VALUE;
-		}else{
+		} else {
 			OperateException oexception = new OperateException(
 					OperateException.KEYPAIRTYPE_ERROR,
 					OperateException.KEYPAIRTYPE_ERROR_DES);
 			throw oexception;
 		}
-		LogManager.init();
-		logger = LogManager.getSysLogger();
 	}
 
 	public String getCerPath(String path) throws OperateException {
@@ -79,7 +85,8 @@ public abstract class InitFather {
 			throw oexception;
 		}
 	}
-	public byte[] getCertficateByte(String filePath) throws OperateException{
+
+	public byte[] getCertficateByte(String filePath) throws OperateException {
 		FileInputStream localFileInputStream;
 		try {
 			localFileInputStream = new FileInputStream(getCerPath(filePath));
@@ -100,11 +107,4 @@ public abstract class InitFather {
 		}
 	}
 
-	public SysLogger getLogger() {
-		return logger;
-	}
-
-	public void setLogger(SysLogger logger) {
-		this.logger = logger;
-	}
 }
