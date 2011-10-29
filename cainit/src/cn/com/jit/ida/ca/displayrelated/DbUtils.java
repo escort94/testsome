@@ -27,7 +27,7 @@ public class DbUtils {
 				.getUser(), dbConfig.getPassword());
 	}
 	public static void insertSysAdminPwd() throws IDAException{
-		String pwd = ConfigTool.getNewPassword("请输入系统管理员密码", 6, 16);
+		String pwd = ConfigTool.getNewPassword("请设置系统管理员密码", 6, 16);
 		try {
 			Connection conn = getConnection();
 			String insertAdminsql = "insert into config values(?,?,?,?,?,?)";

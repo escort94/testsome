@@ -17,10 +17,10 @@ import cn.com.jit.ida.globalconfig.ParseXML;
 import cn.com.jit.ida.privilege.Admin;
 
 /**
- * 用于更新管理员
- * 密钥算法与密钥长度后期将修改成控制台选择操作
+ * 用于更新管理员 密钥算法与密钥长度后期将修改成控制台选择操作
+ * 
  * @author kmc
- *
+ * 
  */
 public class UpdateAdmin {
 	private String path;
@@ -59,7 +59,7 @@ public class UpdateAdmin {
 					operateAuditAdmin();
 					break;
 				}
-				if ((str != null) && (str.trim().equalsIgnoreCase("quit"))){
+				if ((str != null) && (str.trim().equalsIgnoreCase("quit"))) {
 					return;
 				}
 				System.out.println("请按菜单项选择");
@@ -83,7 +83,10 @@ public class UpdateAdmin {
 		} else {
 			// make new pfx,in the future will be alter console input keytype
 			// and keysize
-			InitSuperAdminPFX makesuperadmin = new InitSuperAdminPFX(keyAlag, password, path, Integer.parseInt(validityDay));
+			path = new ConfigFromXML("CAConfig", "./config/CAConfig.xml")
+			.getString("AdminKeyStorePath");
+			InitSuperAdminPFX makesuperadmin = new InitSuperAdminPFX(keyAlag,
+					password, path, Integer.parseInt(validityDay));
 			makesuperadmin.setDN(dn);
 			makesuperadmin.makeSuperAdminPFX(keySize);
 		}
@@ -102,25 +105,27 @@ public class UpdateAdmin {
 		} else {
 			// make new pfx,in the future will be alter console input keytype
 			// and keysize
-			InitAuditAdminPFX makeauditdmin = new InitAuditAdminPFX(keyAlag, password, path, Integer.parseInt(validityDay));
+			path = new ConfigFromXML("CAConfig", "./config/CAConfig.xml")
+					.getString("AuditAdminKeyStorePath");
+			InitAuditAdminPFX makeauditdmin = new InitAuditAdminPFX(keyAlag,
+					password, path, Integer.parseInt(validityDay));
 			makeauditdmin.setDN(dn);
 			makeauditdmin.makeAuditAdminPFX(keySize);
 		}
 	}
 
-
 	public boolean beforeOperate() throws IDAException {
-		path = ConfigTool.getFilePathFromUser("请输入申请书文件,按Enter键跳过这一步：", ConfigTool.FILE_TO_READ);
+		path = ConfigTool.getFilePathFromUser("请输入申请书文件,按Enter键跳过这一步：",
+				ConfigTool.FILE_TO_READ);
 		if (null != path && path.equalsIgnoreCase("quit")) {
 			System.out.println("用户放弃");
 			return false;
 		}
 		if (null == path) {
-			path = new ConfigFromXML("CAConfig", "./config/CAConfig.xml").getString("AdminKeyStorePath");
 			int j = 0;
 			j = ConfigTool.displayMenu(
-					"**                     算法                     **", new String[] {
-							"RSA(默认)", "SM2" }, 1);
+					"**                     算法                     **",
+					new String[] { "RSA(默认)", "SM2" }, 1);
 			if (j == 1) {
 				keyAlag = "RSA";
 				keySize = ConfigTool.displayMenu(

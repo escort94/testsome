@@ -10,6 +10,8 @@ import cn.com.jit.ida.ca.exception.OperateException;
 import cn.com.jit.ida.ca.key.keyutils.Keytype;
 import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ParseXML;
+import cn.com.jit.ida.log.LogManager;
+import cn.com.jit.ida.log.SysLogger;
 
 public abstract class InitFather {
 	protected ParseXML init;
@@ -22,7 +24,8 @@ public abstract class InitFather {
 	public static final String RUAN = "RUAN";
 	public static final String YING = "YING";
 	public static String KEYPAIR_TYPE;
-
+	private SysLogger logger;
+	
 	public InitFather() throws IDAException {
 		this.init = new ParseXML("./config/init.xml");
 		initConfig();
@@ -55,7 +58,8 @@ public abstract class InitFather {
 					OperateException.KEYPAIRTYPE_ERROR_DES);
 			throw oexception;
 		}
-		KEYPAIR_TYPE = init.getString("KeyPairType");
+		LogManager.init();
+		logger = LogManager.getSysLogger();
 	}
 
 	public String getCerPath(String path) throws OperateException {
@@ -94,5 +98,13 @@ public abstract class InitFather {
 					OperateException.DEMOCA_FILE_ERROR_DES);
 			throw oexception;
 		}
+	}
+
+	public SysLogger getLogger() {
+		return logger;
+	}
+
+	public void setLogger(SysLogger logger) {
+		this.logger = logger;
 	}
 }

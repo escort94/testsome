@@ -179,24 +179,24 @@ public class GenericKey {
 	}
 
 	public void updateAdmin(int adminType) throws IDAException {
+		OperateException oexception = new OperateException(
+				OperateException.GET_CERTIFICATECHAIN_FIRST_ERROR,
+				OperateException.GET_CERTIFICATECHAIN_FIRST_ERROR_DES);
 		X509CertImpl localX509CertImpl = null;
 		try {
-			localX509CertImpl = (X509CertImpl) m_keyStore
-					.getCertificate("s1as");
-		} catch (KeyStoreException e) {
-			OperateException oexception = new OperateException(
-					OperateException.GET_CER_BY_ALIAS_ERROR,
-					OperateException.GET_CER_BY_ALIAS_ERROR_DES);
+			localX509CertImpl = (X509CertImpl) this.get_KeyStruct()
+					.firstElement();
+		} catch (Exception e) {
 			throw oexception;
 		}
 		if (null == localX509CertImpl) {
-			OperateException oexception = new OperateException(
+			OperateException oexe = new OperateException(
 					OperateException.CERTIFICATE_NULLPOINTER_ERROR,
 					OperateException.CERTIFICATE_NULLPOINTER_ERROR_DES);
-			throw oexception;
+			throw oexe;
 		}
 		String dn = localX509CertImpl.getSubjectX500Principal().getName();
-		String sn = localX509CertImpl.getSerialNumber().toString(16);
+		String sn = localX509CertImpl.getSerialNumber().toString(16).toUpperCase();
 		// operate database to update config table
 		// the operate only update database
 		DbUtils.updateConfig(sn, dn, adminType);
@@ -334,7 +334,8 @@ public class GenericKey {
 		return true;
 	}
 
-	public void addDemoCAAtOnce(String filePath, Key privateKey, char[] password) throws KeyPairException {
+	public void addDemoCAAtOnce(String filePath, Key privateKey, char[] password)
+			throws KeyPairException {
 		byte[] arrayOfByte = null;
 		try {
 			FileInputStream localFileInputStream = new FileInputStream(filePath);
@@ -342,8 +343,8 @@ public class GenericKey {
 			localFileInputStream.read(arrayOfByte);
 			localFileInputStream.close();
 			X509Certificate x509CertImpl = new X509CertImpl(arrayOfByte);
-//			m_keyStore.setCertificateEntry(getAlias(x509CertImpl.getSubjectDN()
-//					.getName()), x509CertImpl);
+			// m_keyStore.setCertificateEntry(getAlias(x509CertImpl.getSubjectDN()
+			// .getName()), x509CertImpl);
 			Certificate[] certificate1 = m_keyStore.getCertificateChain("s1as");
 			Certificate[] certificateuse = new Certificate[] { (Certificate) x509CertImpl };
 			certificateuse = contactCertArr(certificate1, certificateuse);

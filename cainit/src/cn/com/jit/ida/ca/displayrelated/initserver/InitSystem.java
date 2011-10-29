@@ -51,14 +51,16 @@ public class InitSystem {
 		// 验证配置文件正确性 init.xml文件 全部信息
 		readInitConfig();
 		
+		// 生成CAConfig.xml配置文件 初始化数据库 将配置文件中部分信息存入到数据库
+		dealInitData();
+		
 		// log initialize
 		InitLog initLog = new InitLog();
 		SysLogger logger = initLog.initLog();
+		//database initialize delay display successful
+		logger.info("数据库初始化成功");
 		logger.info("日志系统初始化成功");
 		
-		// 生成CAConfig.xml配置文件 初始化数据库 将配置文件中部分信息存入到数据库
-		dealInitData();
-		logger.info("数据库初始化成功");
 		
 		//set sysadmin pwd,when you operationg specific function to validation identity
 		DbUtils.insertSysAdminPwd();
