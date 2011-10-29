@@ -43,13 +43,13 @@ public abstract class InitFather {
 			this.init = new ParseXML("./config/init.xml");
 			baseDN = init.getString("BaseDN");
 			KEYPAIR_TYPE = init.getString("KeyPairType");
+			try {
+				initialize();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		initConfig();
-		try {
-			initialize();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public abstract void initialize() throws IDAException;

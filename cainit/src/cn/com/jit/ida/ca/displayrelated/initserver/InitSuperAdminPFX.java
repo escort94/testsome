@@ -35,6 +35,7 @@ public class InitSuperAdminPFX extends InitFather {
 		super(init);
 	}
 	public InitSuperAdminPFX(String keyalag, String password, String path, int validity)throws IDAException{
+		super(true);
 		this.adminKeyAlg = keyalag;
 		this.signingKeyAlg = keyalag.equals(RSA) ? RSA_ALGORITHM : SM2_ALGORITHM;
 		this.password = password;
