@@ -70,7 +70,7 @@ public class InitAuditAdminPFX extends InitFather {
 		GenericKey gKey = new GenericKey(true, p12Path, password.toCharArray(), keyPair, GenericKey.PKCS12);
 		gKey.setAdminIdentity(Admin.AUDIT_ADMIN);
 		gKey.addKeystoreStruct(signingKeyAlg, DN, password.toCharArray(), validityNum);
-//		gKey.addDemoCAAtOnce(getCerPath(p12Path), keyPair.getPrivate(), password.toCharArray());
+		gKey.addDemoCAAtOnce(getCerPath(p12Path), keyPair.getPrivate(), password.toCharArray());
 		gKey.saveToFile();
 	}
 	
