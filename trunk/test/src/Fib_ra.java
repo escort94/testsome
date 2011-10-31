@@ -2,7 +2,7 @@ public class Fib_ra {
 	public static int fibonacci(int n) {
 		if (n >= 0)
 			if (n == 0 || n == 1)
-				return n;
+				return 1;
 			else
 				return fibonacci(n - 2) + fibonacci(n - 1);
 		return -1;
@@ -10,7 +10,7 @@ public class Fib_ra {
 
 	public static void main(String args[]) {
 
-		int m = 25, n;
+		int m = 50, n;
 		int fib[] = new int[m];
 		for (n = 0; n < m; n++)
 			fib[n] = fibonacci(n);
