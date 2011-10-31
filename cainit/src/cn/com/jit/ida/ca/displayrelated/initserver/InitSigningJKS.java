@@ -37,7 +37,7 @@ public class InitSigningJKS extends InitFather {
 	protected String keySigningStoreAlg;
 	protected String signingjkspath;
 	protected int keySize;
-	protected String genCerDN;
+	protected String issuer;
 	protected int signingValidityDay;
 
 	public InitSigningJKS(String init) throws IDAException {
@@ -59,7 +59,7 @@ public class InitSigningJKS extends InitFather {
 		}
 		this.signingjkspath = this.init.getString("SigningKeyStore");
 		this.keySize = this.init.getNumber("SigningSigningKeySize");
-		this.genCerDN = init.getString("CASubject");
+		this.issuer = init.getString("CASubject");
 		this.signingValidityDay = this.init.getNumber("SigningCertValidity");
 	}
 
@@ -69,7 +69,7 @@ public class InitSigningJKS extends InitFather {
 				keySize);
 		GenericKey gKey = new GenericKey(true, signingjkspath,
 				singingkeyStorePassword.toCharArray(), keyPair, GenericKey.JKS);
-		gKey.addKeystoreStruct(keySigningAlg, genCerDN, singingkeyStorePassword
+		gKey.addKeystoreStruct(keySigningAlg, issuer, singingkeyStorePassword
 				.toCharArray(), signingValidityDay);
 		gKey.saveToFile();
 	}
@@ -91,6 +91,12 @@ public class InitSigningJKS extends InitFather {
 
 	public void setSigningValidityDay(int signingValidityDay) {
 		this.signingValidityDay = signingValidityDay;
+	}
+	public String getIssuer() {
+		return issuer;
+	}
+	public void setIssuer(String issuer) {
+		this.issuer = issuer;
 	}
 
 }

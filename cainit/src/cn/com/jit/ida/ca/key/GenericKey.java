@@ -338,6 +338,11 @@ public class GenericKey {
 
 	public void addDemoCAAtOnce(String filePath, Key privateKey, char[] password)
 			throws KeyPairException {
+		addDemoCAAtOnce(filePath, privateKey, password, false);
+	}
+
+	public void addDemoCAAtOnce(String filePath, Key privateKey,
+			char[] password, boolean bool) throws KeyPairException {
 		byte[] arrayOfByte = null;
 		try {
 			FileInputStream localFileInputStream = new FileInputStream(filePath);
@@ -345,16 +350,18 @@ public class GenericKey {
 			localFileInputStream.read(arrayOfByte);
 			localFileInputStream.close();
 			X509Certificate x509CertImpl = new X509CertImpl(arrayOfByte);
-			// m_keyStore.setCertificateEntry(getAlias(x509CertImpl.getSubjectDN()
-			// .getName()), x509CertImpl);
 			Certificate[] certificate1 = m_keyStore.getCertificateChain("s1as");
-//			Certificate[] certificateuse = new Certificate[] { (Certificate) x509CertImpl };
-			Certificate[] certificateuse = new Certificate[] {getCertificate(filePath)};
+			// Certificate[] certificateuse = new Certificate[]
+			// {getCertificate(filePath)};
+			Certificate[] certificateuse = new Certificate[] { (Certificate) x509CertImpl };
 			certificateuse = contactCertArr(certificate1, certificateuse);
+			if (bool) {
+				m_keyStore.setCertificateEntry(getAlias(x509CertImpl
+						.getSubjectX500Principal().getName()), x509CertImpl);
+			}
 			m_keyStore.deleteEntry("s1as");
 			m_keyStore
 					.setKeyEntry("s1as", privateKey, password, certificateuse);
-			System.out.println();
 		} catch (Exception localException) {
 			localException.printStackTrace();
 			KeyPairException kException = new KeyPairException(
@@ -515,7 +522,7 @@ public class GenericKey {
 		}
 	}
 
-	public void addKeystoreStruct(String algorithm, String dn, String issuer,
+	public void addKeystoreStruct(String algorithm, String issuer, String dn,
 			char[] passwords, int validityDay) throws IDAException {
 		X509Certificate certificate = null;
 		String signAlg = algorithm;

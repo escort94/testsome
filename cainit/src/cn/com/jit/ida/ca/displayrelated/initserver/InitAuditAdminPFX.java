@@ -26,6 +26,7 @@ public class InitAuditAdminPFX extends InitFather {
 	private String password;
 	private String DN;
 	private int keysize;
+	private String issuer;
 	
 	public InitAuditAdminPFX(String init) throws IDAException {
 		super(init);
@@ -60,6 +61,7 @@ public class InitAuditAdminPFX extends InitFather {
 		DN = "CN=" + auditAdminDnNameInCn + "," + baseDN;
 		password = this.init.getString("AdminKeyStorePWD");
 		keysize = this.init.getNumber("AuditAdminKeySize");
+		issuer = init.getString("CASubject");
 	}
 	
 	public void makeAuditAdminPFX() throws IDAException{
@@ -69,7 +71,7 @@ public class InitAuditAdminPFX extends InitFather {
 		KeyPair keyPair = KeyUtils.createKeyPair(adminKeyAlg, KEYPAIR_TYPE, keysize);
 		GenericKey gKey = new GenericKey(true, p12Path, password.toCharArray(), keyPair, GenericKey.PKCS12);
 		gKey.setAdminIdentity(Admin.AUDIT_ADMIN);
-		gKey.addKeystoreStruct(signingKeyAlg, DN, password.toCharArray(), validityNum);
+		gKey.addKeystoreStruct(signingKeyAlg, issuer, DN, password.toCharArray(), validityNum);
 		gKey.addDemoCAAtOnce(getCerPath(p12Path), keyPair.getPrivate(), password.toCharArray());
 		gKey.saveToFile();
 	}

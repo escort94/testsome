@@ -27,6 +27,7 @@ public class InitSuperAdminPFX extends InitFather {
 	private String password;
 	private String DN;
 	private int keysize;
+	private String issuer;
 	
 	public InitSuperAdminPFX(String init) throws IDAException {
 		super(init);
@@ -62,6 +63,7 @@ public class InitSuperAdminPFX extends InitFather {
 		DN = "CN=" + adminDnNameInCn + "," + baseDN;
 		password = this.init.getString("AdminKeyStorePWD");
 		keysize = this.init.getNumber("SuperAdminKeySize");
+		issuer = init.getString("CASubject");
 	}
 	public void makeSuperAdminPFX() throws IDAException{
 		makeSuperAdminPFX(keysize);
@@ -70,7 +72,7 @@ public class InitSuperAdminPFX extends InitFather {
 		KeyPair keyPair = KeyUtils.createKeyPair(adminKeyAlg, KEYPAIR_TYPE, keysize);
 		GenericKey gKey = new GenericKey(true, p12Path, password.toCharArray(), keyPair, GenericKey.PKCS12);
 		gKey.setAdminIdentity(Admin.SUPER_ADMIN);
-		gKey.addKeystoreStruct(signingKeyAlg, DN, password.toCharArray(), validityNum);
+		gKey.addKeystoreStruct(signingKeyAlg, issuer, DN, password.toCharArray(), validityNum);
 		gKey.addDemoCAAtOnce(getCerPath(p12Path), keyPair.getPrivate(), password.toCharArray());
 		gKey.saveToFile();
 	}
@@ -118,6 +120,12 @@ public class InitSuperAdminPFX extends InitFather {
 	}
 	public void setSuperAdminKeyAlg(String superAdminKeyAlg) {
 		this.adminKeyAlg = superAdminKeyAlg;
+	}
+	public String getIssuer() {
+		return issuer;
+	}
+	public void setIssuer(String issuer) {
+		this.issuer = issuer;
 	}
 	
 }
