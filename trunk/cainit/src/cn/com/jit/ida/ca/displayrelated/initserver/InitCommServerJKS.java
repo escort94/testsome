@@ -17,7 +17,7 @@ public class InitCommServerJKS extends InitFather {
 	protected String keyCommSigningStoreAlg;
 	public int commKeySize;
 	protected int commJKSValidityDay;
-	
+	private String issuer;
 	public InitCommServerJKS(String init) throws IDAException {
 		super(init);
 	}
@@ -41,7 +41,7 @@ public class InitCommServerJKS extends InitFather {
 		String CNinDN = init.getString("ServerAddress");
 		String DN = "CN=" + CNinDN + "," + baseDN;
 		String path = this.init.getString("CommKeyStore");
-		String issuer = init.getString("CASubject");
+		issuer = init.getString("CASubject");
 		char[] password = this.init.getString("CommKeyStorePWD").toCharArray();
 		makeServerJKS(path, password, DN);
 	}
@@ -57,8 +57,9 @@ public class InitCommServerJKS extends InitFather {
 				KEYPAIR_TYPE, commKeySize);
 		GenericKey gKey = new GenericKey(true, path, password, keyPair,
 				GenericKey.JKS);
-		gKey.addKeystoreStruct(keyCommSigningAlg, DN, password,
+		gKey.addKeystoreStruct(keyCommSigningAlg, issuer, DN, password,
 				commJKSValidityDay);
+		gKey.addDemoCAAtOnce(getCerPath(path), keyPair.getPrivate(), password, true);
 		gKey.saveToFile();
 	}
 
@@ -68,5 +69,13 @@ public class InitCommServerJKS extends InitFather {
 
 	public void setCommJKSValidityDay(int commJKSValidityDay) {
 		this.commJKSValidityDay = commJKSValidityDay;
+	}
+
+	public String getIssuer() {
+		return issuer;
+	}
+
+	public void setIssuer(String issuer) {
+		this.issuer = issuer;
 	}
 }
