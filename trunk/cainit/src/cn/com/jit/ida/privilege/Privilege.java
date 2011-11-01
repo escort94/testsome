@@ -115,8 +115,9 @@ public class Privilege
     }
     catch (PrivilegeException localPrivilegeException)
     {
+    	 throw new PrivilegeException("8055" + localPrivilegeException.getErrCode(), "获取管理员证书列表:" + localPrivilegeException.getErrDesc(), localPrivilegeException);
     }
-    throw new PrivilegeException("8055" + localPrivilegeException.getErrCode(), "获取管理员证书列表:" + localPrivilegeException.getErrDesc(), localPrivilegeException);
+   
   }
 
   public Vector getRoleList()
@@ -146,7 +147,7 @@ public class Privilege
     HashSet localHashSet1 = new HashSet();
     for (int i = 0; i < localVector2.size(); i++)
     {
-      localObject = (String)localVector2.get(i);
+    	String localObject = (String)localVector2.get(i);
       HashSet localHashSet2 = this.role.getRole((String)localObject);
       if (localHashSet2 == null)
         continue;

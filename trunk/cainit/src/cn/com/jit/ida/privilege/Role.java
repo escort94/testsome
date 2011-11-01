@@ -235,7 +235,7 @@ public class Role
     Iterator localIterator = localSet.iterator();
     while (localIterator.hasNext())
     {
-      localObject = (String)localIterator.next();
+    	String localObject = (String)localIterator.next();
       String str1 = (String)this.relationTable.get(localObject);
       localHashtable.put(str1, localObject);
     }
@@ -253,7 +253,7 @@ public class Role
 
   String getIDFromName(String paramString)
   {
-    Object localObject = null;
+	  String localObject = null;
     Set localSet = this.relationTable.keySet();
     Iterator localIterator = localSet.iterator();
     while (localIterator.hasNext())

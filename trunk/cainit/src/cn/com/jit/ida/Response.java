@@ -91,7 +91,7 @@ public class Response extends Protocol
   {
     Element localElement1;
     Object localObject1;
-    Object localObject2;
+    String localObject2;
     if (paramBoolean)
     {
       this.header = this.doc.createElement("header");
@@ -116,19 +116,19 @@ public class Response extends Protocol
         this.header.appendChild(localElement2);
         for (int j = 0; j < this.detail.size(); j++)
         {
-          localObject2 = (String[])this.detail.get(j);
+        	String[] localObject21 = (String[])this.detail.get(j);
           Element localElement3 = XMLTool.newElement(this.doc, "entry");
           localElement2.appendChild(localElement3);
           Element localElement4;
-          if (localObject2.length == 1)
+          if (localObject21.length == 1)
           {
-            localElement4 = XMLTool.newElement(this.doc, "msg", localObject2[0]);
+            localElement4 = XMLTool.newElement(this.doc, "msg", localObject21[0]);
             localElement3.appendChild(localElement4);
           }
           else
           {
-            localElement4 = XMLTool.newElement(this.doc, "err", localObject2[0]);
-            Element localElement5 = XMLTool.newElement(this.doc, "msg", localObject2[1]);
+            localElement4 = XMLTool.newElement(this.doc, "err", localObject21[0]);
+            Element localElement5 = XMLTool.newElement(this.doc, "msg", localObject21[1]);
             localElement3.appendChild(localElement4);
             localElement3.appendChild(localElement5);
           }

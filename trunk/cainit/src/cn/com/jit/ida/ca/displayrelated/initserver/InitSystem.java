@@ -18,7 +18,6 @@ import cn.com.jit.ida.ca.initserver.InitServerConfig;
 import cn.com.jit.ida.ca.initserver.InitServerException;
 import cn.com.jit.ida.ca.initserver.XML2DB;
 import cn.com.jit.ida.ca.issue.ISSException;
-import cn.com.jit.ida.ca.issue.initschema.InitLDAPSchema;
 import cn.com.jit.ida.ca.key.keyutils.Keytype;
 import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ConfigTool;
@@ -114,16 +113,16 @@ public class InitSystem {
 	}
 
 	private boolean initLDAP() throws InitServerException {
-		if (this.init.getString("InitLDAPSchema").equalsIgnoreCase("true")) {
-			InitLDAPSchema localInitLDAPSchema = new InitLDAPSchema();
-			try {
-				localInitLDAPSchema.init();
-			} catch (ISSException localISSException) {
-				throw new InitServerException(localISSException.getErrCode(),
-						localISSException.getErrDescEx(), localISSException);
-			}
-			return true;
-		}
+//		if (this.init.getString("InitLDAPSchema").equalsIgnoreCase("true")) {
+//			InitLDAPSchema localInitLDAPSchema = new InitLDAPSchema();
+//			try {
+//				localInitLDAPSchema.init();
+//			} catch (ISSException localISSException) {
+//				throw new InitServerException(localISSException.getErrCode(),
+//						localISSException.getErrDescEx(), localISSException);
+//			}
+//			return true;
+//		}
 		return false;
 	}
 
