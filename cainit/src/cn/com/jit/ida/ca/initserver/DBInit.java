@@ -224,60 +224,6 @@ public class DBInit {
 		}
 	}
 
-	public static boolean isInited()
-  {
-    Connection localConnection = null;
-    Statement localStatement = null;
-    ResultSet localResultSet = null;
-    int i = 0;
-    try
-    {
-      int j;
-      try
-      {
-        DBConfig.getInstance();
-      }
-      catch (IDAException localIDAException)
-      {
-        j = 0;
-        jsr 98;
-      }
-      localConnection = DriverManager.getConnection(dbConfig.getURL(), dbConfig.getUser(), dbConfig.getPassword());
-      String str = "select count(ctml_name) from ctml";
-      localStatement = localConnection.createStatement();
-      localResultSet = localStatement.executeQuery(str);
-      while (localResultSet.next())
-      {
-        if (localResultSet.getLong(1) <= 0L)
-          continue;
-        i = 1;
-      }
-    }
-    catch (SQLException localSQLException1)
-    {
-      i = 0;
-    }
-    finally
-    {
-      if (localStatement != null)
-        try
-        {
-          localStatement.close();
-        }
-        catch (SQLException localSQLException2)
-        {
-        }
-      if (localConnection != null)
-        try
-        {
-          localConnection.close();
-        }
-        catch (SQLException localSQLException3)
-        {
-        }
-    }
-    return i;
-  }
 
 	public void initPrivilege() throws DBException {
 		Connection localConnection = null;

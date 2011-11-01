@@ -185,7 +185,7 @@ public class OracleInit extends DBInit {
 				if (localResultSet.getString(6) != null)
 					localCACertInfo.setCertStatus(localResultSet.getString(6));
 				localBLOB = ((OracleResultSet) localResultSet).getBLOB(7);
-				localObject1 = new BufferedInputStream(localBLOB
+				BufferedInputStream localObject1 = new BufferedInputStream(localBLOB
 						.getBinaryStream());
 				byte[] arrayOfByte = new byte[(int) localBLOB.length()];
 				((BufferedInputStream) localObject1).read(arrayOfByte);
@@ -198,7 +198,7 @@ public class OracleInit extends DBInit {
 					localCACertInfo.setRemark(localResultSet.getString(9));
 				localVector.add(localCACertInfo);
 			}
-			localObject1 = localVector;
+			return localVector;
 		} catch (Exception localException) {
 			Object localObject1;
 			throw new DBException("8083", "数据库异常："

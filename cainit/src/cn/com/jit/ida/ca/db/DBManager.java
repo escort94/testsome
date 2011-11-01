@@ -1,33 +1,8 @@
 package cn.com.jit.ida.ca.db;
 
-import cn.com.jit.ida.IDAException;
-import cn.com.jit.ida.ca.certmanager.reqinfo.CRLInfo;
-import cn.com.jit.ida.ca.certmanager.reqinfo.CertExtensions;
-import cn.com.jit.ida.ca.certmanager.reqinfo.CertInfo;
-import cn.com.jit.ida.ca.certmanager.reqinfo.CertPendingRevokeInfo;
-import cn.com.jit.ida.ca.certmanager.reqinfo.CertRevokeInfo;
-import cn.com.jit.ida.ca.certmanager.reqinfo.CertSelfExt;
-import cn.com.jit.ida.ca.certmanager.reqinfo.CertStandardExt;
-import cn.com.jit.ida.ca.certmanager.reqinfo.Extension;
-import cn.com.jit.ida.ca.certmanager.reqinfo.RevokeCert;
-import cn.com.jit.ida.ca.config.CAConfig;
-import cn.com.jit.ida.ca.config.DBConfig;
-import cn.com.jit.ida.ca.config.InternalConfig;
-import cn.com.jit.ida.ca.ctml.x509v3.X509V3CTMLPolicy;
-import cn.com.jit.ida.ca.ctml.x509v3.X509V3CTMLPolicy.Attribute;
-import cn.com.jit.ida.ca.ctml.x509v3.extension.StandardExtension;
-import cn.com.jit.ida.ca.updataRootCert.RevokeCertInfo;
-import cn.com.jit.ida.globalconfig.DBInterface;
-import cn.com.jit.ida.globalconfig.Information;
-import cn.com.jit.ida.log.LogManager;
-import cn.com.jit.ida.log.Operation;
-import cn.com.jit.ida.log.SysLogger;
-import cn.com.jit.ida.privilege.Privilege;
-import cn.com.jit.ida.privilege.TemplateAdmin;
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -44,10 +19,31 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.ProxoolFacade;
+
+import cn.com.jit.ida.IDAException;
+import cn.com.jit.ida.ca.certmanager.reqinfo.CRLInfo;
+import cn.com.jit.ida.ca.certmanager.reqinfo.CertExtensions;
+import cn.com.jit.ida.ca.certmanager.reqinfo.CertInfo;
+import cn.com.jit.ida.ca.certmanager.reqinfo.CertPendingRevokeInfo;
+import cn.com.jit.ida.ca.certmanager.reqinfo.CertRevokeInfo;
+import cn.com.jit.ida.ca.certmanager.reqinfo.CertSelfExt;
+import cn.com.jit.ida.ca.certmanager.reqinfo.CertStandardExt;
+import cn.com.jit.ida.ca.certmanager.reqinfo.Extension;
+import cn.com.jit.ida.ca.certmanager.reqinfo.RevokeCert;
+import cn.com.jit.ida.ca.config.CAConfig;
+import cn.com.jit.ida.ca.config.DBConfig;
+import cn.com.jit.ida.ca.config.InternalConfig;
+import cn.com.jit.ida.globalconfig.DBInterface;
+import cn.com.jit.ida.globalconfig.Information;
+import cn.com.jit.ida.log.LogManager;
+import cn.com.jit.ida.log.Operation;
+import cn.com.jit.ida.log.SysLogger;
+import cn.com.jit.ida.privilege.Privilege;
 
 public class DBManager implements DBInterface {
 	private static DBManager instance = null;
@@ -305,124 +301,6 @@ public class DBManager implements DBInterface {
 		}
 	}
 
-	public int saveCTML(Properties paramProperties)
-    throws DBException
-  {
-    Connection localConnection = null;
-    PreparedStatement localPreparedStatement = null;
-    Statement localStatement = null;
-    ResultSet localResultSet = null;
-    int str2 = -1;
-    try
-    {
-      int i;
-      if (paramProperties == null)
-      {
-        return str2;
-      }
-      localConnection = DriverManager.getConnection("proxool.ida");
-      localConnection.setAutoCommit(false);
-      String str1 = "insert into ctml values(?,?,?,?,?,?,?,?,?,?)";
-      localPreparedStatement = localConnection.prepareStatement(str1);
-      localPreparedStatement.setString(1, paramProperties.getProperty("ctml_name", null));
-      localPreparedStatement.setString(2, paramProperties.getProperty("ctml_id", null));
-      localPreparedStatement.setString(3, paramProperties.getProperty("ctml_type", null));
-      localPreparedStatement.setString(4, paramProperties.getProperty("ctml_status", null));
-      localPreparedStatement.setString(5, paramProperties.getProperty("ctml_description", null));
-      String str3 = paramProperties.getProperty("ctml_policyinfo", "");
-      localPreparedStatement.setCharacterStream(6, new CharArrayReader(str3.toCharArray()), str3.length());
-      localPreparedStatement.setString(7, paramProperties.getProperty("reserve", null));
-      localPreparedStatement.setLong(8, getTime());
-      localPreparedStatement.setString(9, "tmp_signServer");
-      localPreparedStatement.setString(10, "tmp_signClient");
-      str2 = localPreparedStatement.executeUpdate();
-      if (!paramProperties.getProperty("ctml_name").equals("0"))
-      {
-       String str4 = null;
-        String str5 = null;
-        str1 = "select value from config where modulename='CAConfig' and property='CAAdminSN'";
-        localStatement = localConnection.createStatement();
-        localResultSet = localStatement.executeQuery(str1);
-        if (localResultSet.next())
-          str4 = localResultSet.getString(1);
-        X509V3CTMLPolicy localX509V3CTMLPolicy = new X509V3CTMLPolicy(paramProperties.getProperty("ctml_policyinfo").getBytes());
-        if ((localX509V3CTMLPolicy.getAttribute().attribute & 1L) != 0L)
-        {
-          str5 = null;
-        }
-        else
-        {
-          str1 = "select value from config where modulename='CAConfig' and property='BaseDN'";
-          localStatement = localConnection.createStatement();
-          localResultSet = localStatement.executeQuery(str1);
-          if (localResultSet.next())
-            str5 = localResultSet.getString(1);
-        }
-        if (str4 != null)
-          str2 = setTemplateAdmin(localConnection, str4, paramProperties.getProperty("ctml_name", null), str5, null);
-      }
-      localConnection.commit();
-      return str2;
-    }
-    catch (DBException localDBException)
-    {
-      String str4;
-      if (localConnection != null)
-        try
-        {
-          localConnection.rollback();
-        }
-        catch (SQLException localSQLException2)
-        {
-        }
-      throw localDBException;
-    }
-    catch (IDAException localIDAException)
-    {
-      syslogger.info("数据库异常：" + localIDAException.getMessage());
-      if (localConnection != null)
-        try
-        {
-          localConnection.rollback();
-        }
-        catch (SQLException localSQLException3)
-        {
-        }
-      throw new DBException("8004", "调用X509转换失败", localIDAException);
-    }
-    catch (SQLException localSQLException1)
-    {
-      syslogger.info("数据库异常：" + localSQLException1.getMessage());
-      if (localConnection != null)
-        try
-        {
-          localConnection.rollback();
-        }
-        catch (SQLException localSQLException4)
-        {
-        }
-      throw new DBException("8004", "增加模板失败", localSQLException1);
-    }
-    finally
-    {
-      if (localPreparedStatement != null)
-        try
-        {
-          localPreparedStatement.close();
-        }
-        catch (SQLException localSQLException5)
-        {
-        }
-      if (localConnection != null)
-        try
-        {
-          localConnection.close();
-        }
-        catch (SQLException localSQLException6)
-        {
-        }
-    }
-  }
 
 	public int modifyCTML(Properties paramProperties1, Properties paramProperties2)
     throws DBException
@@ -1811,131 +1689,7 @@ public class DBManager implements DBInterface {
 		return localCertInfo;
 	}
 
-	public int saveCertReq(CertInfo paramCertInfo) throws DBException {
-		Connection localConnection = null;
-		int i = -1;
-		try {
-			localConnection = DriverManager.getConnection("proxool.ida");
-			localConnection.setAutoCommit(false);
-			i = saveCertReq(localConnection, paramCertInfo);
-			localConnection.commit();
-			return i;
-		} catch (DBException localDBException) {
-			int j;
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException2) {
-				}
-			throw localDBException;
-		} catch (SQLException localSQLException1) {
-			syslogger.info("数据库异常：" + localSQLException1.getMessage());
-			throw new DBException("8005", "证书申请失败", localSQLException1);
-		} finally {
-			if (localConnection != null)
-				try {
-					localConnection.close();
-				} catch (SQLException localSQLException3) {
-				}
-		}
-	}
 
-	protected int saveCertReq(Connection paramConnection, CertInfo paramCertInfo)
-    throws DBException
-  {
-    PreparedStatement localPreparedStatement = null;
-    int i = -1;
-    try
-    {
-      int j;
-      if (paramCertInfo == null)
-      {
-    	  return i;
-      }
-      String str = "insert into cert values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,null,?,?,?,?,?,?,?,?)";
-      localPreparedStatement = paramConnection.prepareStatement(str);
-      localPreparedStatement.setString(1, paramCertInfo.getCertSN());
-      localPreparedStatement.setString(2, paramCertInfo.getSubject().toUpperCase());
-      localPreparedStatement.setString(3, paramCertInfo.getSubject());
-      localPreparedStatement.setLong(4, paramCertInfo.getNotBefore());
-      localPreparedStatement.setLong(5, paramCertInfo.getNotAfter());
-      localPreparedStatement.setInt(6, paramCertInfo.getValidity());
-      localPreparedStatement.setString(7, paramCertInfo.getAuthCode());
-      localPreparedStatement.setLong(8, paramCertInfo.getCdpid());
-      localPreparedStatement.setString(9, paramCertInfo.getCtmlName());
-      localPreparedStatement.setString(10, paramCertInfo.getCertStatus());
-      localPreparedStatement.setLong(11, 1L);
-      localPreparedStatement.setLong(12, getTime());
-      localPreparedStatement.setString(13, paramCertInfo.getApplicant().toUpperCase());
-      localPreparedStatement.setString(14, paramCertInfo.getApplicant());
-      localPreparedStatement.setString(15, paramCertInfo.getEmail());
-      localPreparedStatement.setString(16, paramCertInfo.getRemark());
-      localPreparedStatement.setLong(17, paramCertInfo.getAuthCodeUpdateTime());
-      localPreparedStatement.setString(18, "tmp_signServer");
-      localPreparedStatement.setString(19, "tmp_signClient");
-      localPreparedStatement.setString(20, paramCertInfo.getIsRetainKey());
-      localPreparedStatement.setString(21, "0");
-      localPreparedStatement.setString(22, paramCertInfo.getOldSN());
-      i = localPreparedStatement.executeUpdate();
-      Vector localVector = paramCertInfo.getStandardExtensions();
-      if (localVector != null)
-        for (int k = 0; k < localVector.size(); k++)
-        {
-          str = "insert into cert_standard_ext values(?,?,?,?,?,?,?,?)";
-          StandardExtension localStandardExtension = (StandardExtension)localVector.get(k);
-          localPreparedStatement = paramConnection.prepareStatement(str);
-          localPreparedStatement.setString(1, paramCertInfo.getCertSN());
-          localPreparedStatement.setString(2, localStandardExtension.getParentOID());
-          localPreparedStatement.setString(3, localStandardExtension.getParentName());
-          localPreparedStatement.setString(4, localStandardExtension.getChildName());
-          localPreparedStatement.setString(5, localStandardExtension.getOtherNameOid());
-          localPreparedStatement.setString(6, localStandardExtension.getStandardValue());
-          localPreparedStatement.setString(7, "tmp_signServer");
-          localPreparedStatement.setString(8, "tmp_signClient");
-          localPreparedStatement.executeUpdate();
-        }
-      CertExtensions localCertExtensions = paramCertInfo.getCertExtensions();
-      if (localCertExtensions != null)
-        for (int m = 0; m < localCertExtensions.getExtensionsCount(); m++)
-        {
-          str = "insert into cert_selfext values(?,?,?,?,?,?)";
-          Extension localExtension = localCertExtensions.getExtension(m);
-          localPreparedStatement = paramConnection.prepareStatement(str);
-          localPreparedStatement.setString(1, paramCertInfo.getCertSN());
-          localPreparedStatement.setString(2, localExtension.getOid());
-          localPreparedStatement.setString(3, localExtension.getName());
-          localPreparedStatement.setString(4, localExtension.getValue());
-          localPreparedStatement.setString(5, "tmp_signServer");
-          localPreparedStatement.setString(6, "tmp_signClient");
-          localPreparedStatement.executeUpdate();
-        }
-      str = "update ctml set ctml_status=? where ctml_name=? and ctml_status!=?";
-      localPreparedStatement = paramConnection.prepareStatement(str);
-      localPreparedStatement.setString(1, "USING");
-      localPreparedStatement.setString(2, paramCertInfo.getCtmlName());
-      localPreparedStatement.setString(3, "USING");
-      localPreparedStatement.executeUpdate();
-      addCertSUM();
-      return  i;
-    }
-    catch (SQLException localSQLException1)
-    {
-      int m;
-      syslogger.info("数据库异常：" + localSQLException1.getMessage());
-      throw new DBException("8005", "证书申请失败", localSQLException1);
-    }
-    finally
-    {
-      if (localPreparedStatement != null)
-        try
-        {
-          localPreparedStatement.close();
-        }
-        catch (SQLException localSQLException2)
-        {
-        }
-    }
-  }
 
 	public int saveCertEntity(CertInfo paramCertInfo)
     throws DBException
@@ -2463,348 +2217,9 @@ public class DBManager implements DBInterface {
     }
   }
 
-	public int updateCert(CertRevokeInfo paramCertRevokeInfo,
-			CertInfo paramCertInfo) throws DBException {
-		Connection localConnection = null;
-		int i = -1;
-		try {
-			localConnection = DriverManager.getConnection("proxool.ida");
-			localConnection.setAutoCommit(false);
-			String str = revokeCert(localConnection, paramCertRevokeInfo);
-			if (str != null) {
-				paramCertInfo.setOldSN(str);
-				i = saveCertReq(localConnection, paramCertInfo);
-				if (i == 1) {
-					updateAdmin(localConnection, str, paramCertInfo.getCertSN());
-					updateTemplateAdmin(localConnection, str, paramCertInfo
-							.getCertSN());
-					localConnection.commit();
-				} else {
-					localConnection.rollback();
-				}
-			} else {
-				localConnection.rollback();
-			}
-			return i;
-		} catch (DBException localDBException) {
-			int j;
-			syslogger.info("数据库异常：" + localDBException.getMessage());
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException2) {
-				}
-			throw localDBException;
-		} catch (SQLException localSQLException1) {
-			syslogger.info("数据库异常：" + localSQLException1.getMessage());
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException3) {
-				}
-			throw new DBException("8034", "更新证书失败", localSQLException1);
-		} finally {
-			if (localConnection != null)
-				try {
-					localConnection.close();
-				} catch (SQLException localSQLException4) {
-				}
-		}
-	}
 
-	public int updateAdminCert(CertRevokeInfo paramCertRevokeInfo,
-			CertInfo paramCertInfo) throws DBException {
-		Connection localConnection = null;
-		int localInformation1 = -1;
-		try {
-			localConnection = DriverManager.getConnection("proxool.ida");
-			localConnection.setAutoCommit(false);
-			String str = revokeCert(localConnection, paramCertRevokeInfo);
-			if (str != null) {
-				localInformation1 = saveCertReq(localConnection, paramCertInfo);
-				if (localInformation1 == 1) {
-					updateAdmin(localConnection, str, paramCertInfo.getCertSN());
-					updateTemplateAdmin(localConnection, str, paramCertInfo
-							.getCertSN());
-					Information localInformation2 = new Information("CAAdminSN",
-							paramCertInfo.getCertSN(), "N");
-					localInformation1 = setConfig("CAConfig", localInformation2);
-					if (localInformation1 == 1)
-						localConnection.commit();
-					else
-						localConnection.rollback();
-				} else {
-					localConnection.rollback();
-				}
-			} else {
-				localConnection.rollback();
-			}
-			return localInformation1;
-		} catch (DBException localDBException) {
-			syslogger.info("数据库异常：" + localDBException.getMessage());
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException2) {
-				}
-			throw localDBException;
-		} catch (SQLException localSQLException1) {
-			syslogger.info("数据库异常：" + localSQLException1.getMessage());
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException3) {
-				}
-			throw new DBException("8045", "更新管理员证书失败", localSQLException1);
-		} finally {
-			if (localConnection != null)
-				try {
-					localConnection.close();
-				} catch (SQLException localSQLException4) {
-				}
-		}
-	}
 
-	public int reqAndDownCert(CertInfo paramCertInfo) throws DBException {
-		Connection localConnection = null;
-		int i = -1;
-		try {
-			localConnection = DriverManager.getConnection("proxool.ida");
-			localConnection.setAutoCommit(false);
-			i = reqAndDownCert(localConnection, paramCertInfo);
-			if (i == 1)
-				localConnection.commit();
-			else
-				localConnection.rollback();
-			return i;
-		} catch (DBException localDBException) {
-			int j;
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException2) {
-				}
-			throw localDBException;
-		} catch (SQLException localSQLException1) {
-			syslogger.info("数据库异常：" + localSQLException1.getMessage());
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException3) {
-				}
-			throw new DBException("8035", "申请并下载证书失败", localSQLException1);
-		} finally {
-			if (localConnection != null)
-				try {
-					localConnection.close();
-				} catch (SQLException localSQLException4) {
-				}
-		}
-	}
 
-	private int reqAndDownCert(Connection paramConnection, CertInfo paramCertInfo)
-    throws DBException
-  {
-    PreparedStatement localPreparedStatement = null;
-    ByteArrayInputStream localByteArrayInputStream = null;
-    int i = -1;
-    try
-    {
-      int j;
-      if (paramCertInfo == null)
-      {
-    	  return i;
-      }
-      String str = "insert into cert values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-      localPreparedStatement = paramConnection.prepareStatement(str);
-      localPreparedStatement.setString(1, paramCertInfo.getCertSN());
-      localPreparedStatement.setString(2, paramCertInfo.getSubject().toUpperCase());
-      localPreparedStatement.setString(3, paramCertInfo.getSubject());
-      localPreparedStatement.setLong(4, paramCertInfo.getNotBefore());
-      localPreparedStatement.setLong(5, paramCertInfo.getNotAfter());
-      localPreparedStatement.setInt(6, paramCertInfo.getValidity());
-      localPreparedStatement.setString(7, paramCertInfo.getAuthCode());
-      localPreparedStatement.setLong(8, paramCertInfo.getCdpid());
-      localPreparedStatement.setString(9, paramCertInfo.getCtmlName());
-      localPreparedStatement.setString(10, paramCertInfo.getCertStatus());
-      localPreparedStatement.setLong(11, 1L);
-      localPreparedStatement.setLong(12, getTime());
-      localPreparedStatement.setString(13, paramCertInfo.getApplicant().toUpperCase());
-      localPreparedStatement.setString(14, paramCertInfo.getApplicant());
-      localByteArrayInputStream = new ByteArrayInputStream(paramCertInfo.getCertEntity());
-      localPreparedStatement.setBinaryStream(15, localByteArrayInputStream, paramCertInfo.getCertEntity().length);
-      localPreparedStatement.setString(16, paramCertInfo.getEmail());
-      localPreparedStatement.setString(17, paramCertInfo.getRemark());
-      localPreparedStatement.setLong(18, paramCertInfo.getAuthCodeUpdateTime());
-      localPreparedStatement.setString(19, "tmp_signServer");
-      localPreparedStatement.setString(20, "tmp_signClient");
-      localPreparedStatement.setString(21, paramCertInfo.getIsRetainKey());
-      localPreparedStatement.setString(22, "0");
-      localPreparedStatement.setString(23, paramCertInfo.getOldSN());
-      i = localPreparedStatement.executeUpdate();
-      Vector localVector = paramCertInfo.getStandardExtensions();
-      if (localVector != null)
-        for (int k = 0; k < localVector.size(); k++)
-        {
-          str = "insert into cert_standard_ext values(?,?,?,?,?,?,?,?)";
-          StandardExtension localStandardExtension = (StandardExtension)localVector.get(k);
-          localPreparedStatement = paramConnection.prepareStatement(str);
-          localPreparedStatement.setString(1, paramCertInfo.getCertSN());
-          localPreparedStatement.setString(2, localStandardExtension.getParentOID());
-          localPreparedStatement.setString(3, localStandardExtension.getParentName());
-          localPreparedStatement.setString(4, localStandardExtension.getChildName());
-          localPreparedStatement.setString(5, localStandardExtension.getOtherNameOid());
-          localPreparedStatement.setString(6, localStandardExtension.getStandardValue());
-          localPreparedStatement.setString(7, "tmp_signServer");
-          localPreparedStatement.setString(8, "tmp_signClient");
-          localPreparedStatement.executeUpdate();
-        }
-      CertExtensions localCertExtensions = paramCertInfo.getCertExtensions();
-      if (localCertExtensions != null)
-        for (int m = 0; m < localCertExtensions.getExtensionsCount(); m++)
-        {
-          str = "insert into cert_selfext values(?,?,?,?,?,?)";
-          Extension localExtension = localCertExtensions.getExtension(m);
-          localPreparedStatement = paramConnection.prepareStatement(str);
-          localPreparedStatement.setString(1, paramCertInfo.getCertSN());
-          localPreparedStatement.setString(2, localExtension.getOid());
-          localPreparedStatement.setString(3, localExtension.getName());
-          localPreparedStatement.setString(4, localExtension.getValue());
-          localPreparedStatement.setString(5, "tmp_signServer");
-          localPreparedStatement.setString(6, "tmp_signClient");
-          localPreparedStatement.executeUpdate();
-        }
-      addCertSUM();
-      return i;
-    }
-    catch (SQLException localSQLException1)
-    {
-      int m;
-      syslogger.info("数据库异常：" + localSQLException1.getMessage());
-      throw new DBException("8035", "申请并下载证书失败", localSQLException1);
-    }
-    finally
-    {
-      if (localByteArrayInputStream != null)
-        try
-        {
-          localByteArrayInputStream.close();
-        }
-        catch (IOException localIOException)
-        {
-        }
-      if (localPreparedStatement != null)
-        try
-        {
-          localPreparedStatement.close();
-        }
-        catch (SQLException localSQLException2)
-        {
-        }
-    }
-  }
-
-	public int updAndDownAdminCert(CertRevokeInfo paramCertRevokeInfo,
-			CertInfo paramCertInfo) throws DBException {
-		Connection localConnection = null;
-		int i = -1;
-		try {
-			localConnection = DriverManager.getConnection("proxool.ida");
-			localConnection.setAutoCommit(false);
-			String str = revokeCert(localConnection, paramCertRevokeInfo);
-			if (str != null) {
-				paramCertInfo.setOldSN(str);
-				i = reqAndDownCert(localConnection, paramCertInfo);
-				if (i != -1) {
-					i = updateAdmin(localConnection, str, paramCertInfo
-							.getCertSN());
-					if (i != -1)
-						i = updateTemplateAdmin(localConnection, str,
-								paramCertInfo.getCertSN());
-					if (i != -1)
-						localConnection.commit();
-					else
-						localConnection.rollback();
-				} else {
-					localConnection.rollback();
-				}
-			} else {
-				localConnection.rollback();
-			}
-			return i;
-		} catch (DBException localDBException) {
-			int j;
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException2) {
-				}
-			throw localDBException;
-		} catch (SQLException localSQLException1) {
-			syslogger.info("数据库异常：" + localSQLException1.getMessage());
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException3) {
-				}
-			throw new DBException("8044", "更新并下载管理员证书失败", localSQLException1);
-		} finally {
-			if (localConnection != null)
-				try {
-					localConnection.close();
-				} catch (SQLException localSQLException4) {
-				}
-		}
-	}
-
-	public int updAndDownCert(CertRevokeInfo paramCertRevokeInfo,
-			CertInfo paramCertInfo) throws DBException {
-		Connection localConnection = null;
-		int i = -1;
-		try {
-			localConnection = DriverManager.getConnection("proxool.ida");
-			localConnection.setAutoCommit(false);
-			String str = revokeCert(localConnection, paramCertRevokeInfo);
-			if (str != null) {
-				paramCertInfo.setOldSN(str);
-				i = reqAndDownCert(localConnection, paramCertInfo);
-				if (i == 1) {
-					updateAdmin(localConnection, str, paramCertInfo.getCertSN());
-					updateTemplateAdmin(localConnection, str, paramCertInfo
-							.getCertSN());
-					localConnection.commit();
-				} else {
-					localConnection.rollback();
-				}
-			} else {
-				localConnection.rollback();
-			}
-			return i;
-		} catch (DBException localDBException) {
-			int j;
-			syslogger.info("数据库异常：" + localDBException.getMessage());
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException2) {
-				}
-			throw localDBException;
-		} catch (SQLException localSQLException1) {
-			syslogger.info("数据库异常：" + localSQLException1.getMessage());
-			if (localConnection != null)
-				try {
-					localConnection.rollback();
-				} catch (SQLException localSQLException3) {
-				}
-			throw new DBException("8036", "更新并下载证书失败", localSQLException1);
-		} finally {
-			if (localConnection != null)
-				try {
-					localConnection.close();
-				} catch (SQLException localSQLException4) {
-				}
-		}
-	}
 
 	public byte[] getCertEntity(String paramString)
     throws DBException
@@ -4127,14 +3542,14 @@ public class DBManager implements DBInterface {
 			if ((paramString == null) || (paramInformation == null)) {
 				return i;
 			}
-			String str = "select count(modulename) from config where modulename=? and property=?";
+			String str = "select count(modulename) from " + TableNames.TCA_CONFIG + " where modulename=? and property=?";
 			localPreparedStatement = paramConnection.prepareStatement(str);
 			localPreparedStatement.setString(1, paramString);
 			localPreparedStatement.setString(2, paramInformation.getName());
 			localResultSet = localPreparedStatement.executeQuery();
 			localResultSet.next();
 			if (localResultSet.getInt(1) == 0) {
-				str = "insert into config values(?,?,?,?,?,?)";
+				str = "insert into " + TableNames.TCA_CONFIG + " values(?,?,?,?,?,?)";
 				localPreparedStatement = paramConnection.prepareStatement(str);
 				localPreparedStatement.setString(1, paramString);
 				localPreparedStatement.setString(2, paramInformation.getName());
@@ -4148,7 +3563,7 @@ public class DBManager implements DBInterface {
 				localPreparedStatement.setString(6, "tmp_signClient");
 				i = localPreparedStatement.executeUpdate();
 			} else if (localResultSet.getInt(1) == 1) {
-				str = "update config set value=?,isencrypted=? where modulename=? and property=?";
+				str = "update " + TableNames.TCA_CONFIG + " set value=?,isencrypted=? where modulename=? and property=?";
 				localPreparedStatement = paramConnection.prepareStatement(str);
 				localPreparedStatement.setCharacterStream(1,
 						new CharArrayReader(paramInformation.getValue()
@@ -4644,58 +4059,6 @@ public class DBManager implements DBInterface {
     }
   }
 
-	public int revokeRootCert(RevokeCertInfo paramRevokeCertInfo)
-    throws DBException
-  {
-    Connection localConnection = null;
-    PreparedStatement localPreparedStatement = null;
-    int i = -1;
-    try
-    {
-      if (paramRevokeCertInfo == null)
-      {
-    	  return i;
-      }
-      localConnection = DriverManager.getConnection("proxool.ida");
-      String str = "insert into revokedcert values(?,?,?,?,?,?,?,?)";
-      localPreparedStatement = localConnection.prepareStatement(str);
-      localPreparedStatement.setString(1, paramRevokeCertInfo.getCertSN());
-      localPreparedStatement.setLong(2, paramRevokeCertInfo.getCDPID());
-      localPreparedStatement.setInt(3, paramRevokeCertInfo.getReason());
-      localPreparedStatement.setString(4, paramRevokeCertInfo.getReasionESC());
-      localPreparedStatement.setLong(5, getTime());
-      localPreparedStatement.setString(6, "tmp_signServer");
-      localPreparedStatement.setString(7, "tmp_signClient");
-      localPreparedStatement.setLong(8, paramRevokeCertInfo.getNotAfter());
-      i = localPreparedStatement.executeUpdate();
-      return i;
-    }
-    catch (SQLException localSQLException1)
-    {
-      int j;
-      syslogger.info("数据库异常：" + localSQLException1.getMessage());
-      throw new DBException("8047", "8047", localSQLException1);
-    }
-    finally
-    {
-      if (localPreparedStatement != null)
-        try
-        {
-          localPreparedStatement.close();
-        }
-        catch (SQLException localSQLException2)
-        {
-        }
-      if (localConnection != null)
-        try
-        {
-          localConnection.close();
-        }
-        catch (SQLException localSQLException3)
-        {
-        }
-    }
-  }
 
 	public long getMaxCDPID() throws DBException {
 		Connection localConnection = null;
@@ -5032,70 +4395,6 @@ public class DBManager implements DBInterface {
     }
   }
 
-	public Hashtable getCertStandardExt(String paramString)
-    throws DBException
-  {
-    Connection localConnection = null;
-    PreparedStatement localPreparedStatement = null;
-    ResultSet localResultSet1 = null;
-    ResultSet localResultSet2 = null;
-    Hashtable localHashtable = null;
-    Vector localVector = null;
-    try
-    {
-      if (paramString == null)
-      {
-    	  return localHashtable;
-      }
-      Object localObject1 = "select ext_name,count(certsn) from cert_standard_ext where certsn=? group by ext_name order by ext_name";
-      String str = "select ext_oid,ext_name,child_name,othername_oid,value from cert_standard_ext where certsn=? order by ext_name";
-      localConnection = DriverManager.getConnection("proxool.ida");
-      localPreparedStatement = localConnection.prepareStatement((String)localObject1);
-      localPreparedStatement.setString(1, paramString);
-      localResultSet1 = localPreparedStatement.executeQuery();
-      localPreparedStatement = localConnection.prepareStatement(str);
-      localPreparedStatement.setString(1, paramString);
-      localResultSet2 = localPreparedStatement.executeQuery();
-      localHashtable = new Hashtable();
-      while (localResultSet1.next())
-      {
-        localVector = new Vector();
-       String localObject2 = null;
-        localObject2 = localResultSet1.getString(1);
-        int i = localResultSet1.getInt(2);
-        for (int j = 0; j < i; j++)
-        {
-          localResultSet2.next();
-          StandardExtension localStandardExtension = new StandardExtension();
-          localStandardExtension.setParentOID(localResultSet2.getString(1));
-          localStandardExtension.setParentName(localResultSet2.getString(2));
-          localStandardExtension.setChildName(localResultSet2.getString(3));
-          localStandardExtension.setOtherNameOid(localResultSet2.getString(4));
-          localStandardExtension.setStandardValue(localResultSet2.getString(5));
-          localVector.add(localStandardExtension);
-        }
-        localHashtable.put(localObject2, localVector);
-      }
-      return localHashtable;
-    }
-    catch (SQLException localSQLException1)
-    {
-      Object localObject2;
-      syslogger.info("数据库异常：" + localSQLException1.getMessage());
-      throw new DBException("8067", "获取证书标准扩展信息失败", localSQLException1);
-    }
-    finally
-    {
-      if (localPreparedStatement != null)
-        try
-        {
-          localPreparedStatement.close();
-        }
-        catch (SQLException localSQLException2)
-        {
-        }
-    }
-  }
 
 	public long getCertCountByCtmlNameCertStatus(String paramString)
 			throws DBException {
@@ -7005,84 +6304,6 @@ return localArrayList1;
 		}
 	}
 
-	public int pendingTaskCertRevoke(CertPendingRevokeInfo paramCertPendingRevokeInfo)
-    throws DBException
-  {
-    Connection localConnection = null;
-    int localIDAException1 = -1;
-    if ((paramCertPendingRevokeInfo == null) || (paramCertPendingRevokeInfo.getCertSN() == null))
-      return localIDAException1;
-    try
-    {
-      localConnection = DriverManager.getConnection("proxool.ida");
-      CertRevokeInfo localCertRevokeInfo = new CertRevokeInfo();
-      localCertRevokeInfo.setCertSN(paramCertPendingRevokeInfo.getCertSN());
-      localCertRevokeInfo.setReasonID(paramCertPendingRevokeInfo.getReasonID());
-      localCertRevokeInfo.setCDPID(paramCertPendingRevokeInfo.getCDPID());
-      localCertRevokeInfo.setApplicant(paramCertPendingRevokeInfo.getApplicant());
-      String str1 = revokeCert(localConnection, localCertRevokeInfo);
-      if (str1 != null)
-        try
-        {
-          int i;
-          if (updateCertPendingStatus(localConnection, paramCertPendingRevokeInfo.getCertSN()) == -1)
-          {
-            localConnection.rollback();
-            return localIDAException1;
-          }
-          CertInfo localCertInfo = new CertInfo();
-          localCertInfo = getCertInfo(paramCertPendingRevokeInfo.getCertSN());
-          String str2 = null;
-          str2 = InternalConfig.getInstance().getAdminTemplateName();
-          if (localCertInfo.getCtmlName().equals(str2))
-          {
-            deleteAdmin(localConnection, paramCertPendingRevokeInfo.getCertSN());
-            deleteTemplateAdmin(localConnection, paramCertPendingRevokeInfo.getCertSN());
-            TemplateAdmin.getInstance().deletePendingTemplateAdmin(paramCertPendingRevokeInfo.getCertSN());
-            Privilege.getInstance().deletePendingAdmin(paramCertPendingRevokeInfo.getCertSN());
-          }
-          localIDAException1 = deletePendingtaskRecord(localConnection, paramCertPendingRevokeInfo.getTaskID());
-        }
-        catch (IDAException localIDAException2)
-        {
-          throw new DBException("8607", "注销待操作任务表对应的证书失败", localIDAException2);
-        }
-      if (localIDAException1 == -1)
-      {
-        localConnection.rollback();
-      }
-      else
-      {
-        localConnection.commit();
-        return localIDAException1;
-      }
-      return localIDAException1;
-    }
-    catch (SQLException localSQLException1)
-    {
-      syslogger.info("数据库异常：" + localSQLException1.getMessage());
-      if (localConnection != null)
-        try
-        {
-          localConnection.rollback();
-        }
-        catch (SQLException localSQLException2)
-        {
-        }
-      throw new DBException("8607", "注销待操作任务表对应的证书失败", localSQLException1);
-    }
-    finally
-    {
-      if (localConnection != null)
-        try
-        {
-          localConnection.close();
-        }
-        catch (SQLException localSQLException3)
-        {
-        }
-    }
-  }
 
 	public int modifyCertPendingStatus(String paramString)
     throws DBException
@@ -7377,138 +6598,7 @@ return localArrayList1;
     }
   }
 
-	public int updateCertPending(CertRevokeInfo paramCertRevokeInfo, CertInfo paramCertInfo)
-    throws DBException
-  {
-    Connection localConnection = null;
-    int i = -1;
-    try
-    {
-      if ((paramCertRevokeInfo == null) || (paramCertInfo == null))
-      {
-    	  return i;
-      }
-      localConnection = DriverManager.getConnection("proxool.ida");
-      localConnection.setAutoCommit(false);
-      i = saveCertReq(localConnection, paramCertInfo);
-      if (i == 1)
-      {
-        insertAdmin(localConnection, paramCertRevokeInfo.getCertSN(), paramCertInfo.getCertSN());
-        insertTemplateAdmin(localConnection, paramCertRevokeInfo.getCertSN(), paramCertInfo.getCertSN());
-        localConnection.commit();
-      }
-      else
-      {
-        localConnection.rollback();
-      }
-      return i;
-    }
-    catch (DBException localDBException)
-    {
-      int j;
-      syslogger.info("数据库异常：" + localDBException.getMessage());
-      if (localConnection != null)
-        try
-        {
-          localConnection.rollback();
-        }
-        catch (SQLException localSQLException2)
-        {
-        }
-      throw localDBException;
-    }
-    catch (SQLException localSQLException1)
-    {
-      syslogger.info("数据库异常：" + localSQLException1.getMessage());
-      if (localConnection != null)
-        try
-        {
-          localConnection.rollback();
-        }
-        catch (SQLException localSQLException3)
-        {
-        }
-      throw new DBException("8034", "更新证书失败", localSQLException1);
-    }
-    finally
-    {
-      if (localConnection != null)
-        try
-        {
-          localConnection.close();
-        }
-        catch (SQLException localSQLException4)
-        {
-        }
-    }
-  }
 
-	public int updAndDownCertPending(CertRevokeInfo paramCertRevokeInfo, CertInfo paramCertInfo)
-    throws DBException
-  {
-    Connection localConnection = null;
-    int i = -1;
-    try
-    {
-      if ((paramCertRevokeInfo == null) || (paramCertInfo == null))
-      {
-    	  return i;
-      }
-      localConnection = DriverManager.getConnection("proxool.ida");
-      localConnection.setAutoCommit(false);
-      paramCertInfo.setOldSN(paramCertRevokeInfo.getCertSN());
-      i = reqAndDownCert(localConnection, paramCertInfo);
-      if (i == 1)
-      {
-        insertAdmin(localConnection, paramCertRevokeInfo.getCertSN(), paramCertInfo.getCertSN());
-        insertTemplateAdmin(localConnection, paramCertRevokeInfo.getCertSN(), paramCertInfo.getCertSN());
-        localConnection.commit();
-      }
-      else
-      {
-        localConnection.rollback();
-      }
-      return i;
-    }
-    catch (DBException localDBException)
-    {
-      int j;
-      syslogger.info("数据库异常：" + localDBException.getMessage());
-      if (localConnection != null)
-        try
-        {
-          localConnection.rollback();
-        }
-        catch (SQLException localSQLException2)
-        {
-        }
-      throw localDBException;
-    }
-    catch (SQLException localSQLException1)
-    {
-      syslogger.info("数据库异常：" + localSQLException1.getMessage());
-      if (localConnection != null)
-        try
-        {
-          localConnection.rollback();
-        }
-        catch (SQLException localSQLException3)
-        {
-        }
-      throw new DBException("8036", "更新并下载证书失败", localSQLException1);
-    }
-    finally
-    {
-      if (localConnection != null)
-        try
-        {
-          localConnection.close();
-        }
-        catch (SQLException localSQLException4)
-        {
-        }
-    }
-  }
 
 	public Vector pendingTaskVector()
     throws DBException

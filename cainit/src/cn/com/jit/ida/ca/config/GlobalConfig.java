@@ -10,7 +10,6 @@ public class GlobalConfig
   private InternalConfig internalConfig;
   private ServerConfig serverConfig;
   private CAConfig caConfig;
-  private CRLConfig crlConfig;
   private LOGConfig logConfig;
   private LDAPConfig ldapConfig;
   private KMCConfig kmcConfig;
@@ -30,7 +29,6 @@ public class GlobalConfig
     this.internalConfig = InternalConfig.getInstance();
     this.serverConfig = ServerConfig.getInstance();
     this.caConfig = CAConfig.getInstance();
-    this.crlConfig = CRLConfig.getInstance();
     this.logConfig = LOGConfig.getInstance();
     this.ldapConfig = LDAPConfig.getInstance();
     this.kmcConfig = KMCConfig.getInstance();
@@ -84,10 +82,6 @@ public class GlobalConfig
     return this.internalConfig;
   }
 
-  public CRLConfig getCrlConfig()
-  {
-    return this.crlConfig;
-  }
 
   public AutoServiceConfig getAutoServiceConfig()
   {
@@ -114,7 +108,6 @@ public class GlobalConfig
   {
     this.cryptoConfig.init();
     this.caConfig.init();
-    this.crlConfig.init();
     this.dbConfig.init();
     this.ldapConfig.init();
     LOGConfig.getInstance();

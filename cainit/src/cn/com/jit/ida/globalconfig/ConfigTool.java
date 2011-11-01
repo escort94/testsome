@@ -272,14 +272,22 @@ public class ConfigTool {
 	private static native String getStr();
 
 	public static String getNewPassword(String paramString, int paramInt1,
-			int paramInt2) {
+			int paramInt2, boolean syspwd) {
 		String str1 = null;
 		String str2 = null;
 		while (true) {
-			str1 = getPassword(paramString, paramInt1, paramInt2);
+			if (syspwd) {
+				str1 = getPasswordSys(paramString, paramInt1, paramInt2);
+			} else {
+				str1 = getPassword(paramString, paramInt1, paramInt2);
+			}
 			if (str1 == null)
 				return str1;
-			str2 = getPassword("请重新输入", paramInt1, paramInt2);
+			if (syspwd) {
+				str2 = getPasswordSys("请重新输入", paramInt1, paramInt2);
+			} else {
+				str2 = getPassword("请重新输入", paramInt1, paramInt2);
+			}
 			if (str2 == null)
 				return str2;
 			if (str1.equals(str2))
@@ -288,6 +296,48 @@ public class ConfigTool {
 		}
 	}
 
+	public static String getNewPassword(String paramString, int paramInt1,
+			int paramInt2) {
+		return getNewPassword(paramString, paramInt1, paramInt2, false);
+	}
+	public static String getPasswordSys(String paramString, int paramInt1,
+			int paramInt2) {
+		File localFile = new File("./show");
+		if (paramInt1 < 1)
+			paramInt1 = 1;
+		BufferedReader localBufferedReader = new BufferedReader(
+				new InputStreamReader(System.in));
+		String str = null;
+		while (true) {
+			System.out.print(paramString + "(必填项):");
+			if (localFile.exists()) {
+				try {
+					str = localBufferedReader.readLine().trim();
+				} catch (IOException localIOException) {
+				}
+				continue;
+			} else {
+				// str = getStr();
+				try {
+					str = localBufferedReader.readLine().trim();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (str.length() > paramInt2) {
+				System.out.println("密码长度不能大于" + paramInt2 + "位");
+				continue;
+			}
+			if ((str == null) || (str.equals(""))) {
+				System.out.println("密码不能为空");
+				continue;
+			}
+			if (str.length() >= paramInt1)
+				break;
+			System.out.println("密码长度不能小于" + paramInt1 + "位");
+		}
+		return str;
+	}
 	public static String getPassword(String paramString, int paramInt1,
 			int paramInt2) {
 		File localFile = new File("./show");

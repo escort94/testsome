@@ -115,7 +115,7 @@ public class FunctionPoint
     Iterator localIterator = localSet.iterator();
     while (localIterator.hasNext())
     {
-      localObject = (String)localIterator.next();
+    	String localObject = (String)localIterator.next();
       String str1 = (String)this.hashTable.get(localObject);
       localHashtable.put(str1, localObject);
     }

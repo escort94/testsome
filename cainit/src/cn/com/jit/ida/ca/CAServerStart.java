@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import cn.com.jit.ida.ca.control.ControlServer;
+import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.display.DisplayInitServer;
 import cn.com.jit.ida.ca.display.DisplayLaterCommServerJKS;
 import cn.com.jit.ida.ca.display.DisplaySubCAAll;
@@ -19,16 +19,6 @@ import cn.com.jit.ida.log.LogManager;
 import cn.com.jit.ida.log.SysLogger;
 
 public class CAServerStart {
-	StartServer startServer;
-	ControlServer controlServer;
-	public static final int Function_CANCEL = 0;
-	public static final int Function_RETURN = 1;
-	public static final String KEEP = "keep";
-	public static final String REMOVE_SUPER = "removeSuper";
-	public static final String REMOVE_AUDIT = "removeAudit";
-	public static final String ADD_SUPER = "addSuper";
-	public static final String ADD_AUDIT = "addAudit";
-
 	/**
 	 * 主函数
 	 * 
@@ -114,9 +104,8 @@ public class CAServerStart {
 			System.out.println("   4.  初始化系统                              ");
 			System.out.println("   5.  更新管理员证书                         ");
 			System.out.println("   6.  更新服务器通信证书                        ");
-			System.out.println("   7.  更新签名证书                             ");
-			System.out.println("   8.  服务器通信证书后续操作                     ");
-			System.out.println("   9.  显示版本号                              ");
+			System.out.println("   7.  服务器通信证书后续操作                     ");
+			System.out.println("   8.  修改系统管理员密码                              ");
 			System.out.println("   0.  退出                                   ");
 			System.out
 					.println("************************************************");
@@ -162,25 +151,27 @@ public class CAServerStart {
 					dcj.operate();
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
-			} else if (str.equalsIgnoreCase("7")) {// update gen key cert
-				if (isBeenInit()) {
-					DisplayUpdateSigningJKS dsj = new DisplayUpdateSigningJKS();
-					dsj.operate();
-				}
-				ConfigTool.waitToContinue(localBufferedReader);
-			} else if (str.equalsIgnoreCase("8")) {// comm server jks import
+			} else if (str.equalsIgnoreCase("7")) {// comm server jks import
 				// cert or democa
 				if (isBeenInit()) {
 					DisplayLaterCommServerJKS dlcj = new DisplayLaterCommServerJKS();
 					dlcj.operate();
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
-			} else if (str.equalsIgnoreCase("9")) {// display version
+			}else if (str.equalsIgnoreCase("8")) {// 
 				if (isBeenInit()) {
-
+					LogManager.init();
+					SysLogger logger = LogManager.getSysLogger();
+					try {
+						if(DbUtils.updateSysAdminPwd()){
+							logger.info("修改系统管理员密码成功");
+						}
+					} catch (IDAException e) {
+						logger.info(e.getMessage());
+					}
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
-			} else {
+			}  else {
 				if (str.equalsIgnoreCase("0"))
 					return;
 				System.out.println("请按菜单项选择");
