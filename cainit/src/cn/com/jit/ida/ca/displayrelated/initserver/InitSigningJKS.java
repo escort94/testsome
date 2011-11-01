@@ -1,7 +1,6 @@
 package cn.com.jit.ida.ca.displayrelated.initserver;
 
 import cn.com.jit.ida.IDAException;
-import cn.com.jit.ida.ca.certmanager.service.operation.CodeGenerator;
 import cn.com.jit.ida.ca.db.DBException;
 import cn.com.jit.ida.ca.db.DBManager;
 import cn.com.jit.ida.ca.initserver.InitServerException;

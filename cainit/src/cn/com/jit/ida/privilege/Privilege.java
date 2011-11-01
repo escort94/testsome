@@ -236,56 +236,12 @@ public class Privilege
     }
   }
 
-  public void setAdmin(String paramString, Collection paramCollection)
-    throws PrivilegeException
-  {
-    if ((paramCollection == null) || (paramCollection.isEmpty()))
-      throw new PrivilegeException("80430326", "管理员授权:角色集合为空");
-    Vector localVector1 = this.role.getRoleNameList();
-    if ((localVector1 == null) || (!localVector1.containsAll(paramCollection)))
-      throw new PrivilegeException("80430365", "管理员授权:存在非法权角色");
-    Vector localVector2 = new Vector(paramCollection);
-    Vector localVector3 = this.role.getIDFromName(localVector2);
-    if ((localVector3 == null) || (localVector3.isEmpty()))
-      throw new PrivilegeException("80430364", "管理员授权:角色内部转换失败");
-    try
-    {
-      this.admin.setAdmin(paramString, localVector3);
-    }
-    catch (PrivilegeException localPrivilegeException)
-    {
-      throw new PrivilegeException("8043" + localPrivilegeException.getErrCode(), "管理员授权:" + localPrivilegeException.getErrDesc(), localPrivilegeException);
-    }
-  }
 
   private void setMeMAdmin(String paramString, Vector paramVector)
   {
     this.admin.setMeMAdmin(paramString, paramVector);
   }
 
-  public void setSuperAdmin(String sn, String dn)
-    throws PrivilegeException
-  {
-    this.admin.setSuperAdmin(sn, dn);
-  }
-
-  public void setAuditAdmin(String paramString1, String paramString2)
-    throws PrivilegeException
-  {
-    this.admin.setAuditAdmin(paramString1, paramString2);
-  }
-
-  public void delSuperAdmin()
-    throws PrivilegeException
-  {
-    this.admin.delSuperAdmin();
-  }
-
-  public void delAuditAdmin()
-    throws PrivilegeException
-  {
-    this.admin.delAuditAdmin();
-  }
 
   public void delAdmin(String paramString)
   {
