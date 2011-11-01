@@ -2,7 +2,6 @@ package cn.com.jit.ida.privilege;
 
 import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.certmanager.reqinfo.CertInfo;
-import cn.com.jit.ida.ca.certmanager.service.operation.CertQueryOpt;
 import cn.com.jit.ida.ca.config.CAConfig;
 import cn.com.jit.ida.ca.config.GlobalConfig;
 import cn.com.jit.ida.ca.config.InternalConfig;
@@ -150,48 +149,6 @@ public class Admin {
 		return localVector2;
 	}
 
-	void setAdmin(String paramString, Collection paramCollection)
-			throws PrivilegeException {
-		CertInfo localCertInfo = null;
-		try {
-			localCertInfo = CertQueryOpt.queryCertInfo(paramString);
-		} catch (Exception localException) {
-			throw new PrivilegeException("0126", "获取该SN对应证书信息时出错",
-					localException);
-		}
-		if (localCertInfo == null)
-			throw new PrivilegeException("0130", "没有该SN对应的证书");
-		String str = null;
-		try {
-			str = InternalConfig.getInstance().getAdminTemplateName();
-		} catch (IDAException localIDAException) {
-			throw new PrivilegeException("0507", "获取配置信息出错", localIDAException);
-		}
-		if (!localCertInfo.getCtmlName().equals(str))
-			throw new PrivilegeException("0246", "该SN对应证书不是管理员证书");
-		DBManager localDBManager = null;
-		try {
-			localDBManager = DBManager.getInstance();
-		} catch (DBException localDBException1) {
-			throw new PrivilegeException(localDBException1.getErrCode(),
-					localDBException1.getErrDesc());
-		}
-		int i = -1;
-		Vector localVector = new Vector(paramCollection);
-		try {
-			i = localDBManager.setAdminInfo(paramString, localVector);
-		} catch (DBException localDBException2) {
-			throw new PrivilegeException(localDBException2.getErrCode(),
-					localDBException2.getErrDesc());
-		}
-		if (i < 0)
-			throw new PrivilegeException("0121", "管理员授权失败");
-		if (this.hashTable == null)
-			this.hashTable = new Hashtable();
-		else if (this.hashTable.containsKey(paramString))
-			this.hashTable.remove(paramString);
-		this.hashTable.put(paramString, localVector);
-	}
 
 	void setMeMAdmin(String paramString, Vector paramVector) {
 		if (this.hashTable == null)
@@ -201,138 +158,6 @@ public class Admin {
 		this.hashTable.put(paramString, paramVector);
 	}
 
-	void setSuperAdmin(String sn, String dn) throws PrivilegeException {
-		Role localRole = Role.getInstance();
-		Vector localVector = new Vector();
-		localVector.add(localRole.getIDFromName("证书管理角色"));
-		localVector.add(localRole.getIDFromName("模板管理角色"));
-		localVector.add(localRole.getIDFromName("授权管理角色"));
-		localVector.add(localRole.getIDFromName("超级管理员角色"));
-		String str1 = null;
-		String str2 = null;
-		try {
-			str1 = CAConfig.getInstance().getCaAdminSN();
-			str2 = CAConfig.getInstance().getCAAuditAdminSN();
-		} catch (Exception localException1) {
-		}
-		Object localObject;
-		if ((str1 != null) && (!str1.equals(""))) {
-			localObject = getAdmin(str1);
-			if (localObject != null) {
-				((Vector) localObject).removeAll(localVector);
-				setAdmin(str1, (Collection) localObject);
-			}
-		}
-		if (sn.equalsIgnoreCase(str2))
-			localVector.add(localRole.getIDFromName("审计管理角色"));
-		setAdmin(sn, localVector);
-		try {
-			localObject = GlobalConfig.getInstance();
-			((GlobalConfig) localObject).getCAConfig().setCaAdminSN(sn);
-			((GlobalConfig) localObject).getCAConfig().setCaAdminDN(dn);
-		} catch (Exception localException2) {
-		}
-	}
-
-	void setAuditAdmin(String paramString1, String paramString2)
-			throws PrivilegeException {
-		Role localRole = Role.getInstance();
-		Vector localVector = new Vector();
-		localVector.add(localRole.getIDFromName("审计管理角色"));
-		String str1 = null;
-		String str2 = null;
-		try {
-			str1 = CAConfig.getInstance().getCaAdminSN();
-			str2 = CAConfig.getInstance().getCAAuditAdminSN();
-		} catch (Exception localException1) {
-		}
-		Object localObject;
-		if ((str2 != null) && (!str2.equals(""))) {
-			localObject = getAdmin(str2);
-			if (localObject != null) {
-				((Vector) localObject).removeAll(localVector);
-				setAdmin(str2, (Collection) localObject);
-			}
-		}
-		if (paramString1.equalsIgnoreCase(str1)) {
-			localVector.add(localRole.getIDFromName("证书管理角色"));
-			localVector.add(localRole.getIDFromName("模板管理角色"));
-			localVector.add(localRole.getIDFromName("授权管理角色"));
-			localVector.add(localRole.getIDFromName("超级管理员角色"));
-		}
-		setAdmin(paramString1, localVector);
-		try {
-			localObject = GlobalConfig.getInstance();
-			((GlobalConfig) localObject).getCAConfig().setCAAuditAdminSN(
-					paramString1);
-			((GlobalConfig) localObject).getCAConfig().setCAAuditAdminDN(
-					paramString2);
-		} catch (Exception localException2) {
-		}
-	}
-
-	void delSuperAdmin() throws PrivilegeException {
-		Role localRole = Role.getInstance();
-		Vector localVector1 = new Vector();
-		localVector1.add(localRole.getIDFromName("证书管理角色"));
-		localVector1.add(localRole.getIDFromName("模板管理角色"));
-		localVector1.add(localRole.getIDFromName("授权管理角色"));
-		localVector1.add(localRole.getIDFromName("超级管理员角色"));
-		String str = null;
-		CAConfig localCAConfig = null;
-		try {
-			localCAConfig = CAConfig.getInstance();
-			str = localCAConfig.getCaAdminSN();
-		} catch (Exception localException1) {
-		}
-		if ((str != null) && (!str.equals(""))) {
-			try {
-				localCAConfig.setCaAdminSN("");
-				localCAConfig.setCaAdminDN("");
-			} catch (Exception localException2) {
-			}
-			Vector localVector2 = getAdmin(str);
-			if (localVector2 != null) {
-				localVector2.removeAll(localVector1);
-				setAdmin(str, localVector2);
-			}
-			String[] arrayOfString = new String[0];
-			try {
-				DBManager localDBManager = DBManager.getInstance();
-				localDBManager.setTemplateAdmin(str, arrayOfString,
-						arrayOfString, arrayOfString);
-			} catch (DBException localDBException) {
-				throw new PrivilegeException("0131", "删除超级管理员对应的证书业务权限出错");
-			}
-			refresh();
-		}
-	}
-
-	void delAuditAdmin() throws PrivilegeException {
-		Role localRole = Role.getInstance();
-		Vector localVector1 = new Vector();
-		localVector1.add(localRole.getIDFromName("审计管理角色"));
-		String str = null;
-		CAConfig localCAConfig = null;
-		try {
-			localCAConfig = CAConfig.getInstance();
-			str = localCAConfig.getCAAuditAdminSN();
-		} catch (Exception localException) {
-		}
-		if ((str != null) && (!str.equals(""))) {
-			try {
-				localCAConfig.setCAAuditAdminSN("");
-				localCAConfig.setCAAuditAdminDN("");
-			} catch (IDAException localIDAException) {
-			}
-			Vector localVector2 = getAdmin(str);
-			if (localVector2 != null) {
-				localVector2.removeAll(localVector1);
-				setAdmin(str, localVector2);
-			}
-			refresh();
-		}
-	}
 
 	void delAdmin(String paramString) {
 		if ((this.hashTable != null)

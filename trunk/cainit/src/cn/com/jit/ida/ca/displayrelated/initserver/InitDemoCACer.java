@@ -10,11 +10,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import cn.com.jit.ida.IDAException;
-import cn.com.jit.ida.ca.certmanager.service.operation.CodeGenerator;
+import cn.com.jit.ida.ca.certmanager.service.CodeGenerator;
 import cn.com.jit.ida.ca.exception.OperateException;
 import cn.com.jit.ida.ca.key.keyutils.KeyUtils;
-import cn.com.jit.ida.ca.key.keyutils.Keytype;
-import cn.com.jit.ida.globalconfig.ParseXML;
 import fisher.man.jce.X509Principal;
 import fisher.man.x509.X509V3CertificateGenerator;
 
