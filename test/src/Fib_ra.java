@@ -10,7 +10,7 @@ public class Fib_ra {
 
 	public static void main(String args[]) {
 
-		int m = 50, n;
+		int m = 40, n;
 		int fib[] = new int[m];
 		for (n = 0; n < m; n++)
 			fib[n] = fibonacci(n);
