@@ -230,6 +230,8 @@ public class ParseXML {
 		try {
 			localFileOutputStream = new FileOutputStream(paramString);
 			localFileOutputStream.write(arrayOfByte);
+			localFileOutputStream.flush();
+			localFileOutputStream.close();
 		} catch (Exception localException) {
 			ConfigException localConfigException = new ConfigException(
 					ConfigException.WRITE_FILE_ERROR, "写文件错误", localException);
