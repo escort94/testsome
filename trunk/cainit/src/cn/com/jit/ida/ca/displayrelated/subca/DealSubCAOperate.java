@@ -1,7 +1,11 @@
 package cn.com.jit.ida.ca.displayrelated.subca;
 
+import java.io.File;
+
 import cn.com.jit.ida.IDAException;
+import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ConfigTool;
+import cn.com.jit.ida.globalconfig.ParseXML;
 import cn.com.jit.ida.log.LogManager;
 import cn.com.jit.ida.log.SysLogger;
 import cn.com.jit.ida.util.pki.PKIException;
@@ -13,14 +17,21 @@ import cn.com.jit.ida.util.pki.PKIException;
  */
 public class DealSubCAOperate {
 
-	public void dealCommuCert() {
+	public void dealCommuCert(){
+		File initFile = new File("./config/init.xml");
+		if (!initFile.exists()) {
+			System.out.println("./config/init.xml不存在，无法进行操作");
+			return;
+		}
 		//初始化日志 然后获得日志输出对象
 		CommuCert.clear();
 		LogManager.init();
 		SysLogger logger = LogManager.getSysLogger();
 		//根据选择 进行具体操作 全部是针对子CA
+//		int j = ConfigTool.displayMenu(null, new String[] { "产生申请书(用于创建通信证书)",
+//				"产生申请书(用于更新通信证书)", "导入证书(根据req文件签出的cer格式证书)", "导入根证书" });
 		int j = ConfigTool.displayMenu(null, new String[] { "产生申请书(用于创建通信证书)",
-				"产生申请书(用于更新通信证书)", "导入证书(根据req文件签出的cer格式证书)", "导入根证书" });
+				"产生申请书(用于更新通信证书)"});
 		if (j == 0) {
 			logger.info("用户取消");
 		}

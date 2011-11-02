@@ -32,6 +32,7 @@ public class InitAuditAdminPFX extends InitFather {
 		super(init);
 	}
 	public InitAuditAdminPFX(String keyalag, String password, String path, int validity)throws IDAException{
+		super(true);
 		this.adminKeyAlg = keyalag;
 		this.signingKeyAlg = keyalag.equals(RSA) ? RSA_ALGORITHM : SM2_ALGORITHM;
 		this.password = password;
@@ -84,5 +85,11 @@ public class InitAuditAdminPFX extends InitFather {
 	}
 	public void setDN(String dn) {
 		DN = dn;
+	}
+	public String getIssuer() {
+		return issuer;
+	}
+	public void setIssuer(String issuer) {
+		this.issuer = issuer;
 	}
 }

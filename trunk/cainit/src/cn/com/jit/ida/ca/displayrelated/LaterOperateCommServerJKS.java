@@ -13,11 +13,12 @@ public class LaterOperateCommServerJKS {
 		LogManager.init();
 		SysLogger logger = LogManager.getSysLogger();
 		// 根据选择 进行具体操作 全部是针对子CA
-		int j = ConfigTool.displayMenu(null, new String[] {
-				"导入证书(根据req文件签出的cer格式证书)", "导入根证书" });
-		if (j == 0) {
-			logger.info("用户取消");
-		}
+//		int j = ConfigTool.displayMenu(null, new String[] {
+//				"导入证书(根据req文件签出的cer格式证书)", "导入根证书" });
+//		if (j == 0) {
+//			logger.info("用户取消");
+//		}
+		int j = 2;
 		int i = 0;
 		InitCommuCert initCommuCert;
 		if (j == 1) {
