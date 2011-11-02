@@ -42,6 +42,10 @@ public class OperateException extends IDAException {
 	
 	public static String KEYPAIRTYPE_ERROR = "0015";
 	public static String KEYPAIRTYPE_ERROR_DES = "配置文件密钥生成方式配置错误";
+	public static String SET_ADMIN_AUTHENTICATION_ERROR = "0016";
+	public static String SET_ADMIN_AUTHENTICATION_ERROR_DES = "任命管理员的证书处理失败";
+	public static String SAVE_ADMIN_ERROR = "0017";
+	public static String SAVE_ADMIN_ERROR_DES = "管理员存储失败";
 	public OperateException(String paramString1, String paramString2) {
 		super(paramString1, paramString2);
 	}
