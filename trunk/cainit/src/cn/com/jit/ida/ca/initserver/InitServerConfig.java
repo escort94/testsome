@@ -110,16 +110,16 @@ public class InitServerConfig
     throws InitServerException
   {
     int i;
-    try
-    {
-      i = this.config.getNumber("ServiceTimeOut");
-    }
-    catch (Exception localException1)
-    {
-      throw new InitServerException("0984", "服务器超时时间错误", localException1);
-    }
-    if (i < 1)
-      throw new InitServerException("0984", "服务器超时时间错误");
+//    try
+//    {
+//      i = this.config.getNumber("ServiceTimeOut");
+//    }
+//    catch (Exception localException1)
+//    {
+//      throw new InitServerException("0984", "服务器超时时间错误", localException1);
+//    }
+//    if (i < 1)
+//      throw new InitServerException("0984", "服务器超时时间错误");
     int j;
     try
     {
@@ -131,60 +131,60 @@ public class InitServerConfig
     }
     if (j < 1)
       throw new InitServerException("0979", "通信证书有效期错误");
-    int k;
-    try
-    {
-      k = this.config.getNumber("ControlPort");
-    }
-    catch (Exception localException3)
-    {
-      throw new InitServerException("0978", "控制服务器端口错误", localException3);
-    }
-    if (k < 1)
-      throw new InitServerException("0978", "控制服务器端口错误");
-    int m;
-    try
-    {
-      m = this.config.getNumber("ServicePort");
-    }
-    catch (Exception localException4)
-    {
-      throw new InitServerException("0911", "服务器端口错误", localException4);
-    }
-    if (m < 1)
-      throw new InitServerException("0911", "服务器端口错误");
-    try
-    {
-      int n = this.config.getNumber("AcceptThreadCount");
-    }
-    catch (Exception localException5)
-    {
-      throw new InitServerException("0912", "服务器接收线程数量错误", localException5);
-    }
-    if (m < 1)
-      throw new InitServerException("0912", "服务器接收线程数量错误");
-    int i1;
-    try
-    {
-      i1 = this.config.getNumber("MaxProcessThread");
-    }
-    catch (Exception localException6)
-    {
-      throw new InitServerException("0929", "服务器最大处理线程数量错误", localException6);
-    }
-    if (i1 < 1)
-      throw new InitServerException("0929", "服务器最大处理线程数量错误");
-    String str1;
-    try
-    {
-      str1 = this.config.getString("ServerType");
-    }
-    catch (Exception localException7)
-    {
-      throw new InitServerException("0931", "服务器类型错误", localException7);
-    }
-    if ((!str1.equalsIgnoreCase("SOCKET")) && (!str1.equalsIgnoreCase("SSL")))
-      throw new InitServerException("0931", "服务器类型错误");
+//    int k;
+//    try
+//    {
+//      k = this.config.getNumber("ControlPort");
+//    }
+//    catch (Exception localException3)
+//    {
+//      throw new InitServerException("0978", "控制服务器端口错误", localException3);
+//    }
+//    if (k < 1)
+//      throw new InitServerException("0978", "控制服务器端口错误");
+//    int m;
+//    try
+//    {
+//      m = this.config.getNumber("ServicePort");
+//    }
+//    catch (Exception localException4)
+//    {
+//      throw new InitServerException("0911", "服务器端口错误", localException4);
+//    }
+//    if (m < 1)
+//      throw new InitServerException("0911", "服务器端口错误");
+//    try
+//    {
+//      int n = this.config.getNumber("AcceptThreadCount");
+//    }
+//    catch (Exception localException5)
+//    {
+//      throw new InitServerException("0912", "服务器接收线程数量错误", localException5);
+//    }
+//    if (m < 1)
+//      throw new InitServerException("0912", "服务器接收线程数量错误");
+//    int i1;
+//    try
+//    {
+//      i1 = this.config.getNumber("MaxProcessThread");
+//    }
+//    catch (Exception localException6)
+//    {
+//      throw new InitServerException("0929", "服务器最大处理线程数量错误", localException6);
+//    }
+//    if (i1 < 1)
+//      throw new InitServerException("0929", "服务器最大处理线程数量错误");
+//    String str1;
+//    try
+//    {
+//      str1 = this.config.getString("ServerType");
+//    }
+//    catch (Exception localException7)
+//    {
+//      throw new InitServerException("0931", "服务器类型错误", localException7);
+//    }
+//    if ((!str1.equalsIgnoreCase("SOCKET")) && (!str1.equalsIgnoreCase("SSL")))
+//      throw new InitServerException("0931", "服务器类型错误");
     String str2;
     try
     {
@@ -245,17 +245,17 @@ public class InitServerConfig
     }
     if (str5.equalsIgnoreCase(""))
       throw new InitServerException("0935", "Web的通信证书存储密码错误");
-    int i2 = 0;
-    try
-    {
-      i2 = this.config.getNumber("WebServerPort");
-    }
-    catch (Exception localException14)
-    {
-      throw new InitServerException("0936", "服务器端口错误", localException14);
-    }
-    if (i2 < 1)
-      throw new InitServerException("0936", "服务器端口错误");
+//    int i2 = 0;
+//    try
+//    {
+//      i2 = this.config.getNumber("WebServerPort");
+//    }
+//    catch (Exception localException14)
+//    {
+//      throw new InitServerException("0936", "服务器端口错误", localException14);
+//    }
+//    if (i2 < 1)
+//      throw new InitServerException("0936", "服务器端口错误");
   }
 
   public void readLdapConfig()

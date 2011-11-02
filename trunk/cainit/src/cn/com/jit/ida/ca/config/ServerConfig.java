@@ -54,29 +54,29 @@ public class ServerConfig
   {
     this.config = new ConfigFromXML("NetConfig", "./config/CAConfig.xml");
     this.webServerAddress = this.config.getString("ServerAddress");
-    this.webServerPort = this.config.getNumber("WebServerPort");
+//    this.webServerPort = this.config.getNumber("WebServerPort");
     this.webHomePath = this.config.getString("WebHomePath");
     this.webAppPath = this.config.getString("WebAppPath");
     this.webAppBasePath = this.config.getString("WebAppBasePath");
     this.webDocBasePath = this.config.getString("WebAppDocBasePath");
-    this.secureWebServerAddress = this.config.getString("ServerAddress");
-    this.secureWebPort = this.config.getNumber("SecureWebServerPort");
+//    this.secureWebServerAddress = this.config.getString("ServerAddress");
+//    this.secureWebPort = this.config.getNumber("SecureWebServerPort");
     this.secureWebHomePath = this.config.getString("SecureWebHomePath");
     this.secureWebAppPath = this.config.getString("SecureWebAppPath");
     this.secureWebDocBasePath = this.config.getString("SecureWebAppDocBasePath");
     this.secureWebAppBasePath = this.config.getString("SecureWebAppBasePath");
     this.serverAddress = this.config.getString("ServerAddress");
-    this.serverPort = this.config.getNumber("ServicePort");
-    this.acceptThreadCount = this.config.getNumber("AcceptThreadCount");
-    this.maxProcessThread = this.config.getNumber("MaxProcessThread");
+//    this.serverPort = this.config.getNumber("ServicePort");
+//    this.acceptThreadCount = this.config.getNumber("AcceptThreadCount");
+//    this.maxProcessThread = this.config.getNumber("MaxProcessThread");
     this.serverType = this.config.getString("ServerType");
     this.communicateCert = this.config.getString("CommKeyStore");
     this.communicateCertPWD = this.config.getString("CommKeyStorePWD");
-    this.webSessionTimeOut = this.config.getNumber("WebSessionTimeOut");
-    this.secureWebSessionTimeOut = this.config.getNumber("SecureWebSessionTimeOut");
+//    this.webSessionTimeOut = this.config.getNumber("WebSessionTimeOut");
+//    this.secureWebSessionTimeOut = this.config.getNumber("SecureWebSessionTimeOut");
     this.webType = this.config.getString("WebType");
-    this.controlPort = this.config.getNumber("ControlPort");
-    this.sessionTimeOut = this.config.getNumber("ServiceTimeOut");
+//    this.controlPort = this.config.getNumber("ControlPort");
+//    this.sessionTimeOut = this.config.getNumber("ServiceTimeOut");
   }
 
   public String getServerAddress()

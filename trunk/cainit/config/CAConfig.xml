@@ -15,24 +15,22 @@
                 <CACommDeviceID>JSOFT_LIB</CACommDeviceID>
                 <!--  在CA通信密钥使用加密机时，输入CA的通信密钥ID标识，如果<CACommDeviceID>为JSOFT_LIB，则此项不起作用-->
                 <CACommKeyID>2</CACommKeyID>
+                <!-- 密钥生成方式 软加密库或者加密机   RUAN YING 之分-->
+                <KeyPairType>RUAN</KeyPairType>
                 <!-- CA通信密钥容器存储路径  -->
                 <CommKeyStore>./keystore/commCert.jks</CommKeyStore>
                 <!-- CA通信密钥容器密码  -->
                 <CommKeyStorePWD isEncrypted="TRUE">detRcNxW</CommKeyStorePWD>
 
                 <!-- CA超级管理员pfx证书存储路径 -->
-                <AdminKeyStorePath>
-					./keystore/superAdminCert.pfx
-				</AdminKeyStorePath>
+                <AdminKeyStorePath>./keystore/superAdminCert.pfx</AdminKeyStorePath>
                 <!-- CA审计管理员pfx证书存储路径 -->
                 <AuditAdminKeyStorePath>./keystore/auditAdminCert.pfx</AuditAdminKeyStorePath>
         </keyStoreConfig>
 
         <DBConfig>
                 <!-- 数据库联接用的URI  -->
-                <Driver_URL>
-				jdbc:oracle:thin:@192.168.0.35:1521:eccca
-			</Driver_URL>
+                <Driver_URL>jdbc:oracle:thin:@192.168.0.35:1521:eccca</Driver_URL>
                 <!-- 数据库联接用的Driver_Class  -->
                 <Driver_Class>oracle.jdbc.driver.OracleDriver</Driver_Class>	
                 <!-- 数据库用户名  -->
@@ -52,7 +50,7 @@
                 <!--  LDAP服务器用户DN -->
                 <LDAPUserDN>cn=directory manager</LDAPUserDN>
                 <!--  LDAP服务器用户口令 -->
-                <LDAP_USER_Password isEncrypted="TRUE">RcNxcNxW</LDAP_USER_Password>	
+                <LDAP_USER_Password isEncrypted="TRUE">detRcNxW</LDAP_USER_Password>	
         </LDAPConfig>
 
         <KMCConfig>
@@ -66,46 +64,46 @@
                 <!--  服务器地址-->
                 <ServerAddress>192.168.0.138</ServerAddress>	
                 <!-- CAServer服务器系统控制端口  -->
-                <ControlPort>40622</ControlPort>			
+                <ControlPort></ControlPort>			
 
                 <!-- CAServer RA服务监听端口  -->
-                <ServicePort>40623</ServicePort>			
+                <ServicePort></ServicePort>			
                 <!-- 接收线程数量，建议1-5  -->
-                <AcceptThreadCount>5</AcceptThreadCount>		
+                <AcceptThreadCount></AcceptThreadCount>		
                 <!-- 线程池最大线程数量  -->
-                <MaxProcessThread>100</MaxProcessThread>		
+                <MaxProcessThread></MaxProcessThread>		
                 <!-- CAServer服务器超时时间  -->
-                <ServiceTimeOut>60</ServiceTimeOut>		
+                <ServiceTimeOut></ServiceTimeOut>		
                 <!-- Server类型  -->
-                <ServerType>SSL</ServerType>			
+                <ServerType></ServerType>			
 
                 <!--  Web服务器端口 -->
-                <WebServerPort>8443</WebServerPort>			
+                <WebServerPort></WebServerPort>			
                 <!--  Web服务器的根目录 -->
-                <WebHomePath>./web</WebHomePath>			
+                <WebHomePath></WebHomePath>			
                 <!--  Web服务器应用程序基地址 -->
-                <WebAppBasePath>./webapp</WebAppBasePath>		
+                <WebAppBasePath></WebAppBasePath>		
                 <!--  Web服务器应用路径 -->
                 <WebAppPath></WebAppPath>				
                 <!--  Web服务器的WebAppDocBasePath -->
-                <WebAppDocBasePath>EndUser</WebAppDocBasePath>	
+                <WebAppDocBasePath></WebAppDocBasePath>	
                 <!--  Web服务器的Session超时时间,单位：分钟 -->
-                <WebSessionTimeOut>30</WebSessionTimeOut>		
+                <WebSessionTimeOut></WebSessionTimeOut>		
                 <!--  Web服务器类型GENERAL是一般联接，UNILATERALISM为单向验证,建议不要修改 -->
-                <WebType>UNILATERALISM</WebType>			
+                <WebType></WebType>			
 
                 <!--  安全Web服务器端口 -->
-                <SecureWebServerPort>9443</SecureWebServerPort>		
+                <SecureWebServerPort></SecureWebServerPort>		
                 <!--  安全Web服务器的根目录,建议不要修改 -->
-                <SecureWebHomePath>./web</SecureWebHomePath>		
+                <SecureWebHomePath></SecureWebHomePath>		
                 <!--  安全Web服务器应用程序基地址,建议不要修改 -->
-                <SecureWebAppBasePath>./webapp</SecureWebAppBasePath>	
+                <SecureWebAppBasePath></SecureWebAppBasePath>	
                 <!--  安全Web服务器应用路径,建议不要修改 -->
                 <SecureWebAppPath></SecureWebAppPath>			
                 <!--  安全Web服务器的WebAppDocBasePath,建议不要修改 -->
-                <SecureWebAppDocBasePath>CA</SecureWebAppDocBasePath>	
+                <SecureWebAppDocBasePath></SecureWebAppDocBasePath>	
                 <!--  安全Web服务器的Session超时时间,单位：分钟 -->
-                <SecureWebSessionTimeOut>30</SecureWebSessionTimeOut>	
+                <SecureWebSessionTimeOut></SecureWebSessionTimeOut>	
         </NetConfig>
 
         <LOGConfig>
