@@ -41,7 +41,7 @@
 			<!--  CA的BaseDN -->
 			<BaseDN>O=AISINO,C=CN</BaseDN>
 			<!--  CA名称，注意这个DN要符合BaseDN，即以BaseDN项中的内容为结尾 -->
-			<CASubject>CN=DemoCA,O=AISINO,C=CN</CASubject>
+			<CASubject>CN=ZICA,O=AISINO,C=CN</CASubject>
 		</CAConfig>
 	</QuickConf>
 
@@ -259,6 +259,8 @@
 	</CSPConfig>
 
 	<keyStoreConfig>
+		<!-- 是否是子CA yes 代表子CA no 代表根CA-->
+		<CAIdentity>yes</CAIdentity>
 		<!-- CA签名密钥所使用的加密库类型，目前支持 "JSOFT_LIB"   "JSJY05B_LIB"   -->
 		<CASigningDeviceID>JSOFT_LIB</CASigningDeviceID>
 		<!-- 在CA签名密钥使用加密机时，输入CA的签名密钥ID标识，要求为大于0的整数，实际取值范围视加密机情况而定，如果<CASigningDeviceID>为JSOFT_LIB，则此项不起作用-->
