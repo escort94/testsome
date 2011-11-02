@@ -9,6 +9,7 @@ import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
@@ -197,7 +198,14 @@ public class GenericKey {
 				.toUpperCase();
 		// operate database to update config table
 		// the operate only update database
-		DbUtils.updateConfig(sn, dn, adminType);
+		try {
+			DbUtils.updateConfig(sn, dn, adminType, localX509CertImpl);
+		} catch (CertificateEncodingException e) {
+			OperateException oo = new OperateException(
+					OperateException.SAVE_ADMIN_ERROR,
+					OperateException.SAVE_ADMIN_ERROR_DES);
+			throw oo;
+		}
 	}
 
 	public String resetDN(String dn) {
@@ -274,9 +282,6 @@ public class GenericKey {
 					bool = addDemoCA(privateKey, password);
 				} while (bool == true
 						&& ConfigTool.getYesOrNo("是否再次需要导入其他根证书[Y/N]:"));
-			}
-			if (this.fileType.equals(GenericKey.PKCS12)) {
-				DbUtils.updateConfig(sn, dn, this.getAdminIdentity());
 			}
 			return true;
 		} catch (Exception e) {
@@ -358,6 +363,10 @@ public class GenericKey {
 			m_keyStore.deleteEntry("s1as");
 			m_keyStore
 					.setKeyEntry("s1as", privateKey, password, certificateuse);
+			if (this.fileType.equals(GenericKey.PKCS12)) {
+				X509Certificate cert = (X509Certificate)certificate1[0];
+				DbUtils.updateConfig(cert.getSerialNumber().toString(16), cert.getSubjectX500Principal().getName(), this.getAdminIdentity(), cert);
+			}
 		} catch (Exception localException) {
 			KeyPairException kException = new KeyPairException(
 					KeyPairException.INSERT_GEN_CER_ERROR,
@@ -519,6 +528,8 @@ public class GenericKey {
 
 	public void addKeystoreStruct(String algorithm, String issuer, String dn,
 			char[] passwords, int validityDay) throws IDAException {
+		this.sn = issuer;
+		this.dn = dn;
 		X509Certificate certificate = null;
 		String signAlg = algorithm;
 		String snStr = CodeGenerator.generateRefCode();

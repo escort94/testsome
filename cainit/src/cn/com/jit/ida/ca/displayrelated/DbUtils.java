@@ -1,12 +1,21 @@
 package cn.com.jit.ida.ca.displayrelated;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
+import java.security.spec.RSAPublicKeySpec;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.Date;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -30,21 +39,24 @@ public class DbUtils {
 		return DriverManager.getConnection(dbConfig.getURL(), dbConfig
 				.getUser(), dbConfig.getPassword());
 	}
-	public String encode(String pwd){
+
+	public String encode(String pwd) {
 		BASE64Encoder encode = new BASE64Encoder();
 		return encode.encode(pwd.getBytes());
 	}
-	public String decode(String pwd) throws IOException{
+
+	public String decode(String pwd) throws IOException {
 		BASE64Decoder decode = new BASE64Decoder();
 		return new String(decode.decodeBuffer(pwd));
 	}
-	public static void insertSysAdminPwd() throws IDAException{
+
+	public static void insertSysAdminPwd() throws IDAException {
 		String pwd = ConfigTool.getNewPassword("请设置系统管理员密码", 6, 16, true);
 		try {
 			Connection conn = getConnection();
-			String insertAdminsql = "insert into " + TableNames.TCA_CONFIG + " values(?,?,?,?,?,?)";
-			PreparedStatement statement = conn
-					.prepareStatement(insertAdminsql);
+			String insertAdminsql = "insert into " + TableNames.TCA_CONFIG
+					+ " values(?,?,?,?,?,?)";
+			PreparedStatement statement = conn.prepareStatement(insertAdminsql);
 			statement.setString(1, "CAConfig");
 			statement.setString(2, "SysAdminPwd");
 			statement.setString(3, pwd);
@@ -59,14 +71,15 @@ public class DbUtils {
 			throw oexception;
 		}
 	}
-	public static String getSysPwd() throws OperateException{
+
+	public static String getSysPwd() throws OperateException {
 		try {
 			Connection conn = getConnection();
-			String insertAdminsql = "select value from " + TableNames.TCA_CONFIG + " where property = 'SysAdminPwd'";
-			Statement statement = conn
-					.createStatement();
+			String insertAdminsql = "select value from "
+					+ TableNames.TCA_CONFIG + " where property = 'SysAdminPwd'";
+			Statement statement = conn.createStatement();
 			ResultSet set = statement.executeQuery(insertAdminsql);
-			while(set.next()){
+			while (set.next()) {
 				String pwd = set.getString(1);
 				return pwd;
 			}
@@ -78,27 +91,28 @@ public class DbUtils {
 		}
 		return null;
 	}
-	public static boolean updateSysAdminPwd() throws IDAException{
+
+	public static boolean updateSysAdminPwd() throws IDAException {
 		String pwd_old = ConfigTool.getPassword("请输入系统管理员密码", 6, 16);
-		if(pwd_old == null){
+		if (pwd_old == null) {
 			return false;
 		}
-		while(!pwd_old.equals(getSysPwd())){
+		while (!pwd_old.equals(getSysPwd())) {
 			System.out.println("系统管理员密码错误...");
 			pwd_old = ConfigTool.getPassword("请输入系统管理员密码", 6, 16);
-			if(pwd_old == null){
+			if (pwd_old == null) {
 				return false;
 			}
 		}
 		String pwd_new = ConfigTool.getNewPassword("请输入新的系统管理员密码", 6, 16);
-		if(pwd_new == null){
+		if (pwd_new == null) {
 			return false;
 		}
 		try {
 			Connection conn = getConnection();
-			String insertAdminsql = "update " + TableNames.TCA_CONFIG + " set value = ? where property ='SysAdminPwd'";
-			PreparedStatement statement = conn
-					.prepareStatement(insertAdminsql);
+			String insertAdminsql = "update " + TableNames.TCA_CONFIG
+					+ " set value = ? where property ='SysAdminPwd'";
+			PreparedStatement statement = conn.prepareStatement(insertAdminsql);
 			statement.setString(1, pwd_new);
 			statement.execute();
 			return true;
@@ -109,6 +123,7 @@ public class DbUtils {
 			throw oexception;
 		}
 	}
+
 	public static void closeConnection(Connection conn) {
 		if (null != conn) {
 			try {
@@ -136,12 +151,40 @@ public class DbUtils {
 	 * @param dn
 	 * @param adminType
 	 * @throws IDAException
+	 * @throws CertificateEncodingException 
+	 * @throws  
 	 * @throws SQLException
 	 */
-	public static void updateConfig(String sn, String dn, int adminType)
-			throws IDAException {
+	public static void updateConfig(String sn, String dn, int adminType,
+			X509Certificate cert) throws IDAException, CertificateEncodingException {
+		String keytype = null;
+		int keylength = 0;
+		Timestamp after = null;
+		Timestamp before = null;
+		try {
+			after = new Timestamp(cert.getNotAfter().getTime());
+			before = new Timestamp(cert.getNotBefore().getTime());
+			Key publicKey = cert.getPublicKey();
+			keytype = publicKey.getAlgorithm();
+			if (keytype.equalsIgnoreCase("RSA")) {
+				KeyFactory keyFact;
+
+				keyFact = KeyFactory.getInstance(keytype);
+
+				RSAPublicKeySpec keySpec = (RSAPublicKeySpec) keyFact
+						.getKeySpec(publicKey, RSAPublicKeySpec.class);
+				BigInteger modulus = keySpec.getModulus();
+				keylength = modulus.toString(2).length();
+			} else {
+				keylength = 256;
+			}
+		} catch (Exception e) {
+			OperateException kException = new OperateException(
+					OperateException.SET_ADMIN_AUTHENTICATION_ERROR,
+					OperateException.SET_ADMIN_AUTHENTICATION_ERROR, e);
+			throw kException;
+		}
 		sn = sn.toUpperCase();
-		dn = dn.toUpperCase();
 		Connection conn = null;
 		try {
 			conn = getConnection();
@@ -149,7 +192,8 @@ public class DbUtils {
 
 			// wether ,delete the update admin,because system is not allow one
 			// person hava two identity
-			String delconfigsql = "delete from " + TableNames.TCA_CONFIG + " where value = ?";
+			String delconfigsql = "delete from " + TableNames.TCA_CONFIG
+					+ " where value = ?";
 			PreparedStatement delconfigPStatement = conn
 					.prepareStatement(delconfigsql);
 			delconfigPStatement.setString(1, sn);
@@ -160,7 +204,8 @@ public class DbUtils {
 				delconfigPStatement.close();
 			}
 
-			String deladminsql = "delete from " + TableNames.TCA_ADMIN+ " where certsn = ?";
+			String deladminsql = "delete from " + TableNames.TCA_ADMIN
+					+ " where cert_sn = ?";
 			PreparedStatement delAdminPStatement = conn
 					.prepareStatement(deladminsql);
 			delAdminPStatement.setString(1, sn);
@@ -168,21 +213,30 @@ public class DbUtils {
 			if (null != delAdminPStatement) {
 				delAdminPStatement.close();
 			}
-			//TODO
-			//★★★must be modify in the futher,role_id and tablename ★★★
-			String insertAdminsql = "insert into " + TableNames.TCA_ADMIN+ " values(?,?,?,?)";
+			// TODO
+			// ★★★must be modify in the futher,role_id and tablename ★★★
+			String insertAdminsql = "insert into " + TableNames.TCA_ADMIN
+					+ " values(?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement insertAdminPStatement = conn
 					.prepareStatement(insertAdminsql);
 			insertAdminPStatement.setString(1, sn);
-			insertAdminPStatement.setString(2, String.valueOf(adminType));
-			insertAdminPStatement.setString(3, "temp_client");
-			insertAdminPStatement.setString(4, "temp_server");
+			insertAdminPStatement.setString(2, dn);
+			insertAdminPStatement.setObject(3, before);
+			insertAdminPStatement.setObject(4, after);
+			insertAdminPStatement.setObject(5, new Timestamp(new Date().getTime()));
+			insertAdminPStatement.setString(6,
+					new BASE64Encoder().encode(cert.getEncoded()));
+			insertAdminPStatement.setString(7, keytype);
+			insertAdminPStatement.setInt(8, keylength);
+			insertAdminPStatement.setNull(9, Types.NUMERIC);
+			insertAdminPStatement.setInt(10, adminType);
 			insertAdminPStatement.execute();
 			if (null != insertAdminPStatement) {
 				insertAdminPStatement.close();
 			}
-			
-			String insertConfigsql = "insert into " + TableNames.TCA_CONFIG + " values(?,?,?,?,?,?)";
+
+			String insertConfigsql = "insert into " + TableNames.TCA_CONFIG
+					+ " values(?,?,?,?,?,?)";
 			PreparedStatement localPreparedStatement = conn
 					.prepareStatement(insertConfigsql);
 			if (adminType == Admin.AUDIT_ADMIN) {
