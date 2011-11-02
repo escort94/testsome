@@ -42,6 +42,7 @@ public class InitSigningJKS extends InitFather {
 	public InitSigningJKS(String init) throws IDAException {
 		super(init);
 	}
+
 	public InitSigningJKS(boolean init) throws IDAException {
 		super(init);
 	}
@@ -64,8 +65,8 @@ public class InitSigningJKS extends InitFather {
 
 	// 生成自签名的证书cer 当然是利用上面的密钥对
 	public void getSignedByItselfCer() throws IDAException {
-		KeyPair keyPair =KeyUtils.createKeyPair(keySigningStoreAlg, KEYPAIR_TYPE,
-				keySize);
+		KeyPair keyPair = KeyUtils.createKeyPair(keySigningStoreAlg,
+				KEYPAIR_TYPE, keySize);
 		GenericKey gKey = new GenericKey(true, signingjkspath,
 				singingkeyStorePassword.toCharArray(), keyPair, GenericKey.JKS);
 		gKey.addKeystoreStruct(keySigningAlg, issuer, singingkeyStorePassword
@@ -84,6 +85,14 @@ public class InitSigningJKS extends InitFather {
 		System.out.println(xml);
 	}
 
+	public static void main(String[] args) {
+		try {
+			getTempLateInfo();
+		} catch (DBException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public int getSigningValidityDay() {
 		return signingValidityDay;
 	}
@@ -91,9 +100,11 @@ public class InitSigningJKS extends InitFather {
 	public void setSigningValidityDay(int signingValidityDay) {
 		this.signingValidityDay = signingValidityDay;
 	}
+
 	public String getIssuer() {
 		return issuer;
 	}
+
 	public void setIssuer(String issuer) {
 		this.issuer = issuer;
 	}

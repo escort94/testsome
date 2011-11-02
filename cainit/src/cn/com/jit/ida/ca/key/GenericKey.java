@@ -40,9 +40,7 @@ public class GenericKey {
 	private static GenericKey instance = null;
 	private boolean m_isNewKeyStore = false;
 	private String jksFilePath = null;
-	private int m_keyID = -1;
 	private char[] m_pwd = null;
-	private String m_deviceID = "JSOFT_LIB";
 	private Vector m_KeyStruct = new Vector();
 	public KeyStore m_keyStore;
 	Vector m_TrustCerts = new Vector();
@@ -361,7 +359,6 @@ public class GenericKey {
 			m_keyStore
 					.setKeyEntry("s1as", privateKey, password, certificateuse);
 		} catch (Exception localException) {
-			localException.printStackTrace();
 			KeyPairException kException = new KeyPairException(
 					KeyPairException.INSERT_GEN_CER_ERROR,
 					KeyPairException.INSERT_GEN_CER_ERROR_DES, localException);

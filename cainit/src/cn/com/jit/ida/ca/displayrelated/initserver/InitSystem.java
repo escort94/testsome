@@ -69,10 +69,12 @@ public class InitSystem {
 			logger.info("LDAP初始化成功");
 		}
 
-		// DemoCA.cer initialize
-		InitDemoCACer initDemoCACer = new InitDemoCACer(false);
-		initDemoCACer.makeDemoCACer();
-		logger.info("根证书初始化成功");
+		if(!init.getString("CAIdentity").equalsIgnoreCase("yes")){
+			// DemoCA.cer initialize
+			InitDemoCACer initDemoCACer = new InitDemoCACer(false);
+			initDemoCACer.makeDemoCACer();
+			logger.info("根证书初始化成功");
+		}
 
 		// signingJKS initialize
 		InitSigningJKS initSignJKS = new InitSigningJKS(false);

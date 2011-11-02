@@ -6,6 +6,7 @@ import cn.com.jit.ida.IDAException;
 import cn.com.jit.ida.ca.key.GenericKey;
 import cn.com.jit.ida.globalconfig.ConfigException;
 import cn.com.jit.ida.globalconfig.ConfigTool;
+import cn.com.jit.ida.globalconfig.ParseXML;
 
 public class CommuCert {
 	private String commKeyStore = null;
@@ -24,11 +25,14 @@ public class CommuCert {
 	}
 
 	public void init() throws IDAException {
-		if (InitCommuCert.SUB_CA_JKS.equals(InitCommuCert.identity)) {
-			this.commKeyStore = "./keystore/subCAKeystore.jks";
-		}else if (InitCommuCert.COMM_JKS.equals(InitCommuCert.identity)){
-			this.commKeyStore = "./keystore/commCert.jks";
-		}
+		// if (InitCommuCert.SUB_CA_JKS.equals(InitCommuCert.identity)) {
+		// this.commKeyStore = "./keystore/subCAKeystore.jks";
+		// }else if (InitCommuCert.COMM_JKS.equals(InitCommuCert.identity)){
+		// this.commKeyStore = "./keystore/commCert.jks";
+		// }
+		// this.commKeyStore = "./keystore/commCert.jks";
+		this.commKeyStore = new ParseXML("./config/CAConfig.xml")
+				.getString("CommKeyStore");
 		if (this.commKeyStorePWD == null) {
 			commKeyStorePWD = ConfigTool.getPassword("请输入通信证书密码", 0, 16);
 			if (commKeyStorePWD == null)

@@ -21,6 +21,7 @@ import cn.com.jit.ida.ca.key.keyutils.Keyalg;
 import cn.com.jit.ida.ca.key.keyutils.Keytype;
 import cn.com.jit.ida.globalconfig.ConfigTool;
 import cn.com.jit.ida.globalconfig.KeyPairException;
+import cn.com.jit.ida.globalconfig.ParseXML;
 import cn.com.jit.ida.util.pki.PKIException;
 
 public class InitCommuCert {
@@ -38,6 +39,7 @@ public class InitCommuCert {
 	}
 
 	public int generalReq() throws IDAException {
+		ParseXML xml = new ParseXML("./config/init.xml");
 		String jksFliePath = ConfigTool.getFilePathFromUser(
 				"请输入服务器证书密钥储存的文件名\n(默认： ./keystore/subCAKeystore.jks，直接回车使用默认文件名)：",
 				ConfigTool.FILE_TO_WRITE, "./keystore/subCAKeystore.jks");
@@ -77,9 +79,12 @@ public class InitCommuCert {
 		}
 		if (keySize < 256)
 			return 0;
-		String dn = ConfigTool.getDN("请输入通信证书DN:");
-		if (dn == null)
-			return 0;
+//		String dn = ConfigTool.getDN("请输入通信证书DN:");
+		String dn = xml.getString("CASubject");
+		if (dn == null){
+			System.out.println("请检查/config/init.xml配置文件是否配置<CASubject>");
+			return -1;
+		}
 		String passwords = ConfigTool.getNewPassword("请输入密钥存储密码", 6, 16);
 		if (passwords == null) {
 			return 0;

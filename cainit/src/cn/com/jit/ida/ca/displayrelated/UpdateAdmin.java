@@ -90,13 +90,26 @@ public class UpdateAdmin {
 			.getString("AdminKeyStorePath");
 			InitSuperAdminPFX makesuperadmin = new InitSuperAdminPFX(keyAlag,
 					password, path, Integer.parseInt(validityDay));
+			makesuperadmin.setIssuer(reverseDN(DemoCAUtils.getIssuer()));
 			makesuperadmin.setDN(dn);
 			makesuperadmin.makeSuperAdminPFX(keySize);
 			this.getLogger().info("更新超级管理员操作成功");
 		}
 
 	}
-
+	public String reverseDN(String dn){
+		String[] dns = dn.split(",");
+		int length = dns.length;
+		String[] returndns = new String[length];
+		StringBuffer sb = new StringBuffer();
+		for(String s : dns){
+			returndns[--length] = s.trim();
+		}
+		for(String s : returndns){
+			sb.append(s + ",");
+		}
+		return sb.substring(0, sb.length() - 1);
+	}
 	public void operateAuditAdmin() throws IDAException {
 		if (!beforeOperate()) {
 			return;
@@ -113,6 +126,7 @@ public class UpdateAdmin {
 					.getString("AuditAdminKeyStorePath");
 			InitAuditAdminPFX makeauditdmin = new InitAuditAdminPFX(keyAlag,
 					password, path, Integer.parseInt(validityDay));
+			makeauditdmin.setIssuer(DemoCAUtils.getIssuer());
 			makeauditdmin.setDN(dn);
 			makeauditdmin.makeAuditAdminPFX(keySize);
 			this.getLogger().info("更新审计管理员操作成功");

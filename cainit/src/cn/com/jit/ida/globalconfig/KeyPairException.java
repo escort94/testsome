@@ -25,6 +25,8 @@ public class KeyPairException extends IDAException{
 	public static String EXPORT_REQ_ERROR_DES = "导出req证书请求失败";
 	public static String GET_PRIVATE_KEY_ERROR = "0311";
 	public static String GET_PRIVATE_KEY_ERROR_DES = "获取证书私钥失败";
+	public static String GET_DN_ERROR = "0312";
+	public static String GET_DN_ERROR_DES = "获取证书主题失败";
 	public KeyPairException(String paramString) {
 		super(paramString);
 	}

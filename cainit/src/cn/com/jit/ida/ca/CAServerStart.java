@@ -12,6 +12,7 @@ import cn.com.jit.ida.ca.display.DisplaySubCAAll;
 import cn.com.jit.ida.ca.display.DisplayUpdateAdmin;
 import cn.com.jit.ida.ca.display.DisplayUpdateCommjks;
 import cn.com.jit.ida.ca.display.DisplayUpdateSigningJKS;
+import cn.com.jit.ida.ca.display.DisplayWebServer;
 import cn.com.jit.ida.ca.displayrelated.DbUtils;
 import cn.com.jit.ida.ca.exception.OperateException;
 import cn.com.jit.ida.globalconfig.ConfigTool;
@@ -100,11 +101,11 @@ public class CAServerStart {
 					.println("************************************************");
 			System.out.println("   1.  启动服务器                              ");
 			System.out.println("   2.  停止服务器                              ");
-			System.out.println("   3.  子CA通信证书操作        ");
+			System.out.println("   3.  子CA身份的根证书申请                  ");
 			System.out.println("   4.  初始化系统                              ");
 			System.out.println("   5.  更新管理员证书                         ");
 			System.out.println("   6.  更新服务器通信证书                        ");
-			System.out.println("   7.  服务器通信证书后续操作                     ");
+			System.out.println("   7.  导入服务器通信证书根证书                     ");
 			System.out.println("   8.  修改系统管理员密码                              ");
 			System.out.println("   0.  退出                                   ");
 			System.out
@@ -120,19 +121,19 @@ public class CAServerStart {
 			}
 			if (str.equalsIgnoreCase("1")) {
 				if (isBeenInit() && checkOperateIdentity()) {// start server
-
+					DisplayWebServer dws = new DisplayWebServer();
+					dws.start();
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("2")) {
 				if (isBeenInit() && checkOperateIdentity()) {// stop server
-
+					DisplayWebServer dws = new DisplayWebServer();
+					dws.stop();
 				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("3")) {// apply cert
-				if (isBeenInit()) {// stop server
 					DisplaySubCAAll dca = new DisplaySubCAAll();
 					dca.operate();
-				}
 				ConfigTool.waitToContinue(localBufferedReader);
 			} else if (str.equalsIgnoreCase("4")) {// init server
 				DisplayInitServer dis = new DisplayInitServer();

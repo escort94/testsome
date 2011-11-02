@@ -44,7 +44,7 @@ public class Oracle extends DBManager {
 		BufferedInputStream is = null;
 		try {
 			localConnection = DriverManager.getConnection("proxool.ida");
-			String str1 = "select CT_XML from TCA_CERT_TEMPLATE where CT_ID = 1";
+			String str1 = "select CT_XML from TCA_CERT_TEMPLATE where CT_ID = 4";
 			localStatement = localConnection.createStatement();
 			localResultSet = localStatement.executeQuery(str1);
 			if (localResultSet.next()) {
