@@ -3,9 +3,7 @@
 		<!-- Oracle 数据库配置示例 -->
 		<DBConfig>
 			<!-- 数据库联接用的URI -->
-			<Driver_URL>
-				jdbc:oracle:thin:@192.168.0.35:1521:eccca
-			</Driver_URL>
+			<Driver_URL>jdbc:oracle:thin:@192.168.0.35:1521:eccca</Driver_URL>
 			<!-- 数据库联接用的Driver_Class -->
 			<Driver_Class>oracle.jdbc.driver.OracleDriver</Driver_Class>
 			<!-- 数据库用户名 -->
@@ -25,9 +23,7 @@
 			<!--  LDAP服务器用户DN -->
 			<LDAPUserDN>cn=directory manager</LDAPUserDN>
 			<!--  LDAP服务器用户口令 -->
-			<LDAP_USER_Password isEncrypted="TRUE">
-				detRcNxW
-			</LDAP_USER_Password>
+			<LDAP_USER_Password isEncrypted="TRUE">detRcNxW</LDAP_USER_Password>
 		</LDAPConfig>
 		<KMCConfig>
 			<!--  密钥管理中心server地址（没有可以不写）-->
@@ -45,50 +41,6 @@
 		</CAConfig>
 	</QuickConf>
 
-	<NetConfig>
-		<!-- CAServer服务器系统控制端口 -->
-		<ControlPort>40622</ControlPort>
-		<!-- CAServer RA服务监听端口 -->
-		<ServicePort>40623</ServicePort>
-		<!-- 接收线程数量，建议1-5 -->
-		<AcceptThreadCount>5</AcceptThreadCount>
-		<!-- 线程池最大线程数量 -->
-		<MaxProcessThread>100</MaxProcessThread>
-
-		<!-- CAServer服务器超时时间 -->
-		<ServiceTimeOut>60</ServiceTimeOut>
-		<!-- Server类型  -->
-		<ServerType>SSL</ServerType>
-
-		<!--  Web服务器端口 -->
-		<WebServerPort>8443</WebServerPort>
-		<!--  Web服务器的根目录 -->
-		<WebHomePath>./web</WebHomePath>
-		<!--  Web服务器应用程序基地址 -->
-		<WebAppBasePath>./webapp</WebAppBasePath>
-		<!--  Web服务器应用路径 -->
-		<WebAppPath/>
-		<!--  Web服务器的WebAppDocBasePath -->
-		<WebAppDocBasePath>EndUser</WebAppDocBasePath>
-		<!--  Web服务器的Session超时时间,单位：分钟 -->
-		<WebSessionTimeOut>30</WebSessionTimeOut>
-		<!--  Web服务器类型GENERAL是一般联接，UNILATERALISM为单向验证,建议不要修改 -->
-		<WebType>UNILATERALISM</WebType>
-
-		<!--  安全Web服务器端口 -->
-		<SecureWebServerPort>9443</SecureWebServerPort>
-
-		<!--  安全Web服务器的根目录,建议不要修改 -->
-		<SecureWebHomePath>./web</SecureWebHomePath>
-		<!--  安全Web服务器应用程序基地址,建议不要修改 -->
-		<SecureWebAppBasePath>./webapp</SecureWebAppBasePath>
-		<!--  安全Web服务器应用路径,建议不要修改 -->
-		<SecureWebAppPath/>
-		<!--  安全Web服务器的WebAppDocBasePath,建议不要修改 -->
-		<SecureWebAppDocBasePath>CA</SecureWebAppDocBasePath>
-		<!--  安全Web服务器的Session超时时间,单位：分钟 -->
-		<SecureWebSessionTimeOut>30</SecureWebSessionTimeOut>
-	</NetConfig>
 
 	<LOGConfig>
 		<!--  日志文件存放路径 -->

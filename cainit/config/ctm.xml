@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ctml>
 	<basedescription>
-		<name>子CA证书模板</name>
+		<name>系统服务证书模板</name>
 		<validitypolicy>
 			<defaultValidity>365</defaultValidity>
 			<maxValidity>365</maxValidity>
-			<notBefore>2010-08-31</notBefore>
+			<notBefore>2010-12-31</notBefore>
 		</validitypolicy>
 		<keypolicy>
 			<keyType>rsa</keyType>
@@ -16,21 +15,13 @@
 			<keyspec>sign</keyspec>
 		</keyspecpolicy>
 		<attribute>
-			<type>single</type>
+			<type>sys</type>
 			<refCodeRequest>false</refCodeRequest>
 		</attribute>
 	</basedescription>
 	<extensiondescription>
 		<standardextension>
-			<BasicConstraints>
-				<name>BasicConstraints</name>
-				<crucial>false</crucial>
-				<userprocess>ALLOW</userprocess>
-				<value>
-					<ca>true</ca>
-					<pathLenConstraint>2</pathLenConstraint>
-				</value>
-			</BasicConstraints>
+			<BasicConstraints />
 			<CertificateTemplate />
 			<CertificatePolicies />
 			<CRLDistributionPoints />
@@ -51,5 +42,3 @@
 		<selfextension />
 	</extensiondescription>
 </ctml>
-
-

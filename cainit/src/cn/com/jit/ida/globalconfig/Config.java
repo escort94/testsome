@@ -28,6 +28,7 @@ public abstract class Config
     }
     catch (Exception localException)
     {
+//    	System.out.println("<" + paramString + ">值配置非法");
       throw new IDAException(ConfigException.DATA_TYPE_ERROR, "<" + paramString + ">值配置非法");
     }
     if (i < 0)
