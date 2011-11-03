@@ -37,7 +37,7 @@ public class MyServer {
 				new ProtocolCodecFilter(new TextLineCodecFactory(Charset
 						.forName("UTF-8"), LineDelimiter.WINDOWS.getValue(),
 						LineDelimiter.WINDOWS.getValue())));
-		acceptor.bind(new InetSocketAddress(9123));
+		acceptor.bind(new InetSocketAddress(10022));
 	}
 
 }
