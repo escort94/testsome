@@ -10,7 +10,10 @@ public class FibonacciTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		guoqing(100);
+		guoqing(50);
+		System.out.println();
+		fib(50);
+		System.out.println();
 	}
 
 	/**
@@ -35,7 +38,7 @@ public class FibonacciTest {
 	}
 
 	public static void guoqing(int n) {
-		if(n <= 0){
+		if (n <= 0) {
 			System.out.println("参数不合法，请调整参数");
 			return;
 		}
@@ -47,9 +50,9 @@ public class FibonacciTest {
 			System.out.print(1 + " " + 1 + " ");
 			break;
 		default:
-			int beforOne = 1;
-			int beforeTwo = 1;
-			int now;
+			long beforOne = 1;
+			long beforeTwo = 1;
+			long now;
 			System.out.print(beforOne + " " + beforeTwo + " ");
 			n -= 2;
 			while (n > 0) {
@@ -62,12 +65,48 @@ public class FibonacciTest {
 		}
 	}
 
+	public static void fib(int n) {
+		if (n < 0) {
+			System.out.println("the param is unrightful");
+		}
+		switch (n) {
+		case 1:
+			System.out.println(1 + " ");
+			break;
+		case 2:
+			System.out.println(1 + " " + 1 + " ");
+			break;
+		default:
+			int two = 1;
+			int one = 1;
+			int now;
+			System.out.print(1 + " " + 1 + " ");
+			n -= 2;
+			while (n > 0) {
+				now = one + two;
+				two = one;
+				one = now;
+				System.out.print(51 - n + ":" + now + " ");
+				n--;
+			}
+		}
+	}
+
 	public static int fibonacci1(int n) {
 		if (n >= 0)
 			if (n == 0 || n == 1)
 				return 1;
 			else
 				return fibonacci1(n - 2) + fibonacci1(n - 1);
+		return -1;
+	}
+
+	public static int fibonaccidigui(int i) {
+		if (i > 0)
+			if (i == 0 || i == 1)
+				return 1;
+			else
+				return fibonaccidigui(i - 2) + fibonaccidigui(i - 1);
 		return -1;
 	}
 }
