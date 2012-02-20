@@ -62,6 +62,7 @@ public class KeyUtils {
 		try {
 			ecPair.initialize(keysize, rand);
 			keyPair = ecPair.generateKeyPair();
+//			System.out.println(keyPair.getPrivate());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

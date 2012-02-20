@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+	<DBConfig>
+		<Url>jdbc:oracle:thin:@192.168.3.32:1521:eccca</Url>
+		<DriverClass>oracle.jdbc.driver.OracleDriver</DriverClass>
+		<Username>sica</Username>
+		<Password>sica</Password>
+	</DBConfig>
+</Config>
